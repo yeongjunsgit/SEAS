@@ -2,7 +2,7 @@ $primary-color: #513c3a;
 $secondary-color: #583f28;
 $selected-color: #7c5c3f;
 
-button {
+.menu-button {
     border: 1px solid $primary-color;
     padding: 1%;
     border-radius: 10%;
@@ -10,4 +10,15 @@ button {
     &:hover {
         color: red;
     }
+}
+
+/*한글 폰트*/
+@font-face {
+    font-family: "Ahnjunggeun";
+    src: url("@/assets/fonts/Ahnjunggeun.ttf");
+}
+/*영어 폰트*/
+@font-face {
+    font-family: "caveat";
+    src: url("@/assets/fonts/Caveat.ttf");
 }
