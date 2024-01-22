@@ -1,3 +1,13 @@
 $primary-color: #513c3a;
 $secondary-color: #583f28;
 $selected-color: #7c5c3f;
+
+button {
+    border: 1px solid $primary-color;
+    padding: 1%;
+    border-radius: 10%;
+
+    &:hover {
+        color: red;
+    }
+}
