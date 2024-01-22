@@ -11,7 +11,6 @@ import HeaderComponent from "./components/commons/HeaderComponent.vue";
         <RouterView />
     </div>
 </template>
-
 <style lang="scss">
 * {
     margin: 0px;
