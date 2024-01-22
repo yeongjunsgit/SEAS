@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import MenuView from "@/views/MenuView.vue";
+import AuthenicateView from "@/views/AuthenicateView";
 import MyPageView from "@/views/MyPageView.vue";
 
 const router = createRouter({
@@ -15,6 +16,11 @@ const router = createRouter({
             path: "/menu",
             name: "menu",
             component: MenuView,
+        },
+        {
+            path: "/auth",
+            name: "authenicate",
+            component: AuthenicateView,
         },
         {
             path: "/mypage/",

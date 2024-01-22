@@ -6,6 +6,10 @@ const goHome = () => {
     router.push({ path: "/" });
 };
 
+const goLogin = () => {
+    router.push({ path: "/auth" });
+};
+
 const goMyPage = () => {
     router.push({ path: "/mypage" });
 };
@@ -29,6 +33,9 @@ const goMyPage = () => {
                             <v-btn class="home-menus">퀴즈</v-btn>
                             <v-btn class="home-menus">랭킹</v-btn>
                             <v-divider></v-divider>
+                            <v-btn class="home-menus" @click="goLogin()"
+                                >로그인</v-btn
+                            >
                             <v-btn class="home-menus" @click="goMyPage()"
                                 >마이페이지</v-btn
                             >
@@ -42,14 +49,7 @@ const goMyPage = () => {
 </template>
 
 <style scoped lang="scss">
-@font-face {
-    font-family: "Ahnjunggeun";
-    src: url("@/assets/fonts/Ahnjunggeun.ttf");
-}
-@font-face {
-    font-family: "caveat";
-    src: url("@/assets/fonts/Caveat.ttf");
-}
+@import url("@/assets/style/main.scss");
 .home-title {
     font-family: "caveat";
     color: white;
