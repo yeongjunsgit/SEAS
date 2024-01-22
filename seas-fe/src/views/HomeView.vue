@@ -46,9 +46,6 @@ const goMenu = () => {
 video {
     object-fit: cover;
     position: fixed;
-    // transform: scale(1.8, 1.8);
-    // right: 40%;
-    // top: -20%;
     min-width: 100%;
     min-height: 100%;
     width: 100%;
