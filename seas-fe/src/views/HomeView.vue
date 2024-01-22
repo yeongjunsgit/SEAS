@@ -23,7 +23,7 @@ const goMenu = () => {
             </div>
             <button class="wave-button" @click="goMenu()">
                 <span class="wave"></span>
-                <p>Button</p>
+                <p>Get Started</p>
             </button>
         </div>
         <!-- 홈 화면 우측 부분 -->
@@ -67,7 +67,7 @@ video {
 }
 .wave-button {
     display: inline-block;
-    width: 100px;
+    width: 150px;
     height: 60px;
     position: relative;
     font-size: 20px;
@@ -114,7 +114,7 @@ video {
     }
 
     &:hover p {
-        color: white;
+        color: black;
     }
 }
 
