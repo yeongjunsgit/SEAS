@@ -48,7 +48,7 @@ const goMyPage = () => {
 }
 @font-face {
     font-family: "caveat";
-    src: url("@/assets/fonts/caveat.ttf");
+    src: url("@/assets/fonts/Caveat.ttf");
 }
 .home-title {
     font-family: "caveat";
