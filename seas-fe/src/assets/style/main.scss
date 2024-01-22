@@ -2,13 +2,23 @@ $primary-color: #513c3a;
 $secondary-color: #583f28;
 $selected-color: #7c5c3f;
 
+.flex-center {
+    display: flex;
+    justify-content: center;
+}
+
 .menu-button {
-    border: 1px solid $primary-color;
-    padding: 1%;
-    border-radius: 10%;
+    min-width: 30%;
+    max-width: 40%;
+    margin-top: 5%;
+    border: 3px solid $primary-color;
+    padding: 2%;
+    border-radius: 10px;
 
     &:hover {
-        color: red;
+        transition-duration: 0.5s;
+        background-color: $selected-color;
+        color: white;
     }
 }
 
