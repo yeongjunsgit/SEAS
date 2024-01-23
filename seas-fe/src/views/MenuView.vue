@@ -1,18 +1,19 @@
 <script setup>
 import MenuComponent from "@/components/selection/MenuComponent.vue";
-
+const titles = ["암기", "퀴즈", "마이페이지"];
 const contents = ["안녕하세요", "퀴즈입니다", "마이페이지입니다."];
+const paths = ["/flashcard", "/quiz", "/mypage"];
 </script>
 
 <template>
     <div class="menu-container">
         <MenuComponent
-            title="Memorize"
-            :content="contents[0]"
-            path="/flashcard"
+            v-for="idx in titles.length"
+            :key="idx"
+            :title="titles[idx - 1]"
+            :content="contents[idx - 1]"
+            :path="paths[idx - 1]"
         />
-        <MenuComponent title="Quiz" :content="contents[1]" path="/quiz" />
-        <MenuComponent title="Mypage" :content="contents[2]" path="/mypage" />
     </div>
 </template>
 
@@ -23,8 +24,8 @@ const contents = ["안녕하세요", "퀴즈입니다", "마이페이지입니�
     background-size: cover;
     width: 100%;
     height: 100%;
-    display: flex;
     position: absolute;
+    display: flex;
     justify-content: space-evenly;
     z-index: 0;
 }

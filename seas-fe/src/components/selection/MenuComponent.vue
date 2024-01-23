@@ -13,7 +13,7 @@ const goToPage = () => {
 <template>
     <div class="menu flex-center">
         <div class="menu-text">
-            <div class="title title-font">
+            <div class="title text-font">
                 <p>{{ title }}</p>
             </div>
             <div class="content text-font">
