@@ -1,7 +1,7 @@
 $primary-color: #513c3a;
 $secondary-color: #583f28;
 $selected-color: #7c5c3f;
-
+$gradation-color: #7c5c3f;
 .flex-center {
     display: flex;
     justify-content: center;
@@ -42,5 +42,5 @@ button {
 /*영어 폰트*/
 @font-face {
     font-family: "caveat";
-    src: url("@/assets/fonts/Caveat.ttf");
+    src: url("@/assets/fonts/caveat.ttf");
 }
