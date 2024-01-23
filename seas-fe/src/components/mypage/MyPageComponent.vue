@@ -1,11 +1,11 @@
 <script setup></script>
 
 <template>
-  <div class="mypage-background"></div>
+  <div class="mypage-component-background"></div>
 </template>
 
 <style scoped lang="scss">
-.mypage-background {
+.mypage-component-background {
   height: 100vh;
   overflow: hidden;
   margin: 0;
