@@ -21,7 +21,7 @@ const goMenu = () => {
                 <h1>퀴즈를 통한 복기</h1>
                 <h1>점수를 통한 랭킹 시스템</h1>
             </div>
-            <button class="wave-button text-font bold" @click="goMenu()">
+            <button class="wave-button text-font" @click="goMenu()">
                 <span class="wave"></span>
                 <p>시작</p>
             </button>
@@ -110,7 +110,6 @@ video {
         position: relative;
         z-index: 3;
         transition: 1s ease-out;
-        font-weight: bold;
     }
 
     &:hover p {

@@ -7,9 +7,14 @@ $selected-color: #7c5c3f;
     justify-content: center;
 }
 
+button {
+    font-family: "Ahnjunggeun";
+    font-weight: bold;
+    font-size: larger;
+}
+
 .menu-button {
-    min-width: 30%;
-    max-width: 40%;
+    min-width: 40%;
     margin-top: 5%;
     border: 3px solid $primary-color;
     padding: 2%;

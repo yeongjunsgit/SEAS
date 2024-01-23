@@ -21,7 +21,9 @@ const goToPage = () => {
             </div>
         </div>
         <div class="flex-center">
-            <button class="menu-button" @click="goToPage"><h3>GO</h3></button>
+            <button class="menu-button" @click="goToPage">
+                <p>바로가기</p>
+            </button>
         </div>
     </div>
 </template>
