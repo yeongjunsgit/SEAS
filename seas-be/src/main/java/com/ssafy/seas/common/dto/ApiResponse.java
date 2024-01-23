@@ -9,8 +9,8 @@ import lombok.Getter;
 
 @Getter
 public class ApiResponse<T> {
-	private int status;
-	private String message;
+	private final Integer status;
+	private final String message;
 	private T data;
 
 	private ApiResponse(int status, String message, T data) {
@@ -32,7 +32,7 @@ public class ApiResponse<T> {
 		return new ApiResponse<>(code.getStatus().value(), code.getMessage());
 	}
 
-	public static <T> ApiResponse<T> error(HttpStatus status, String message) {
-		return new ApiResponse<>(status.value(), message);
+	public static ApiResponse<String> error(HttpStatus status, String message) {
+		return new ApiResponse<>(status.value(), message, "");
 	}
 }
