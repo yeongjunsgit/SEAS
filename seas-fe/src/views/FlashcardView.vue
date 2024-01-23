@@ -2,11 +2,10 @@
 import backgroundImage from "@/assets/images/CardPage_BG_HighQuality.png";
 import cardImage from "@/assets/images/card_removed.png";
 import flashcardImage from "@/assets/images/cardPage.jpg";
-import commonbutton from "@/components/commons/buttonComponent.vue";
 
 import { RouterLink, RouterView } from "vue-router";
 import HeaderComponent from "@/components/commons/HeaderComponent.vue";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 const quizData = ref(null);
 </script>
@@ -26,7 +25,6 @@ const quizData = ref(null);
         </p>
       </v-img>
     </div>
-    <commonbutton class="button_move" @click="flashcard_effect"></commonbutton>
   </v-app>
 </template>
 
