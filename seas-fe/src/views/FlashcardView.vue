@@ -2,12 +2,22 @@
 import backgroundImage from "@/assets/images/CardPage_BG_HighQuality.png";
 import cardImage from "@/assets/images/card_removed.png";
 import flashcardImage from "@/assets/images/cardPage.jpg";
+import buttonBgImage from "@/assets/images/button_background.png";
 
 import { RouterLink, RouterView } from "vue-router";
 import HeaderComponent from "@/components/commons/HeaderComponent.vue";
 import { ref, watch } from "vue";
 
 const quizData = ref(null);
+
+const button_category = [
+  "네트워크",
+  "자료구조",
+  "컴퓨터 구조",
+  "운영체제",
+  "알고리즘",
+  "데이터베이스",
+];
 </script>
 
 <template>
@@ -24,6 +34,15 @@ const quizData = ref(null);
         선택하세요<br />
       </p>
     </v-img>
+    <v-container class="button_menu">
+      <v-row align="start" no-gutters>
+        <v-col v-for="(button, index) in button_category" :key="index" cols="6">
+          <v-img :src="buttonBgImage" class="menu_img">
+            <p class="button_text">{{ button }}</p>
+          </v-img>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-app>
 </template>
 
@@ -81,10 +100,29 @@ const quizData = ref(null);
     transform: scale(calc(1 / 2.2)) translate(-50%, -50%);
   }
 }
-.button_move {
+.button_menu {
   position: absolute;
-  top: 50%;
-  left: 70%;
+  margin-top: 10vw;
+  margin-left: 58vw;
+  text-align: center;
+  display: flex;
+  width: 35vw;
+  height: 35vw;
+
+  .menu_img {
+    width: 14vw;
+    height: 9vw;
+    position: absolute;
+    transform: scale(1, 0.7);
+    filter: drop-shadow(5px 5px 5px #000);
+
+    .button_text {
+      width: 10vw;
+      font-size: 1.8vw;
+      transform: scale(1, calc(1 / 0.7)) translate(20%, 75%);
+      // position: absolute;
+    }
+  }
 }
 
 .bgbg {
