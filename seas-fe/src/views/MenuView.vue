@@ -6,7 +6,11 @@ const contents = ["안녕하세요", "퀴즈입니다", "마이페이지입니�
 
 <template>
     <div class="menu-container">
-        <MenuComponent title="Memorize" :content="contents[0]" path="/card" />
+        <MenuComponent
+            title="Memorize"
+            :content="contents[0]"
+            path="/flashcard"
+        />
         <MenuComponent title="Quiz" :content="contents[1]" path="/quiz" />
         <MenuComponent title="Mypage" :content="contents[2]" path="/mypage" />
     </div>
