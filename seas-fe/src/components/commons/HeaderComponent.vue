@@ -22,13 +22,13 @@ const goMyPage = () => {
                 <v-row justify="end">
                     <v-col cols="4">
                         <v-toolbar-title
-                            class="home-title text-center text-h4 font-weight-bold"
+                            class="home-title text-center text-h4 font-weight-bold title-font"
                             @click="goHome()"
                             >SEAS</v-toolbar-title
                         >
                     </v-col>
                     <v-col cols="4" class="align-self-center">
-                        <v-toolbar-items>
+                        <v-toolbar-items class="text-font">
                             <v-btn class="home-menus">카드</v-btn>
                             <v-btn class="home-menus">퀴즈</v-btn>
                             <v-btn class="home-menus">랭킹</v-btn>
@@ -51,14 +51,12 @@ const goMyPage = () => {
 <style scoped lang="scss">
 @import url("@/assets/style/main.scss");
 .home-title {
-    font-family: "caveat";
     color: white;
     &:hover {
         cursor: pointer;
     }
 }
 .home-menus {
-    font-family: "Ahnjunggeun";
     font-size: larger;
     font-weight: bold;
     color: white;

@@ -1,7 +1,7 @@
 <script setup>
 import { useRouter } from "vue-router";
 
-const props = defineProps(["title", "buttonText", "path"]);
+const props = defineProps(["title", "content", "path"]);
 
 const router = useRouter();
 
@@ -13,12 +13,15 @@ const goToPage = () => {
 <template>
     <div class="menu flex-center">
         <div class="menu-text">
-            <h2>{{ title }}</h2>
+            <div class="title title-font">
+                <p>{{ title }}</p>
+            </div>
+            <div class="content text-font">
+                <p>{{ content }}</p>
+            </div>
         </div>
         <div class="flex-center">
-            <button class="menu-button" @click="goToPage">
-                {{ buttonText }}
-            </button>
+            <button class="menu-button" @click="goToPage"><h3>GO</h3></button>
         </div>
     </div>
 </template>
@@ -43,6 +46,15 @@ const goToPage = () => {
     &:hover {
         transition-duration: 0.5s;
         scale: 1.1;
+    }
+
+    .title {
+        font-size: 50px;
+        font-weight: bold;
+    }
+
+    .content {
+        font-size: 25px;
     }
 }
 </style>
