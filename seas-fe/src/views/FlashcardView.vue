@@ -11,7 +11,7 @@ const quizData = ref(null);
 </script>
 
 <template>
-  <v-app class="bgbg">
+  <v-app class="bgbg text-font">
     <!-- <img :src="backgroundImage" class="bg_position" /> -->
     <!-- <v-img contain cover :src="backgroundImage" class="bg_position"> </v-img> -->
     <v-img :src="cardImage" class="memo_card">
@@ -28,18 +28,21 @@ const quizData = ref(null);
 </template>
 
 <style scoped lang="scss">
+@import url("@/assets/style/main.scss");
 .memo_card {
   position: absolute;
-  top: 20%;
-  left: 16%;
+  // top: 20%;
+  // left: 16%;
   transform: rotate(340deg) scale(1, 1.2);
   width: 30vw;
   height: 30vw;
+  margin-top: 14vw;
+  margin-left: 18vw;
 
   .card_text {
     transform: scale(1, calc(1 / 1.2)) translate(-50%, -50%);
     position: absolute;
-    top: 18%;
+    top: 20%;
     left: 50%;
     font-size: 3vw;
   }
@@ -51,17 +54,19 @@ const quizData = ref(null);
 }
 .flashcard {
   position: absolute;
-  top: 25%;
-  left: 17.5%;
+  // top: 25%;
+  // left: 17.5%;
   transform: rotate(340deg) scale(1, 1.3);
   text-align: center;
+  margin-top: 16vw;
+  margin-left: 19.2vw;
   // transition: all 0.3s linear;
   width: 29vw;
   height: 30vw;
   .card_text {
     transform: scale(1, calc(1 / 1.3)) translate(-50%, -50%);
     position: absolute;
-    top: 40%;
+    top: 42%;
     left: 50%;
     font-size: 3vw;
     width: 20vw;
@@ -83,11 +88,15 @@ const quizData = ref(null);
 }
 
 .bgbg {
-  position: absolute;
-  width: 100%;
-  height: 100%;
+  position: fixed;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
   z-index: -1;
   background-image: url("@/assets/images/CardPage_BG_HighQuality.png");
+  background-position: center;
   background-size: cover;
+  background-repeat: no-repeat;
 }
 </style>
