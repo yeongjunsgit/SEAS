@@ -15,15 +15,15 @@ const goMenu = () => {
         </video>
         <!-- 홈 화면 좌측 부분 -->
         <div class="main-content">
-            <div>
+            <div class="text-font">
                 <h1>분당 CS 10개</h1>
                 <h1>카드를 통한 간단한 암기</h1>
                 <h1>퀴즈를 통한 복기</h1>
                 <h1>점수를 통한 랭킹 시스템</h1>
             </div>
-            <button class="wave-button" @click="goMenu()">
+            <button class="wave-button text-font bold" @click="goMenu()">
                 <span class="wave"></span>
-                <p>Get Started</p>
+                <p>시작</p>
             </button>
         </div>
         <!-- 홈 화면 우측 부분 -->
@@ -32,6 +32,8 @@ const goMenu = () => {
 </template>
 
 <style scoped lang="scss">
+@import url("@/assets/style/main.scss");
+
 * {
     width: 100%;
     height: 100%;
@@ -108,6 +110,7 @@ video {
         position: relative;
         z-index: 3;
         transition: 1s ease-out;
+        font-weight: bold;
     }
 
     &:hover p {

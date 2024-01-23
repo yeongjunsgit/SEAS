@@ -1,12 +1,14 @@
 <script setup>
 import MenuComponent from "@/components/selection/MenuComponent.vue";
+
+const contents = ["안녕하세요", "퀴즈입니다", "마이페이지입니다."];
 </script>
 
 <template>
     <div class="menu-container">
-        <MenuComponent title="Memorize" buttonText="GO" path="/card" />
-        <MenuComponent title="Quiz" buttonText="GO" path="/quiz" />
-        <MenuComponent title="Mypage" buttonText="GO" path="/mypage" />
+        <MenuComponent title="Memorize" :content="contents[0]" path="/card" />
+        <MenuComponent title="Quiz" :content="contents[1]" path="/quiz" />
+        <MenuComponent title="Mypage" :content="contents[2]" path="/mypage" />
     </div>
 </template>
 
