@@ -183,3 +183,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# SEAS config
+seas-config.yml
