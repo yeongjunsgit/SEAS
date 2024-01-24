@@ -12,20 +12,22 @@ services:
   vue:
     container_name: seas-vue
     ports:
-      - 3000:80
+      - 5173:80
     build:
       context: ../
       dockerfile: ./docker/dockerfile/vue.dockerfile
 
   mysql:
-    container_name: sees-mysql
+    container_name: seas-mysql
     image : mysql:8.0
     ports :
       - 3306:3306
+    env_file:
+      - .env
     environment:
-      MYSQL_ROOT_PASSWORD : admin
-      MYSQL_USER : 'a609'
-      MYSQL_PASSWORD: '1234'
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     volumes:
       - ./mysql:/var/lib/mysql
     build:
