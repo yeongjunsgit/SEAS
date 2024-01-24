@@ -1,7 +1,8 @@
-$primary-color: #513c3a;
+$primary-color: rgba(81, 60, 58, 1);
 $secondary-color: #583f28;
 $selected-color: #7c5c3f;
 $gradation-color: #7c5c3f;
+
 .flex-center {
     display: flex;
     justify-content: center;
@@ -33,7 +34,9 @@ button {
 .text-font {
     font-family: "Ahnjunggeun";
 }
-
+.temp-font {
+    font-family: "AnneliesRoughBrush";
+}
 /*한글 폰트*/
 @font-face {
     font-family: "Ahnjunggeun";
@@ -43,4 +46,8 @@ button {
 @font-face {
     font-family: "caveat";
     src: url("@/assets/fonts/caveat.ttf");
+}
+@font-face {
+    font-family: "AnneliesRoughBrush";
+    src: url("@/assets/fonts/AnneliesRoughBrush.ttf");
 }

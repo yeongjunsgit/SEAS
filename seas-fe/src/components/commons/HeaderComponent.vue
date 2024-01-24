@@ -30,7 +30,7 @@ const goRank = () => {
                 <v-row justify="end">
                     <v-col cols="4">
                         <v-toolbar-title
-                            class="home-title text-center text-h4 font-weight-bold title-font"
+                            class="home-title text-center text-h4 font-weight-bold temp-font"
                             @click="goHome()"
                             >SEAS</v-toolbar-title
                         >
