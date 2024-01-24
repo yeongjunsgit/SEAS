@@ -3,30 +3,30 @@ import TagComponent from "@/components/commons/TagComponent.vue";
 import { ref } from "vue";
 
 const rankerList = ref([
-    { name: "김싸피", badge: [1], score: 3000 },
-    { name: "최싸피", badge: [2, 3], score: 1231 },
-    { name: "홍싸피", badge: [1, 2, 3, 4], score: 1442 },
-    { name: "임싸피", badge: [1, 2, 3], score: 1232 },
-    { name: "이싸피", badge: [0], score: 9292 },
-    { name: "배싸피", badge: [1, 2, 3], score: 1231 },
-    { name: "엄싸피", badge: [4], score: 6463 },
-    { name: "송싸피", badge: [1, 2, 3], score: 3901 },
-    { name: "양싸피", badge: [5], score: 2302 },
+    { name: "김싸피", tag: [1], score: 3000 },
+    { name: "최싸피", tag: [2, 3], score: 1231 },
+    { name: "홍싸피", tag: [1, 2, 3, 4], score: 1442 },
+    { name: "임싸피", tag: [1, 2, 3], score: 1232 },
+    { name: "이싸피", tag: [0], score: 9292 },
+    { name: "배싸피", tag: [1, 2, 3], score: 1231 },
+    { name: "엄싸피", tag: [4], score: 6463 },
+    { name: "송싸피", tag: [1, 2, 3, 4, 5], score: 3901 },
+    { name: "양싸피", tag: [5], score: 2302 },
 ]);
 
-const badgeList = ref([
+const tagList = ref([
     { title: "CS 선장" },
-    { title: "알고리즘 항해사" },
-    { title: "네트워크 항해사" },
-    { title: "자료구조 항해사" },
-    { title: "데이터베이스 항해사" },
-    { title: "컴퓨터구조 항해사" },
-    { title: "운영체제 항해사" },
+    { title: "알고리즘" },
+    { title: "네트워크" },
+    { title: "자료구조" },
+    { title: "데이터베이스" },
+    { title: "컴퓨터구조" },
+    { title: "운영체제" },
 ]);
 </script>
 
 <template>
-    <div class="ranking-container temp-font">
+    <div class="ranking-container text-font">
         <div class="ranking-board">
             <img src="@/assets/images/mypage_paper.png" alt="" />
             <div class="board">
@@ -65,13 +65,14 @@ const badgeList = ref([
                             >
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ ranker.name }}</td>
-                                <td class="badge-container">
+                                <td class="tag-container">
                                     <div
-                                        v-for="(badge, index) in ranker.badge"
+                                        v-for="(tag, index) in ranker.tag"
                                         :key="index"
+                                        class="tag"
                                     >
                                         <TagComponent
-                                            :title="badgeList[badge].title"
+                                            :title="tagList[tag].title"
                                         />
                                     </div>
                                 </td>
@@ -166,11 +167,16 @@ const badgeList = ref([
                 border-bottom: 1px solid black;
             }
 
-            .badge-container {
+            .tag-container {
                 display: flex;
                 text-align: center;
                 margin-top: 1%;
+                max-width: 105vh;
                 overflow: hidden;
+
+                .tag {
+                    margin-left: 1%;
+                }
             }
         }
     }

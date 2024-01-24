@@ -3,25 +3,25 @@ const props = defineProps(["title"]);
 </script>
 
 <template>
-    <div class="tag-container">
+    <div class="container text-font">
         <p>{{ title }}</p>
     </div>
 </template>
 
 <style scoped lang="scss">
 @import "@/assets/style/main.scss";
-.tag-container {
+.container {
     border: 3px solid $primary-color;
     border-radius: 20px;
-    padding: 3%;
-    min-width: 20vh;
+    padding: 1%;
+    min-width: 18vh;
     margin: 0 3px 0 3px;
 
     p {
         color: rgba(81, 60, 58, 1);
         text-align: center;
         font-weight: bolder;
-        font-size: small;
+        font-size: medium;
     }
 }
 </style>
