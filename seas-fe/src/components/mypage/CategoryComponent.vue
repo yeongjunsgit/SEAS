@@ -16,33 +16,35 @@ const router = useRouter();
 </script>
 
 <template>
-  <div class="d-flex ml-6">
-    <h1>{{ type }}</h1>
-    <h4 class="align-self-center ml-2">아이콘</h4>
-  </div>
-  <div>
-    <v-list class="transparent-list" lines="two">
-      <v-list-item class="ml-6" v-for="(category, n) in categories" :key="n">
-        <v-list-item-content>
-          <v-list-item-title class="text-left">{{
-            category
-          }}</v-list-item-title>
-          <v-list-item-subtitle class="text-right">1,2,3</v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
-  </div>
+  <table>
+    <caption>
+      <span>{{ type }}</span>
+      <span>아이콘</span>
+    </caption>
+
+    <tbody>
+      <tr class="mycard" v-for="(category, n) in categories" :key="n">
+        <th class="card-category">{{ category }}</th>
+        <td>1 2 3</td>
+      </tr>
+    </tbody>
+  </table>
 </template>
 
 <style scoped lang="scss">
 @import url("@/assets/style/main.scss");
 
-.transparent-list {
-  background: transparent;
+.mycard {
+  margin-left: 55px;
 }
-
-// .temp {
-//   display: flex;
-//   flex-direction: row;
-// }
+table {
+  margin-left: 55px;
+}
+.card-category {
+  padding-right: 15px;
+}
+th,
+td {
+  padding: 20px;
+}
 </style>

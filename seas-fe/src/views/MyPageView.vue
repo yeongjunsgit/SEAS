@@ -26,9 +26,6 @@ const isFilled = function (day) {
   <div class="mypage-background text-font">
     <div class="container">
       <div class="mypage-component-background userinfo">
-        <!-- <div>
-          <h2>유저정보</h2>
-        </div> -->
         <div>
           <div class="user-box">
             <div class="text-center">
@@ -41,7 +38,7 @@ const isFilled = function (day) {
               <p>정답률 : 75%</p>
             </div>
             <div>
-              <p>차트</p>
+              <p>유저 정보</p>
               <div>
                 <RadarChart />
               </div>
@@ -49,7 +46,7 @@ const isFilled = function (day) {
           </div>
         </div>
         <div class="grass">
-          <div>잔디</div>
+          <div class="text-center">일일 학습 경과</div>
           <div class="grass-container">
             <div v-for="week in weeks" :key="week" class="week">
               <div
@@ -64,14 +61,9 @@ const isFilled = function (day) {
       </div>
       <div class="mypage-component-background mychart">
         <div v-for="(category, n) in categories" :key="n" cols="4">
-          <div class="ml-4 mt-7 transparent-card" max-width="344">
-            <div>
-              <div>
-                <div>{{ category }}</div>
-                <div>
-                  <LineChartVue />
-                </div>
-              </div>
+          <div class="transparent-card">
+            <div class="chart-box">
+              <LineChartVue />
             </div>
           </div>
         </div>
@@ -94,7 +86,9 @@ const isFilled = function (day) {
 img {
   max-width: 100%;
 }
-
+.text-center {
+  text-align: center;
+}
 .mypage-background {
   overflow: hidden;
   height: auto;
@@ -140,23 +134,31 @@ img {
 .grass-container {
   display: flex;
   flex-wrap: wrap;
+  justify-content: start;
+  padding-left: 20px;
 }
 .week {
   display: flex;
 }
 
 .day {
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
   margin: 1px;
+  border: 1px solid black;
   background-color: #ebedf0;
   transition: background-color 0.3s ease;
 }
 .day.filled {
   background-color: green;
 }
+.chart-box {
+  padding-left: 40px;
+}
 .transparent-card {
   background: transparent;
+  padding-left: 30px;
+  width: 350px;
 }
 .mycard {
   display: grid;
