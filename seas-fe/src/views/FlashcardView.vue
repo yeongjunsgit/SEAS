@@ -8,9 +8,37 @@ import { RouterLink, RouterView } from "vue-router";
 import HeaderComponent from "@/components/commons/HeaderComponent.vue";
 import { ref, watch } from "vue";
 
-const quizData = ref(null);
+import { useRouter } from "vue-router";
+const router = useRouter();
 
-const button_category = [
+const keywordData = ref(null);
+const Data = ref(null);
+const idx = ref(0);
+
+const reverseCard = function () {
+  console.log("뒤집혔당");
+};
+
+const gotoNextCard = function () {
+  idx.value = idx.value += 1;
+};
+
+const gotoPreviousCard = function () {
+  idx.value = idx.value -= 1;
+};
+
+watch(idx, (newValue, oldValue) => {
+  if (newValue === 11) {
+    isOver.value === !isOver.value;
+    idx.value = 0;
+  }
+});
+// 버튼 출력을 다룰 변수 2개 생성
+const isSelected = ref(false);
+const isOver = ref(false);
+
+// 버튼들에 출력할 내용들 생성
+const buttonCategory = [
   "네트워크",
   "자료구조",
   "컴퓨터 구조",
@@ -18,6 +46,39 @@ const button_category = [
   "알고리즘",
   "데이터베이스",
 ];
+const buttonFunc = ["좋아요", "다음", "이전"];
+
+// 버튼 눌렀을 때 호출되는 함수들
+const selectCategory = function (cate) {
+  isSelected.value = !isSelected.value;
+  const category = ref(cate);
+  console.log(category);
+  keywordData.value = [
+    "키워드 1",
+    "키워드 2",
+    "키워드 3",
+    "키워드 4",
+    "키워드 5",
+    "키워드 6",
+    "키워드 7",
+    "키워드 8",
+    "키워드 9",
+    "키워드 10",
+  ];
+  console.log(quizData.value);
+  // 여기서 받은 카테고리를 axios로 보내자!
+};
+
+const goToMain = function () {
+  router.push({ path: "/" });
+};
+const goToQuiz = function () {
+  router.push({ path: "/quiz" });
+};
+const replayFlashcard = function () {
+  isSelected.value = !isSelected.value;
+  isOver.value = !isOver.value;
+};
 </script>
 
 <template>
@@ -28,18 +89,64 @@ const button_category = [
       <p class="card_text">암기하기</p>
     </v-img>
     <v-img :src="flashcardImage" class="flashcard">
-      <p class="card_text" v-if="quizData">{{ quizData }}</p>
+      <p class="card_text" v-if="keywordData" @click="reverseCard">
+        {{ keywordData[idx] }}
+      </p>
       <p class="card_text" v-else>
         카테고리를<br />
         선택하세요<br />
       </p>
     </v-img>
-    <v-container class="button_menu">
+    <!-- 카테고리 선택 전 출력할 버튼 목록 -->>
+    <v-container class="button_menu" v-if="!isSelected">
       <v-row align="start" no-gutters>
-        <v-col v-for="(button, index) in button_category" :key="index" cols="6">
+        <v-col
+          v-for="(button, index) in buttonCategory"
+          :key="index"
+          cols="6"
+          @click="selectCategory(button)"
+        >
           <v-img :src="buttonBgImage" class="menu_img">
             <p class="button_text">{{ button }}</p>
           </v-img>
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <!-- 카테고리 선택 후 진행상황, 좋아요, 이전, 다음 기능 버튼 출력 -->
+    <v-container class="button_menu" v-else-if="isSelected && !isOver">
+      <v-row align="start" no-gutters>
+        <v-col cols="12">
+          <div class="menu-button">
+            <!-- 현재는 idx/10으로 적어 두었지만 axios로 데이터를 받아오면 각 문제의 index 값을 출력해야함! -->
+            <p class="button_text">idx/10</p>
+          </div>
+        </v-col>
+        <v-col v-for="(func, index) in buttonFunc" :key="index" cols="12">
+          <div class="menu-button">
+            <p class="button_text">{{ func }}</p>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <!-- 모든 암기를 본 후에 이동할 페이지를 보여주는 버튼 출력 -->
+    <v-container class="button_menu" v-else-if="isSelected && isOver">
+      <v-row align="start" no-gutters>
+        <v-col cols="12">
+          <div class="menu-button" @click="goToMain">
+            <p class="gotomain_text">메인 메뉴로 돌아가기</p>
+          </div>
+        </v-col>
+        <v-col cols="12">
+          <div class="menu-button" @click="replayFlashcard">
+            <p class="button_text">다시하기</p>
+          </div>
+        </v-col>
+        <v-col cols="12">
+          <div class="menu-button" @click="goToQuiz">
+            <p class="button_text">퀴즈로 가기</p>
+          </div>
         </v-col>
       </v-row>
     </v-container>
@@ -48,6 +155,7 @@ const button_category = [
 
 <style scoped lang="scss">
 @import url("@/assets/style/main.scss");
+
 .memo_card {
   position: absolute;
   // top: 20%;
@@ -55,7 +163,7 @@ const button_category = [
   transform: rotate(340deg) scale(1, 1.2);
   width: 30vw;
   height: 30vw;
-  margin-top: 14vw;
+  margin-top: 11vw;
   margin-left: 18vw;
 
   .card_text {
@@ -77,7 +185,7 @@ const button_category = [
   // left: 17.5%;
   transform: rotate(340deg) scale(1, 1.3);
   text-align: center;
-  margin-top: 16vw;
+  margin-top: 13vw;
   margin-left: 19.2vw;
   // transition: all 0.3s linear;
   width: 29vw;
@@ -121,6 +229,37 @@ const button_category = [
       font-size: 1.8vw;
       transform: scale(1, calc(1 / 0.7)) translate(20%, 75%);
       // position: absolute;
+    }
+  }
+
+  .menu-button {
+    width: 12vw;
+    height: 5vw;
+    margin-left: 8vw;
+    border: 3px solid rgb(124, 92, 63);
+    color: rgb(124, 92, 63);
+    padding: 2%;
+
+    .button_text {
+      width: 10vw;
+      font-size: 1.8vw;
+      transform: translate(8%, 11%);
+      font-weight: bold;
+      // position: absolute;
+    }
+    border-radius: 10px;
+
+    &:hover {
+      transition-duration: 0.5s;
+      background-color: rgb(124, 92, 63);
+      color: white;
+    }
+
+    .gotomain_text {
+      width: 8vw;
+      font-size: 1.6vw;
+      transform: translate(20%, -13%);
+      font-weight: bold;
     }
   }
 }
