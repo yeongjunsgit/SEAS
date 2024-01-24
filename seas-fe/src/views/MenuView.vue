@@ -1,8 +1,8 @@
 <script setup>
 import MenuComponent from "@/components/selection/MenuComponent.vue";
-const titles = ["암기", "퀴즈", "마이페이지"];
-const contents = ["안녕하세요", "퀴즈입니다", "마이페이지입니다."];
-const paths = ["/flashcard", "/quiz", "/mypage"];
+const titles = ["카드", "퀴즈", "랭킹"];
+const contents = ["안녕하세요", "퀴즈입니다", "랭킹입니다"];
+const paths = ["/flashcard", "/quiz", "/ranking"];
 </script>
 
 <template>
