@@ -1,46 +1,53 @@
-$primary-color: #513c3a;
+$primary-color: rgba(81, 60, 58, 1);
 $secondary-color: #583f28;
 $selected-color: #7c5c3f;
 $gradation-color: #7c5c3f;
+
 .flex-center {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 button {
-    font-family: "Ahnjunggeun";
-    font-weight: bold;
-    font-size: larger;
+  font-family: "Ahnjunggeun";
+  font-weight: bold;
+  font-size: larger;
 }
 
 .menu-button {
-    min-width: 40%;
-    margin-top: 5%;
-    border: 3px solid $primary-color;
-    padding: 2%;
-    border-radius: 10px;
+  min-width: 40%;
+  margin-top: 5%;
+  border: 3px solid $primary-color;
+  padding: 2%;
+  border-radius: 10px;
 
-    &:hover {
-        transition-duration: 0.5s;
-        background-color: $selected-color;
-        color: white;
-    }
+  &:hover {
+    transition-duration: 0.5s;
+    background-color: $selected-color;
+    color: white;
+  }
 }
 
 .title-font {
-    font-family: "caveat";
+  font-family: "caveat";
 }
 .text-font {
-    font-family: "Ahnjunggeun";
+  font-family: "Ahnjunggeun";
 }
-
+.temp-font {
+    font-family: "AnneliesRoughBrush";
+}
 /*한글 폰트*/
 @font-face {
-    font-family: "Ahnjunggeun";
-    src: url("@/assets/fonts/Ahnjunggeun.ttf");
+  font-family: "Ahnjunggeun";
+  src: url("@/assets/fonts/Ahnjunggeun.ttf");
 }
 /*영어 폰트*/
 @font-face {
-    font-family: "caveat";
-    src: url("@/assets/fonts/caveat.ttf");
+  font-family: "caveat";
+  src: url("@/assets/fonts/caveat.ttf");
+}
+@font-face {
+    font-family: "AnneliesRoughBrush";
+    src: url("@/assets/fonts/AnneliesRoughBrush.ttf");
 }

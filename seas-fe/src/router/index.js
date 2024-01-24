@@ -4,6 +4,8 @@ import MenuView from "@/views/MenuView.vue";
 import AuthenicateView from "@/views/AuthenicateView.vue";
 import MyPageView from "@/views/MyPageView.vue";
 import FlashcardView from "@/views/FlashcardView.vue";
+import RankingView from "@/views/RankingView.vue";
+import QuizView from "@/views/QuizView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +34,16 @@ const router = createRouter({
       path: "/flashcard/",
       name: "flashcard",
       component: FlashcardView,
+    },
+    {
+      path: "/ranking",
+      name: "ranking",
+      component: RankingView,
+    },
+    {
+      path: "/quiz",
+      name: "quiz",
+      component: QuizView,
     },
     // {
     //   path: '/about',

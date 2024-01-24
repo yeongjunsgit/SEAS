@@ -17,10 +17,14 @@ const goMyPage = () => {
 const goCard = () => {
   router.push({ path: "/flashcard" });
 };
+
+const goRank = () => {
+  router.push({ path: "/ranking" });
+};
 </script>
 
 <template>
-  <div>
+  <div class="header-container">
     <v-toolbar class="transparent">
       <v-container>
         <v-row justify="end">
@@ -35,7 +39,7 @@ const goCard = () => {
             <v-toolbar-items class="text-font">
               <v-btn class="home-menus" @click="goCard()">카드</v-btn>
               <v-btn class="home-menus">퀴즈</v-btn>
-              <v-btn class="home-menus">랭킹</v-btn>
+              <v-btn class="home-menus" @click="goRank()">랭킹</v-btn>
               <v-divider></v-divider>
               <v-btn class="home-menus" @click="goLogin()">로그인</v-btn>
               <v-btn class="home-menus" @click="goMyPage()">마이페이지</v-btn>
@@ -50,6 +54,11 @@ const goCard = () => {
 
 <style scoped lang="scss">
 @import url("@/assets/style/main.scss");
+
+.header-container {
+  min-height: 80px;
+  vertical-align: middle;
+}
 .home-title {
   color: white;
   &:hover {
