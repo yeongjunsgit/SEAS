@@ -1,0 +1,32 @@
+
+
+services:
+#  spring:
+#    container_name: seas-spring
+#    build:
+#      context: ../
+#      dockerfile: ./docker/dockerfile/spring.dockerfile
+#    ports:
+#      - 8080:8081
+
+#  vue:
+#    container_name: seas-vue
+#    ports:
+#      - 3000:3000
+#    build:
+#      context: ../
+#      dockerfile: ./docker/dockerfile/vue.dockerfile
+
+  mysql:
+    container_name: sees-mysql
+    image : mysql:8.0
+    ports :
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD : admin
+      MYSQL_USER : 'a609'
+      MYSQL_PASSWORD: '1234'
+    volumes:
+      - ./mysql:/var/lib/mysql
+    build:
+      context: ../
