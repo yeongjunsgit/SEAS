@@ -1,6 +1,5 @@
 package com.ssafy.seas.member.controller;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.seas.common.constants.ErrorCode;
 import com.ssafy.seas.common.constants.SuccessCode;
+import com.ssafy.seas.common.dto.ApiResponse;
 import com.ssafy.seas.member.dto.MemberDto;
 import com.ssafy.seas.member.service.MemberService;
 
@@ -20,13 +20,12 @@ public class MemberController {
 	private final MemberService memberService;
 
 	@PostMapping("/signup")
-	public ResponseEntity<String> regist(@RequestBody MemberDto memberDto){
+	public ApiResponse<String> regist(@RequestBody MemberDto memberDto){
 		try{
-			memberService.signup(memberDto);
-			return new ResponseEntity<String>(SuccessCode.POST_SUCCESS.getMessage(), SuccessCode.POST_SUCCESS.getStatus());
+			return ApiResponse.success(SuccessCode.GET_SUCCESS, memberService.signup(memberDto));
 		} catch(Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<String>(ErrorCode.SERVER_ERROR.getMessage(), ErrorCode.SERVER_ERROR.getStatus());
+			return ApiResponse.error(ErrorCode.SERVER_ERROR);
 		}
 	}
 
