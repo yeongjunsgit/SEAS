@@ -109,7 +109,7 @@ const checkDuplicate = async () => {
                         />
                         <input
                             type="text"
-                            placeholder="Name"
+                            placeholder="NickName"
                             v-model="signupInfo.name"
                         />
                         <input
@@ -319,7 +319,6 @@ const checkDuplicate = async () => {
     opacity: 0;
     z-index: 1;
 }
-
 /* 컨테이너가 활성 상태일 때의 가입 영역 스타일링 */
 .container.active .sign-up {
     transform: translateX(100%);
