@@ -22,6 +22,7 @@ public class FlashcardService {
 	private final FlashcardMapper flashcardMapper;
 
 	public List<FlashcardDto.Response> getFlashcaradsByCategoryName(String categoryName) {
+		// TODO: 즐겨찾기 개발 후 isFavorite 내용 추가
 		List<Flashcard> flashcards = flashcardRepository.findByCategory_Name(categoryName);
 		// TODO: 가중치 순 정렬
 
