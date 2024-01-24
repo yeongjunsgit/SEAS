@@ -13,5 +13,4 @@ public class SeasApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SeasApplication.class, args);
 	}
-
 }
