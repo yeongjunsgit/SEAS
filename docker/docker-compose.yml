@@ -9,14 +9,6 @@ services:
 #    ports:
 #      - 8080:8081
 
-  vue:
-    container_name: seas-vue
-    ports:
-      - 5173:80
-    build:
-      context: ../
-      dockerfile: ./docker/dockerfile/vue.dockerfile
-
   mysql:
     container_name: seas-mysql
     image : mysql:8.0
