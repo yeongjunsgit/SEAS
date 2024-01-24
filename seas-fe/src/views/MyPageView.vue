@@ -1,70 +1,100 @@
 <script setup>
 import MyPageComponent from "@/components/mypage/MyPageComponent.vue";
-// import RadarChart from "@/components/mypage/RadarChart.vue";
+import CategoryComponent from "@/components/mypage/CategoryComponent.vue";
+import RadarChart from "@/components/mypage/RadarChart.vue";
+import LineChartVue from "@/components/mypage/LineChart.vue";
+
+const categories = [
+  "자료구조",
+  "알고리즘",
+  "운영체제",
+  "데이터베이스",
+  "네트워크",
+  "컴퓨터 구조",
+];
+
+const weeks = Array.from({ length: 52 }, (_, index) => index + 1);
+const days = Array.from({ length: 7 }, (_, index) => index + 1);
+const filledDays = [7, 14, 21, 28, 35, 42, 49];
+
+const isFilled = function (day) {
+  return filledDays.includes(day);
+};
 </script>
 
 <template>
-  <v-app class="mypage-background">
-    <v-container>
-      <br />
-      <br />
-      <h1 class="text-white mx-10">My Page</h1>
-      <v-row class="mypage-component-background justify-center">
-        <!-- <MyPageComponent /> -->
-        <v-col cols="12">
+  <div class="mypage-background text-font">
+    <div class="container">
+      <div class="mypage-component-background userinfo">
+        <!-- <div>
           <h2>유저정보</h2>
-        </v-col>
-
-        <v-col cols="6">
-          <v-row class="user-box justify-center">
-            <v-col cols="5" class="text-center">
-              <div>이미지</div>
+        </div> -->
+        <div>
+          <div class="user-box">
+            <div class="text-center">
+              <div>
+                <img src="@/assets/images/Logo.png" alt="" />
+              </div>
               <p>김싸피</p>
-              <p>현상금액</p>
+              <p>현상금액 : $10000</p>
               <p>전체 푼 횟수 : 40</p>
               <p>정답률 : 75%</p>
-            </v-col>
-            <v-col cols="7">
+            </div>
+            <div>
               <p>차트</p>
               <div>
-                <!-- <RadarChart /> -->
+                <RadarChart />
               </div>
-            </v-col>
-          </v-row>
-        </v-col>
-        <v-col cols="5" class="grass">
+            </div>
+          </div>
+        </div>
+        <div class="grass">
           <div>잔디</div>
-        </v-col>
-      </v-row>
-      <v-row
-        class="mypage-component-background"
-        align="center"
-        justify="center"
-      >
-        <v-col v-for="i in 6" :key="i" cols="4">
-          <v-card class="mx-auto mt-7" max-width="344">
-            <v-card-item>
+          <div class="grass-container">
+            <div v-for="week in weeks" :key="week" class="week">
+              <div
+                v-for="day in days"
+                :key="day"
+                class="day"
+                :class="{ filled: isFilled(day) }"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mypage-component-background mychart">
+        <div v-for="(category, n) in categories" :key="n" cols="4">
+          <div class="ml-4 mt-7 transparent-card" max-width="344">
+            <div>
               <div>
-                <div class="text-overline mb-1">카테고리</div>
-                <div>그래프</div>
+                <div>{{ category }}</div>
+                <div>
+                  <LineChartVue />
+                </div>
               </div>
-            </v-card-item>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row class="mypage-component-background">
-        <v-col cols="6">
-          <div><h1>즐겨찾기</h1></div>
-        </v-col>
-        <v-col cols="6">
-          <div><h1>오답노트</h1></div>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-app>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mypage-component-background mycard">
+        <div>
+          <CategoryComponent type="즐겨찾기" />
+        </div>
+        <div>
+          <CategoryComponent type="오답노트" />
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped lang="scss">
+@import url("@/assets/style/main.scss");
+
+img {
+  max-width: 100%;
+}
+
 .mypage-background {
   overflow: hidden;
   height: auto;
@@ -73,27 +103,63 @@ import MyPageComponent from "@/components/mypage/MyPageComponent.vue";
   background-repeat: no-repeat;
   background-position: center;
 }
+.userinfo {
+  margin-top: 50px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
 .rotate {
   rotate: -90deg;
 }
 .mypage-component-background {
-  width: 100%;
-  height: fit-content;
+  // width: 80%;
+  height: auto;
   overflow: hidden;
+  margin-inline: 10%;
   padding: 50px;
   background-image: url("@/assets/images/mypage_paper.png");
-  background-size: cover;
+  background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position-x: center;
 }
 .user-box {
   margin-left: 50px;
-  border: 2px solid black;
-  border-radius: 2cap;
+  border: 2px brown;
+  border-style: none;
+  border-radius: 0.5cap;
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 10px;
 }
-.grass {
-  margin-left: 20px;
-  border: 2px solid black;
-  border-radius: 2cap;
+.mychart {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  // grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  // grid-auto-rows: minmax(100px, auto);
+}
+.grass-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.week {
+  display: flex;
+}
+
+.day {
+  width: 12px;
+  height: 12px;
+  margin: 1px;
+  background-color: #ebedf0;
+  transition: background-color 0.3s ease;
+}
+.day.filled {
+  background-color: green;
+}
+.transparent-card {
+  background: transparent;
+}
+.mycard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 </style>
