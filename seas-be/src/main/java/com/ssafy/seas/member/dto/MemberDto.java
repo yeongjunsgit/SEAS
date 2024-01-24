@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberDto {
-	private String pwd;
+	private String memberId;
+	private String password;
 	private String name;
 	private String email;
 	private Integer point = 0;

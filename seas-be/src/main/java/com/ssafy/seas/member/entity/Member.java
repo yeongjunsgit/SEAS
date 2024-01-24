@@ -15,8 +15,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "member")
 public class Member extends BaseEntity {
-	@Column(nullable = false)
-	private String pwd;
+	@Column(name = "member_id", nullable = false, unique = true)
+	private String memberId;
+	@Column(name = "pwd", nullable = false)
+	private String password;
 	@Column(nullable = false)
 	private String name;
 	@Column(nullable = false, unique = true)

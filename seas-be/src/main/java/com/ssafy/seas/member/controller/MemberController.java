@@ -15,11 +15,11 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/member")
+@RequestMapping("/auth")
 public class MemberController {
 	private final MemberService memberService;
 
-	@PostMapping("/regist")
+	@PostMapping("/signup")
 	public ResponseEntity<String> regist(@RequestBody MemberDto memberDto){
 		try{
 			memberService.signup(memberDto);
