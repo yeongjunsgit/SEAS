@@ -21,6 +21,10 @@ const goCard = () => {
 const goRank = () => {
     router.push({ path: "/ranking" });
 };
+
+const goQuiz = () => {
+    router.push({ path: "/quiz" });
+};
 </script>
 
 <template>
@@ -40,7 +44,9 @@ const goRank = () => {
                             <v-btn class="home-menus" @click="goCard()"
                                 >카드</v-btn
                             >
-                            <v-btn class="home-menus">퀴즈</v-btn>
+                            <v-btn class="home-menus" @click="goQuiz()"
+                                >퀴즈</v-btn
+                            >
                             <v-btn class="home-menus" @click="goRank()"
                                 >랭킹</v-btn
                             >
