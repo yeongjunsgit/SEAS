@@ -8,10 +8,7 @@ const paths = ["/flashcard", "/quiz", "/ranking"];
 <template>
     <div class="menu-container">
         <video muted autoplay loop>
-            <source
-                src="https://d2qkxc1ity7pm2.cloudfront.net/videos/menu.mp4"
-                type="video/mp4"
-            />
+            <source src="@/assets/videos/menu.mp4" type="video/mp4" />
             <strong>Your browser does not support the video tag.</strong>
         </video>
         <MenuComponent
