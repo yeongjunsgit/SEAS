@@ -4,50 +4,75 @@ $selected-color: #7c5c3f;
 $gradation-color: #7c5c3f;
 
 .flex-center {
-  display: flex;
-  justify-content: center;
+    display: flex;
+    justify-content: center;
 }
 
-button {
-  font-family: "Ahnjunggeun";
-  font-weight: bold;
-  font-size: larger;
+.header-button {
+    font-family: "LINESeedKR-Bd";
 }
 
 .menu-button {
-  min-width: 40%;
-  margin-top: 5%;
-  border: 3px solid $primary-color;
-  padding: 2%;
-  border-radius: 10px;
+    font-family: "GangwonEdu_OTFBoldA";
+    font-size: x-large;
+    min-width: 40%;
+    margin-top: 5%;
+    border: 3px solid $primary-color;
+    padding: 2%;
+    border-radius: 10px;
 
-  &:hover {
-    transition-duration: 0.5s;
-    background-color: $selected-color;
-    color: white;
-  }
+    &:hover {
+        transition-duration: 0.5s;
+        background-color: $selected-color;
+        color: white;
+    }
+
+    p {
+        margin-top: 5%;
+    }
 }
 
-.title-font {
-  font-family: "caveat";
+.header-font {
+    font-family: "LINESeedKR-Bd";
 }
 .text-font {
-  font-family: "Ahnjunggeun";
+    font-family: "GangwonEdu_OTFBoldA";
+    p {
+        margin-top: 3%;
+    }
 }
-.temp-font {
+.title-font {
     font-family: "AnneliesRoughBrush";
 }
 /*한글 폰트*/
 @font-face {
-  font-family: "Ahnjunggeun";
-  src: url("@/assets/fonts/Ahnjunggeun.ttf");
+    font-family: "Ahnjunggeun";
+    src: url("@/assets/fonts/Ahnjunggeun.ttf");
 }
 /*영어 폰트*/
 @font-face {
-  font-family: "caveat";
-  src: url("@/assets/fonts/caveat.ttf");
+    font-family: "caveat";
+    src: url("@/assets/fonts/caveat.ttf");
 }
 @font-face {
     font-family: "AnneliesRoughBrush";
     src: url("@/assets/fonts/AnneliesRoughBrush.ttf");
+}
+
+// 텍스트 폰트
+@font-face {
+    font-family: "GangwonEdu_OTFBoldA";
+    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff")
+        format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+// 헤더 폰트
+@font-face {
+    font-family: "LINESeedKR-Bd"; // Bd, Rd, Th
+    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2")
+        format("woff2");
+    font-weight: 700;
+    font-style: normal;
 }
