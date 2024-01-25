@@ -195,7 +195,7 @@ const checkDuplicate = async () => {
 
 .main-container {
     position: absolute;
-    background-image: url("@/assets/images/map.jpg");
+    background-image: url($url-path + "images/map.jpg");
     background-size: cover;
     height: 100%;
     width: 100%;
