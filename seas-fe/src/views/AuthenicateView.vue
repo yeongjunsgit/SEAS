@@ -141,11 +141,11 @@ const checkDuplicate = async () => {
                 </div>
                 <div class="toggle-container">
                     <div class="toggle">
-                        <div class="toggle-panel toggle-left title-font">
+                        <div class="toggle-panel toggle-left">
                             <a href="/"
                                 ><img src="@/assets/images/Logo.png" alt=""
                             /></a>
-                            <h1>SEAS</h1>
+                            <h1 class="title-font">SEAS</h1>
                             <h3>CS 공부 사이트</h3>
                             <p class="description-text">
                                 Enter your personal details to use all of site
@@ -162,11 +162,11 @@ const checkDuplicate = async () => {
                                 Sign In
                             </button>
                         </div>
-                        <div class="toggle-panel toggle-right title-font">
+                        <div class="toggle-panel toggle-right">
                             <a href="/"
                                 ><img src="@/assets/images/Logo.png" alt=""
                             /></a>
-                            <h1>SEAS</h1>
+                            <h1 class="title-font">SEAS</h1>
                             <h3>CS 공부 사이트</h3>
                             <p class="description-text">
                                 Register with your personal details to use all
