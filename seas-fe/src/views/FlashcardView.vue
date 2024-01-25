@@ -11,6 +11,7 @@ import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 
+const category = ref(null);
 const keywordData = ref(null);
 const Data = ref(null);
 const idx = ref(0);
@@ -27,9 +28,14 @@ const gotoPreviousCard = function () {
   idx.value = idx.value -= 1;
 };
 
+// 좋아요 추가 기능 구현하기!
+const addLike = function () {
+  console.log("구현해주세요");
+};
+
 watch(idx, (newValue, oldValue) => {
-  if (newValue === 11) {
-    isOver.value === !isOver.value;
+  if (newValue === 10) {
+    isOver.value = !isOver.value;
     idx.value = 0;
   }
 });
@@ -46,13 +52,13 @@ const buttonCategory = [
   "알고리즘",
   "데이터베이스",
 ];
-const buttonFunc = ["좋아요", "다음", "이전"];
 
 // 버튼 눌렀을 때 호출되는 함수들
 const selectCategory = function (cate) {
   isSelected.value = !isSelected.value;
-  const category = ref(cate);
+  category.value = ref(cate);
   console.log(category);
+  // 여기서 받은 카테고리를 axios로 보내자! 일단 임시로 아무거나 만들어서 쓰겠다
   keywordData.value = [
     "키워드 1",
     "키워드 2",
@@ -65,8 +71,6 @@ const selectCategory = function (cate) {
     "키워드 9",
     "키워드 10",
   ];
-  console.log(quizData.value);
-  // 여기서 받은 카테고리를 axios로 보내자!
 };
 
 const goToMain = function () {
@@ -78,6 +82,8 @@ const goToQuiz = function () {
 const replayFlashcard = function () {
   isSelected.value = !isSelected.value;
   isOver.value = !isOver.value;
+  keywordData.value = null;
+  category.value = null;
 };
 </script>
 
@@ -86,13 +92,15 @@ const replayFlashcard = function () {
     <!-- <img :src="backgroundImage" class="bg_position" /> -->
     <!-- <v-img contain cover :src="backgroundImage" class="bg_position"> </v-img> -->
     <v-img :src="cardImage" class="memo_card">
-      <p class="card_text">암기하기</p>
+      <!-- text 박스의 크기를 늘려서 길이가 늘어나도 문제없게 수정하자!! -->
+      <p class="card_text">{{ category || "암기하기" }}</p>
     </v-img>
     <v-img :src="flashcardImage" class="flashcard">
-      <p class="card_text" v-if="keywordData" @click="reverseCard">
+      <p class="card_text" v-if="isOver && keywordData">THE END</p>
+      <p class="card_text" v-else-if="keywordData" @click="reverseCard">
         {{ keywordData[idx] }}
       </p>
-      <p class="card_text" v-else>
+      <p class="card_text" v-else-if="!keywordData">
         카테고리를<br />
         선택하세요<br />
       </p>
@@ -119,10 +127,34 @@ const replayFlashcard = function () {
         <v-col cols="12">
           <div class="menu-button">
             <!-- 현재는 idx/10으로 적어 두었지만 axios로 데이터를 받아오면 각 문제의 index 값을 출력해야함! -->
-            <p class="button_text">idx/10</p>
+            <p class="button_text">{{ idx + 1 }} / 10</p>
           </div>
         </v-col>
-        <v-col v-for="(func, index) in buttonFunc" :key="index" cols="12">
+        <v-col cols="12">
+          <div class="menu-button" @click="addLike">
+            <p class="gotomain_text">좋아요</p>
+          </div>
+        </v-col>
+        <v-col cols="12">
+          <div class="menu-button" @click="gotoNextCard">
+            <p class="gotomain_text">다음</p>
+          </div>
+        </v-col>
+        <v-col cols="12">
+          <div
+            class="menu-button"
+            @click="gotoPreviousCard"
+            :disabled="idx === 0"
+          >
+            <p class="gotomain_text">이전</p>
+          </div>
+        </v-col>
+        <v-col
+          v-for="(func, index) in buttonFunc"
+          :key="index"
+          cols="12"
+          :disabled="buttonValue === 'hihi' && idx === 0"
+        >
           <div class="menu-button">
             <p class="button_text">{{ func }}</p>
           </div>
@@ -170,8 +202,9 @@ const replayFlashcard = function () {
     transform: scale(1, calc(1 / 1.2)) translate(-50%, -50%);
     position: absolute;
     top: 20%;
-    left: 50%;
+    left: 55%;
     font-size: 3vw;
+    width: 18vw;
   }
 }
 .bg_position {
