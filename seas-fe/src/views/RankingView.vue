@@ -143,9 +143,6 @@ const tagList = ref([
                     background-position: center;
                 }
             }
-            .first {
-            }
-
             .second {
                 margin-top: 10%;
             }
