@@ -149,7 +149,7 @@ const replayFlashcard = function () {
       </p>
     </v-img>
 
-    <!-- 카테고리 선택 전 출력할 버튼 목록 -->>
+    <!-- 카테고리 선택 전 출력할 버튼 목록 -->
     <v-container class="button_menu" v-if="!isSelected">
       <v-row align="start" no-gutters>
         <v-col
@@ -188,7 +188,7 @@ const replayFlashcard = function () {
           <div
             class="menu-button"
             @click="gotoPreviousCard"
-            :disabled="idx === 0"
+            :class="{ disabled: idx === 0 }"
           >
             <p class="gotomain_text">이전</p>
           </div>
