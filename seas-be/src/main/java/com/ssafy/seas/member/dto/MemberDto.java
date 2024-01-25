@@ -13,7 +13,7 @@ public class MemberDto {
 	public static class Post {
 		private String memberId;
 		private String password;
-		private String name;
+		private String nickname;
 		private String email;
 	}
 
@@ -24,7 +24,7 @@ public class MemberDto {
 	public static class Response {
 		private String memberId;
 		private String password;
-		private String name;
+		private String nickname;
 		private String email;
 		private Integer point;
 	}
