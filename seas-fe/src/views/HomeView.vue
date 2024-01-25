@@ -106,10 +106,11 @@ video {
     }
 
     p {
-        top: 20%;
+        top: 1vh;
         position: relative;
         z-index: 3;
         transition: 1s ease-out;
+        font-size: larger;
     }
 
     &:hover p {

@@ -13,15 +13,16 @@ const props = defineProps(["title"]);
 .container {
     border: 3px solid $primary-color;
     border-radius: 20px;
-    padding: 1%;
     min-width: 18vh;
     margin: 0 3px 0 3px;
 
     p {
         color: rgba(81, 60, 58, 1);
         text-align: center;
-        font-weight: bolder;
+        font-weight: 700;
         font-size: medium;
+        vertical-align: middle;
+        margin-top: 3%;
     }
 }
 </style>

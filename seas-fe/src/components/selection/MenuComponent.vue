@@ -59,4 +59,7 @@ const goToPage = () => {
         font-size: 25px;
     }
 }
+.menu-button p {
+    margin-top: 5%;
+}
 </style>
