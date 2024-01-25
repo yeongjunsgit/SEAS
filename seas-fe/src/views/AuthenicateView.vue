@@ -109,7 +109,7 @@ const checkDuplicate = async () => {
                         />
                         <input
                             type="text"
-                            placeholder="NickName"
+                            placeholder="Name"
                             v-model="signupInfo.name"
                         />
                         <input
