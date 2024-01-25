@@ -6,18 +6,19 @@ import buttonBgImage from "@/assets/images/button_background.png";
 
 import { RouterLink, RouterView } from "vue-router";
 import HeaderComponent from "@/components/commons/HeaderComponent.vue";
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 
 import { useRouter } from "vue-router";
 const router = useRouter();
 
 const category = ref(null);
 const keywordData = ref(null);
-const Data = ref(null);
+const commentData = ref(null);
 const idx = ref(0);
+const isReversed = ref(false);
 
 const reverseCard = function () {
-  console.log("뒤집혔당");
+  isReversed.value = !isReversed.value;
 };
 
 const gotoNextCard = function () {
@@ -39,6 +40,17 @@ watch(idx, (newValue, oldValue) => {
     idx.value = 0;
   }
 });
+
+// const displayText = computed(() =>{
+//     if (!this.keywordData) {
+//       return "카테고리를\n선택하세요"
+//     } else if (isOver.value) {
+//       return "THE END"
+//     } else {
+//       return this.isReversed ? commentData.value[idx.value] : keywordData.value[idx.value]
+//     }
+//   })
+
 // 버튼 출력을 다룰 변수 2개 생성
 const isSelected = ref(false);
 const isOver = ref(false);
@@ -71,6 +83,18 @@ const selectCategory = function (cate) {
     "키워드 9",
     "키워드 10",
   ];
+  commentData.value = [
+    "내용 1",
+    "내용 2",
+    "내용 3",
+    "내용 4",
+    "내용 5",
+    "내용 6",
+    "내용 7",
+    "내용 8",
+    "내용 9",
+    "내용 10",
+  ];
 };
 
 const goToMain = function () {
@@ -93,18 +117,38 @@ const replayFlashcard = function () {
     <!-- <v-img contain cover :src="backgroundImage" class="bg_position"> </v-img> -->
     <v-img :src="cardImage" class="memo_card">
       <!-- text 박스의 크기를 늘려서 길이가 늘어나도 문제없게 수정하자!! -->
-      <p class="card_text">{{ category || "암기하기" }}</p>
+      <div class="card_text card_box">
+        <p>{{ category || "암기하기" }}</p>
+      </div>
     </v-img>
-    <v-img :src="flashcardImage" class="flashcard">
+    <v-img
+      :src="flashcardImage"
+      class="flashcard"
+      :class="{ flashcard_effect: isSelected }"
+    >
+      <!---->
+      <!-- 클릭했을때 내용이 바뀌게 만들자! -->
       <p class="card_text" v-if="isOver && keywordData">THE END</p>
-      <p class="card_text" v-else-if="keywordData" @click="reverseCard">
+      <p
+        class="card_text"
+        v-else-if="keywordData && !isReversed"
+        @click="reverseCard"
+      >
         {{ keywordData[idx] }}
+      </p>
+      <p
+        class="card_text"
+        v-else-if="keywordData && isReversed"
+        @click="reverseCard"
+      >
+        {{ commentdData[idx] }}
       </p>
       <p class="card_text" v-else-if="!keywordData">
         카테고리를<br />
         선택하세요<br />
       </p>
     </v-img>
+
     <!-- 카테고리 선택 전 출력할 버튼 목록 -->>
     <v-container class="button_menu" v-if="!isSelected">
       <v-row align="start" no-gutters>
@@ -202,9 +246,14 @@ const replayFlashcard = function () {
     transform: scale(1, calc(1 / 1.2)) translate(-50%, -50%);
     position: absolute;
     top: 20%;
-    left: 55%;
+    left: 50%;
     font-size: 3vw;
     width: 18vw;
+  }
+
+  .card_box {
+    width: 50vw;
+    text-align: center;
   }
 }
 .bg_position {
@@ -236,11 +285,20 @@ const replayFlashcard = function () {
   /* translate(px - +  = 오른쪽, - = 왼쪽 , % - + = 아래, - = 위 ) 
             scale(x, y) 1개만 넣으면 x만큼 커짐, x, y를 넣으면 가로 세로 비율 따로 지정 가능  
         */
-  transform: translate(10px, 20%) scale(2.2);
+  transition: all 0.3s linear;
+  transform: translate(20px, -15%) scale(1.5, 1.8);
   .card_text {
-    transform: scale(calc(1 / 2.2)) translate(-50%, -50%);
+    transform: scale(calc(1 / 1.5), calc(1 / 1.8)) translate(-50%, -50%);
+    font-size: 3vw;
+    left: 40%;
+    top: 45%;
   }
 }
+
+.reverse_effect {
+  transform: rotateY(180deg);
+}
+
 .button_menu {
   position: absolute;
   margin-top: 10vw;
