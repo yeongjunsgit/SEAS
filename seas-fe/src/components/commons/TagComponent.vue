@@ -15,9 +15,11 @@ const props = defineProps(["title"]);
     border-radius: 20px;
     min-width: 18vh;
     margin: 0 3px 0 3px;
+    background-color: $primary-color;
 
     p {
-        color: rgba(81, 60, 58, 1);
+        // color: rgba(81, 60, 58, 1);
+        color: white;
         text-align: center;
         font-weight: 700;
         font-size: medium;

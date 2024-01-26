@@ -7,10 +7,6 @@ const paths = ["/flashcard", "/quiz", "/ranking"];
 
 <template>
     <div class="menu-container">
-        <video muted autoplay loop>
-            <source src="@/assets/videos/menu.mp4" type="video/mp4" />
-            <strong>Your browser does not support the video tag.</strong>
-        </video>
         <MenuComponent
             v-for="idx in titles.length"
             :key="idx"
@@ -19,6 +15,13 @@ const paths = ["/flashcard", "/quiz", "/ranking"];
             :path="paths[idx - 1]"
         />
     </div>
+    <video muted autoplay loop>
+        <source
+            src="https://d2qkxc1ity7pm2.cloudfront.net/videos/menu.mp4"
+            type="video/mp4"
+        />
+        <strong>Your browser does not support the video tag.</strong>
+    </video>
 </template>
 
 <style scoped lang="scss">
