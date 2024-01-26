@@ -143,7 +143,9 @@ const checkDuplicate = async () => {
                     <div class="toggle">
                         <div class="toggle-panel toggle-left">
                             <a href="/"
-                                ><img src="@/assets/images/Logo.png" alt=""
+                                ><img
+                                    src="https://d2qkxc1ity7pm2.cloudfront.net/images/Logo.png"
+                                    alt=""
                             /></a>
                             <h1 class="title-font">SEAS</h1>
                             <h3>CS 공부 사이트</h3>
@@ -164,7 +166,9 @@ const checkDuplicate = async () => {
                         </div>
                         <div class="toggle-panel toggle-right">
                             <a href="/"
-                                ><img src="@/assets/images/Logo.png" alt=""
+                                ><img
+                                    src="https://d2qkxc1ity7pm2.cloudfront.net/images/Logo.png"
+                                    alt=""
                             /></a>
                             <h1 class="title-font">SEAS</h1>
                             <h3>CS 공부 사이트</h3>
@@ -186,16 +190,31 @@ const checkDuplicate = async () => {
                     </div>
                 </div>
             </div>
+            <video muted autoplay loop>
+                <source
+                    src="https://d2qkxc1ity7pm2.cloudfront.net/videos/login.mp4"
+                    type="video/mp4"
+                />
+            </video>
         </div>
     </div>
 </template>
 
 <style scoped lang="scss">
 @import "@/assets/style/main.scss";
+video {
+    object-fit: cover;
+    position: fixed;
+    min-width: 100%;
+    min-height: 100%;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
 
 .main-container {
     position: absolute;
-    background-image: url($url-path + "images/map.jpg");
+    // background-image: url($url-path + "images/map.jpg");
     background-size: cover;
     height: 100%;
     width: 100%;
@@ -204,7 +223,6 @@ const checkDuplicate = async () => {
     height: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 8%;
     max-height: 60%;
 }
 
@@ -218,6 +236,7 @@ const checkDuplicate = async () => {
     width: 768px;
     max-width: 100%;
     min-height: 480px;
+    margin-top: 8%;
 }
 
 /* 컨테이너 내의 문단 스타일링 */

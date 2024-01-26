@@ -28,7 +28,10 @@ const tagList = ref([
 <template>
     <div class="ranking-container text-font">
         <div class="ranking-board">
-            <img src="@/assets/images/mypage_paper.png" alt="" />
+            <img
+                src="https://d2qkxc1ity7pm2.cloudfront.net/images/mypage_paper.png"
+                alt=""
+            />
             <div class="board">
                 <div class="ranking-title"><h1>현상금 순위 RANK</h1></div>
                 <div class="top-ranker">
