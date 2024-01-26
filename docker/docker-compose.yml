@@ -1,0 +1,26 @@
+
+
+services:
+  spring:
+    container_name: seas-spring
+    build:
+      context: ../
+      dockerfile: ./docker/dockerfile/spring.dockerfile
+    ports:
+      - 8080:8081
+
+  mysql:
+    container_name: seas-mysql
+    image : mysql:8.0
+    ports :
+      - 3306:3306
+    env_file:
+      - .env
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - ./mysql:/var/lib/mysql
+    build:
+      context: ../
