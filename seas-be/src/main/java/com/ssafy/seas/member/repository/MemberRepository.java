@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.ssafy.seas.member.entity.Member;
 
 @Repository
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Integer> {
 
 }
