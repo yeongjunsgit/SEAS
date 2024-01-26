@@ -8,5 +8,5 @@ import com.ssafy.seas.flashcard.entity.Flashcard;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface FlashcardMapper {
-	FlashcardDto.Response FlashcardoResponseDto(Flashcard flashcard);
+	FlashcardDto.Response FlashcardToResponseDto(Flashcard flashcard);
 }

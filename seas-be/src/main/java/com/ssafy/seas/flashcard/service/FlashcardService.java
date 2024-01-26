@@ -28,7 +28,7 @@ public class FlashcardService {
 
 		return flashcards
 			.stream()
-			.map(flashcardMapper::FlashcardoResponseDto)
+			.map(flashcardMapper::FlashcardToResponseDto)
 			.toList();
 	}
 }
