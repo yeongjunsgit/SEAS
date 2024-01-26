@@ -8,6 +8,24 @@ const router = useRouter();
 const goToPage = () => {
     router.push({ path: props.path });
 };
+
+// 이미지와 비디오의 경로
+const imageUrl = "https://d2qkxc1ity7pm2.cloudfront.net/images/menu.png";
+const videoUrl = "https://d2qkxc1ity7pm2.cloudfront.net/videos/menu.mp4";
+
+// 이미지와 비디오를 사전 로딩하는 함수
+onMounted(() => {
+    preloadResource(imageUrl, "image");
+    preloadResource(videoUrl, "video");
+});
+
+function preloadResource(url, type) {
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = type;
+    link.href = url;
+    document.head.appendChild(link);
+}
 </script>
 
 <template>
@@ -36,7 +54,7 @@ const goToPage = () => {
     justify-content: space-evenly;
     margin-top: 10%;
     position: relative;
-    background-image: url("@/assets/images/menu.png");
+    background-image: url("https://d2qkxc1ity7pm2.cloudfront.net/images/menu.png");
     background-size: contain;
     min-width: 300px;
     max-height: 430px;
