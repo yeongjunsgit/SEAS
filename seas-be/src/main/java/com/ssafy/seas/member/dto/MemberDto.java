@@ -28,4 +28,6 @@ public class MemberDto {
 		private String email;
 		private Integer point;
 	}
+
+
 }
