@@ -28,4 +28,17 @@ public class MemberDto {
 		private String email;
 		private Integer point;
 	}
+
+	@Getter
+	@Builder
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class MyInfoResponse {
+		private String nickname;
+		private Integer point;
+		private String tier;
+		private Integer solvedCount;
+		private Integer correctRate;
+
+	}
 }
