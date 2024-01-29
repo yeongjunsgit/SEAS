@@ -19,7 +19,7 @@ public class RankingController {
 	@GetMapping("/list")
 	public ApiResponse<?> getRankingList() {
 		try {
-			rankingService.getRankers();
+			// rankingService.getRankers();
 			return null;
 		} catch (Exception e) {
 			e.printStackTrace();

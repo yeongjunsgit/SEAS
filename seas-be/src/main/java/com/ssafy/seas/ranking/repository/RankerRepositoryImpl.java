@@ -2,15 +2,9 @@ package com.ssafy.seas.ranking.repository;
 
 // QClass는 static import를 한다.
 
-import static com.ssafy.seas.member.entity.QMember.*;
-
-import java.util.List;
-
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.seas.ranking.dto.QRankerDto_Response;
-import com.ssafy.seas.ranking.dto.RankerDto;
 
 import jakarta.persistence.EntityManager;
 
@@ -30,11 +24,11 @@ public class RankerRepositoryImpl implements RankerRepositoryCustom {
 	// 페이징 1 - 100
 	// 랭킹은 보통 RDBMS를 안 쓴다.
 	// 캐싱을 해서 사용하거나 랭킹 정보를 저장한다.
-	@Override
-	public List<RankerDto.Response> getRankers() {
-		return queryFactory
-			.select(new QRankerDto_Response(member.nickname, member.memberId, member.email))
-			.from(member)
-			.fetch();
-	}
+	// @Override
+	// public List<RankerDto.Response> getRankers() {
+	// 	return queryFactory
+	// 		.select(new QRankerDto_Response(member.nickname, member.memberId, member.email))
+	// 		.from(member)
+	// 		.fetch();
+	// }
 }
