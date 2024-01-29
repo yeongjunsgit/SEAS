@@ -192,7 +192,7 @@ const checkDuplicate = async () => {
             </div>
             <video muted autoplay loop>
                 <source
-                    src="https://d2qkxc1ity7pm2.cloudfront.net/videos/login.mp4"
+                    src="https://d2qkxc1ity7pm2.cloudfront.net/videos/login_compressed.mp4"
                     type="video/mp4"
                 />
             </video>

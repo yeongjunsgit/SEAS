@@ -11,7 +11,7 @@ const goMenu = () => {
     <div class="home-container">
         <video muted autoplay loop>
             <source
-                src="https://d2qkxc1ity7pm2.cloudfront.net/videos/home_short.mp4"
+                src="https://d2qkxc1ity7pm2.cloudfront.net/videos/home_compressed.mp4"
                 type="video/mp4"
             />
         </video>
