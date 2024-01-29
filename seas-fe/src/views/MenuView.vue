@@ -35,7 +35,7 @@ function preloadResource(url, type) {
             :path="paths[idx - 1]"
         />
     </div>
-    <video muted autoplay loop loading="lazy">
+    <video autoplay loop>
         <source :src="videoUrl" type="video/mp4" />
     </video>
 </template>
