@@ -5,15 +5,34 @@ const router = useRouter();
 const goMenu = () => {
     router.push({ path: "/menu" });
 };
+
+// 비디오의 경로
+const videoUrl =
+    "https://d2qkxc1ity7pm2.cloudfront.net/videos/home_compressed.mp4";
+
+// 비디오를 사전 로딩하는 함수
+onMounted(() => {
+    // preloadResource(imageUrl, "image");
+    preloadResource(videoUrl, "video");
+});
+
+function preloadResource(url, type) {
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = type;
+    link.href = url;
+    document.head.appendChild(link);
+}
 </script>
 
 <template>
     <div class="home-container">
         <video muted autoplay loop>
-            <source
+            <source :src="videoUrl" type="video/mp4" />
+            <!-- <source
                 src="https://d2qkxc1ity7pm2.cloudfront.net/videos/home_compressed.mp4"
                 type="video/mp4"
-            />
+            /> -->
         </video>
         <!-- 홈 화면 좌측 부분 -->
         <div class="main-content">
