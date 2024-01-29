@@ -12,7 +12,7 @@ const goToPage = () => {
 </script>
 
 <template>
-    <div class="menu flex-center">
+    <div class="menu">
         <div class="menu-text">
             <div class="title text-font">
                 <p>{{ title }}</p>
@@ -41,6 +41,8 @@ const goToPage = () => {
     background-size: contain;
     min-width: 300px;
     max-height: 430px;
+    display: flex;
+    justify-content: center;
 
     .menu-text {
         text-align: center;
