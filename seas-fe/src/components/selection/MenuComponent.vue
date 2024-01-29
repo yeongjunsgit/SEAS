@@ -21,7 +21,7 @@ const goToPage = () => {
                 <p>{{ content }}</p>
             </div>
         </div>
-        <div class="flex-center">
+        <div class="button-container">
             <button class="menu-button" @click="goToPage">
                 <p>바로가기</p>
             </button>
@@ -64,5 +64,10 @@ const goToPage = () => {
 }
 .menu-button p {
     margin-top: 5%;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
 }
 </style>
