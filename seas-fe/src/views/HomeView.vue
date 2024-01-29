@@ -10,8 +10,10 @@ const goMenu = () => {
 <template>
     <div class="home-container">
         <video muted autoplay loop>
-            <source src="@/assets/videos/home.mp4" type="video/mp4" />
-            <strong>Your browser does not support the video tag.</strong>
+            <source
+                src="https://d2qkxc1ity7pm2.cloudfront.net/videos/home_short.mp4"
+                type="video/mp4"
+            />
         </video>
         <!-- 홈 화면 좌측 부분 -->
         <div class="main-content">

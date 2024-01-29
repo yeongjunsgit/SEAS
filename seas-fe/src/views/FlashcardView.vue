@@ -16,9 +16,11 @@ const keywordData = ref(null);
 const commentData = ref(null);
 const idx = ref(0);
 const isReversed = ref(false);
+const isFront = ref(true);
 
 const reverseCard = function () {
   isReversed.value = !isReversed.value;
+  isFront.value = !isFront.value;
 };
 
 const gotoNextCard = function () {
@@ -40,16 +42,6 @@ watch(idx, (newValue, oldValue) => {
     idx.value = 0;
   }
 });
-
-// const displayText = computed(() =>{
-//     if (!this.keywordData) {
-//       return "카테고리를\n선택하세요"
-//     } else if (isOver.value) {
-//       return "THE END"
-//     } else {
-//       return this.isReversed ? commentData.value[idx.value] : keywordData.value[idx.value]
-//     }
-//   })
 
 // 버튼 출력을 다룰 변수 2개 생성
 const isSelected = ref(false);
@@ -115,6 +107,25 @@ const replayFlashcard = function () {
   <v-app class="bgbg text-font">
     <!-- <img :src="backgroundImage" class="bg_position" /> -->
     <!-- <v-img contain cover :src="backgroundImage" class="bg_position"> </v-img> -->
+    <!-- 할 것을 정리하자!
+
+    흐름:
+    카테고리를 누르면 이미지가 떠오른다 (완료)
+
+    떠오른 이미지를 누르면 뒤집어지며 키워드와, 해당 관련 내용이 나온다
+    - 어떻게 해야할까?
+    1. 카테고리를 눌렀을때 해당 이미지에 클릭 버튼시 스타일이 변화하는 함수를 넣어야한다
+    2. 함수에서 스타일을 바꿔 적용할 수 있어야한다
+    2-1. 어떻게? boolean 값을 가진 변수를 이용해서 on off 한다!
+    - 현재 출력해야 하는 앞뒷면과, 클릭시 스타일을 추가하는 식으로 진행하자!
+    2-2 함수 내에서 스타일을 수정해줄 방법이 있을까?
+    - 챗지피티가 이런거 없다고 한다.
+  - 우선 클릭 이벤트는 이미지에서 이루어져야 한다는 점
+  - 즉, 화면이 띄워 올라가면 바로 이미지 클릭시 스타일에 저장해둔 회전이 작동해야한다는 점
+  - 그 이전에는 회전을 안해야 한다는 점을 구현해야하는 상황이다.
+  - 한번 잘 찾아봐야할듯.... 
+  
+  -->
     <v-img :src="cardImage" class="memo_card">
       <!-- text 박스의 크기를 늘려서 길이가 늘어나도 문제없게 수정하자!! -->
       <div class="card_text card_box">
@@ -133,6 +144,7 @@ const replayFlashcard = function () {
         class="card_text"
         v-else-if="keywordData && !isReversed"
         @click="reverseCard"
+        :style="{ reverse_effect: !isFront }"
       >
         {{ keywordData[idx] }}
       </p>
@@ -140,6 +152,7 @@ const replayFlashcard = function () {
         class="card_text"
         v-else-if="keywordData && isReversed"
         @click="reverseCard"
+        :style="{ reverse_effect: isFront }"
       >
         {{ commentdData[idx] }}
       </p>
@@ -149,7 +162,7 @@ const replayFlashcard = function () {
       </p>
     </v-img>
 
-    <!-- 카테고리 선택 전 출력할 버튼 목록 -->>
+    <!-- 카테고리 선택 전 출력할 버튼 목록 -->
     <v-container class="button_menu" v-if="!isSelected">
       <v-row align="start" no-gutters>
         <v-col
@@ -188,7 +201,7 @@ const replayFlashcard = function () {
           <div
             class="menu-button"
             @click="gotoPreviousCard"
-            :disabled="idx === 0"
+            :class="{ disabled: idx === 0 }"
           >
             <p class="gotomain_text">이전</p>
           </div>
@@ -269,9 +282,11 @@ const replayFlashcard = function () {
   text-align: center;
   margin-top: 13vw;
   margin-left: 19.2vw;
-  // transition: all 0.3s linear;
   width: 29vw;
   height: 30vw;
+
+  // 회전을 위해 3D 로 선언
+  transform-style: preserve-3d;
   .card_text {
     transform: scale(1, calc(1 / 1.3)) translate(-50%, -50%);
     position: absolute;

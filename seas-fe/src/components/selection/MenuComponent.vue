@@ -1,4 +1,5 @@
 <script setup>
+import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 const props = defineProps(["title", "content", "path"]);
@@ -36,7 +37,7 @@ const goToPage = () => {
     justify-content: space-evenly;
     margin-top: 10%;
     position: relative;
-    background-image: url("@/assets/images/menu.png");
+    background-image: url("https://d2qkxc1ity7pm2.cloudfront.net/images/menu.png");
     background-size: contain;
     min-width: 300px;
     max-height: 430px;

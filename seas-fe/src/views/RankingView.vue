@@ -28,7 +28,10 @@ const tagList = ref([
 <template>
     <div class="ranking-container text-font">
         <div class="ranking-board">
-            <img src="@/assets/images/mypage_paper.png" alt="" />
+            <img
+                src="https://d2qkxc1ity7pm2.cloudfront.net/images/mypage_paper.png"
+                alt=""
+            />
             <div class="board">
                 <div class="ranking-title"><h1>현상금 순위 RANK</h1></div>
                 <div class="top-ranker">
@@ -89,7 +92,7 @@ const tagList = ref([
 @import "@/assets/style/main.scss";
 
 .ranking-container {
-    background-image: url("@/assets/images/ranking_bg.jpg");
+    background-image: url($url-path + "images/ranking_bg.jpg");
     background-size: cover;
     width: 100%;
     height: 200vh;
@@ -138,7 +141,7 @@ const tagList = ref([
                     width: 100%;
                     height: 100%;
                     position: relative;
-                    background-image: url("@/assets/images/Logo.png");
+                    background-image: url($url-path + "images/Logo.png");
                     background-size: contain;
                     background-position: center;
                 }

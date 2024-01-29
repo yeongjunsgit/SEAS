@@ -17,7 +17,7 @@
 
 .quiz-container {
     position: absolute;
-    background-image: url("@/assets/images/map.jpg");
+    background-image: url($url-path + "images/map.jpg");
     background-size: cover;
     height: 100%;
     width: 100%;
@@ -28,7 +28,7 @@
         width: 50%;
         height: 80%;
         margin: 11vh 0 0 10%;
-        background-image: url("@/assets/images/quiz_bg.png");
+        background-image: url($url-path + "images/quiz_bg.png");
         background-size: 100% 100%;
         background-position: center;
     }
@@ -45,7 +45,7 @@
         background-color: rgba($color: #000000, $alpha: 0.1);
 
         .quiz-number {
-            background-image: url("@/assets/images/button_background.png");
+            background-image: url($url-path + "images/button_background.png");
             background-size: 100% 12vh;
             background-position: center;
             height: 12vh;
