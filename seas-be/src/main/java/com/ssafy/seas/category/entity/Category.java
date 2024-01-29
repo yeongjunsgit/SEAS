@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.ssafy.seas.common.entity.BaseEntity;
 import com.ssafy.seas.flashcard.entity.Flashcard;
+import com.ssafy.seas.quiz.entity.Quiz;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -27,5 +28,8 @@ public class Category extends BaseEntity {
 
 	@OneToMany(mappedBy = "category")
 	private List<Flashcard> flashCards = new ArrayList<>();
+
+	@OneToMany(mappedBy = "category")
+	private List<Quiz> quizzes = new ArrayList<>();
 
 }
