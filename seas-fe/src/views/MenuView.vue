@@ -5,24 +5,24 @@ const titles = ["카드", "퀴즈", "랭킹"];
 const contents = ["안녕하세요", "퀴즈입니다", "랭킹입니다"];
 const paths = ["/flashcard", "/quiz", "/ranking"];
 
-// 이미지와 비디오의 경로
-// const imageUrl = "path/to/image.jpg";
-const videoUrl =
-    "https://d2qkxc1ity7pm2.cloudfront.net/videos/menu_compressed.mp4";
+// // 이미지와 비디오의 경로
+// // const imageUrl = "path/to/image.jpg";
+// const videoUrl =
+//     "https://d2qkxc1ity7pm2.cloudfront.net/videos/menu_compressed.mp4";
 
-// 이미지와 비디오를 사전 로딩하는 함수
-onMounted(() => {
-    // preloadResource(imageUrl, "image");
-    preloadResource(videoUrl, "video");
-});
+// // 이미지와 비디오를 사전 로딩하는 함수
+// onMounted(() => {
+//     // preloadResource(imageUrl, "image");
+//     preloadResource(videoUrl, "video");
+// });
 
-function preloadResource(url, type) {
-    const link = document.createElement("link");
-    link.rel = "preload";
-    link.as = type;
-    link.href = url;
-    document.head.appendChild(link);
-}
+// function preloadResource(url, type) {
+//     const link = document.createElement("link");
+//     link.rel = "preload";
+//     link.as = type;
+//     link.href = url;
+//     document.head.appendChild(link);
+// }
 </script>
 
 <template>
@@ -36,7 +36,11 @@ function preloadResource(url, type) {
         />
     </div>
     <video muted autoplay loop>
-        <source :src="videoUrl" type="video/mp4" />
+        <!-- <source :src="videoUrl" type="video/mp4" /> -->
+        <source
+            src="https://d2qkxc1ity7pm2.cloudfront.net/videos/menu_compressed.mp4"
+            type="video/mp4"
+        />
         <strong>Your browser does not support the video tag.</strong>
     </video>
 </template>
