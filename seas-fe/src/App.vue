@@ -1,5 +1,5 @@
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
+import { RouterView } from "vue-router";
 import HeaderComponent from "./components/commons/HeaderComponent.vue";
 </script>
 
