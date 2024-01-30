@@ -20,7 +20,8 @@ public class MyPageService {
 
 	@Transactional(readOnly = true)
 	public MemberDto.MyInfoResponse getMyInfo() {
-		MemberDto.Response memberDto = memberUtil.getLoginMemberDto();
-		return memberMapper.MemberDtoResponseToMemberDtoMyInfoResponse(memberDto);
+		Integer memberId = memberUtil.getLoginMemberId();
+		MemberDto.MyInfoResponse response = memberRepository.getMyInfoResponse(memberId);
+		return response;
 	}
 }
