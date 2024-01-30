@@ -1,7 +1,7 @@
 $primary-color: rgba(81, 60, 58, 1);
 $secondary-color: #583f28;
 $selected-color: #7c5c3f;
-$gradation-color: #7c5c3f;
+$gradation-color: #8a6a4c;
 $url-path: "https://d2qkxc1ity7pm2.cloudfront.net/";
 
 .header-button {
@@ -28,6 +28,69 @@ $url-path: "https://d2qkxc1ity7pm2.cloudfront.net/";
     }
 }
 
+.wave-button {
+    display: inline-block;
+    width: 150px;
+    height: 60px;
+    position: relative;
+    font-size: 20px;
+    cursor: pointer;
+    border: 3px solid white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(black, 0.2);
+    background: transparent;
+    transform: translate3d(0, 0, 0);
+    z-index: 1;
+    text-align: center;
+
+    .wave {
+        opacity: 1;
+        position: absolute;
+        bottom: 3%;
+        left: 50%;
+        background: rgb(45, 171, 255);
+        width: 300px;
+        height: 300px;
+        margin-left: -150px;
+        margin-bottom: -301px;
+        transform-origin: 48% 52%;
+        border-radius: 43%;
+        vertical-align: middle;
+
+        transition-duration: 1.5s;
+        transition-property: margin-bottom;
+        transition-timing-function: ease;
+        z-index: 2;
+    }
+
+    &:hover .wave {
+        margin-bottom: -240px;
+        animation: rotate 2000ms infinite linear;
+    }
+
+    p {
+        top: 1vh;
+        position: relative;
+        z-index: 3;
+        transition: 1s ease-out;
+        font-size: larger;
+    }
+
+    &:hover p {
+        color: black;
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    from {
+        transform: rotate(360deg);
+    }
+}
+
 .header-font {
     font-family: "LINESeedKR-Bd";
 }
@@ -40,16 +103,7 @@ $url-path: "https://d2qkxc1ity7pm2.cloudfront.net/";
 .title-font {
     font-family: "AnneliesRoughBrush";
 }
-/*한글 폰트*/
-@font-face {
-    font-family: "Ahnjunggeun";
-    src: url("@/assets/fonts/Ahnjunggeun.ttf");
-}
-/*영어 폰트*/
-@font-face {
-    font-family: "caveat";
-    src: url("@/assets/fonts/caveat.ttf");
-}
+
 @font-face {
     font-family: "AnneliesRoughBrush";
     src: url("@/assets/fonts/AnneliesRoughBrush.ttf");
