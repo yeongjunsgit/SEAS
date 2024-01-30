@@ -3,6 +3,8 @@ package com.ssafy.seas.category.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.Formula;
+
 import com.ssafy.seas.common.entity.BaseEntity;
 import com.ssafy.seas.flashcard.entity.Flashcard;
 import com.ssafy.seas.quiz.entity.Quiz;
@@ -23,7 +25,7 @@ public class Category extends BaseEntity {
 	private String backgroundColor;
 	private String lineColor;
 
-	// TODO: Formula 사용 논의
+	@Formula("(select count(*) from quiz q where q.category_id = id)")
 	private Integer quizCount = 0;
 
 	@OneToMany(mappedBy = "category")
