@@ -37,16 +37,30 @@ public class MemberDto {
 		private String nickname;
 		private Integer point;
 		private String tier;
-		private Integer solvedCount;
-		private Integer correctRate;
+		private Integer solvedCount = 0;
+		// 소수점 아래 1번째 자리까지 표시
+		private Double correctRate = 0.0;
 
 		@QueryProjection
-		public MyInfoResponse(String nickname, Integer point, String tier, Integer solvedCount, Integer correctRate) {
+		public MyInfoResponse(String nickname, Integer point, String tier) {
+			this.nickname = nickname;
+			this.point = point;
+			this.tier = tier;
+		}
+
+		@QueryProjection
+		public MyInfoResponse(Integer solvedCount, Double correctRate) {
+			this.solvedCount = solvedCount;
+			this.correctRate = Math.round(correctRate*10)/10.0;
+		}
+
+		@Builder
+		public MyInfoResponse(String nickname, Integer point, String tier, Integer solvedCount, Double correctRate) {
 			this.nickname = nickname;
 			this.point = point;
 			this.tier = tier;
 			this.solvedCount = solvedCount;
-			this.correctRate = correctRate;
+			this.correctRate = Math.round(correctRate*10)/10.0;
 		}
 	}
 }
