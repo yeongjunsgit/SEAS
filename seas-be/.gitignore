@@ -188,4 +188,4 @@ $RECYCLE.BIN/
 seas-config.yml
 
 # generated files
-**/generated/
+**/generated/**
