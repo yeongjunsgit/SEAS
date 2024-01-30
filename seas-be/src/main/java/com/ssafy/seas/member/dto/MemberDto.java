@@ -1,5 +1,7 @@
 package com.ssafy.seas.member.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,11 +30,9 @@ public class MemberDto {
 		private String email;
 		private Integer point;
 	}
-	
-	@Getter
-	@Builder
+
 	@NoArgsConstructor
-	@AllArgsConstructor
+	@Getter
 	public static class MyInfoResponse {
 		private String nickname;
 		private Integer point;
@@ -40,5 +40,13 @@ public class MemberDto {
 		private Integer solvedCount;
 		private Integer correctRate;
 
+		@QueryProjection
+		public MyInfoResponse(String nickname, Integer point, String tier, Integer solvedCount, Integer correctRate) {
+			this.nickname = nickname;
+			this.point = point;
+			this.tier = tier;
+			this.solvedCount = solvedCount;
+			this.correctRate = correctRate;
+		}
 	}
 }
