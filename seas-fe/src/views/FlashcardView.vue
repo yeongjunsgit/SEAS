@@ -7,6 +7,7 @@ import buttonBgImage from "@/assets/images/button_background.png";
 import { RouterLink, RouterView } from "vue-router";
 import HeaderComponent from "@/components/commons/HeaderComponent.vue";
 import { ref, watch, computed } from "vue";
+import { gsap } from "gsap";
 
 import { useRouter } from "vue-router";
 const router = useRouter();
@@ -16,19 +17,46 @@ const keywordData = ref(null);
 const commentData = ref(null);
 const idx = ref(0);
 const isReversed = ref(false);
+const isUp = ref(false);
 const isFront = ref(true);
 
-const reverseCard = function () {
-  isReversed.value = !isReversed.value;
-  isFront.value = !isFront.value;
+window.onload = function () {
+  // 카드 뒤집어지는 애니메이션 구현
+  const flashCardImg = document.querySelector(".flashcard");
+
+  const reverseCard = function () {
+    if (isUp.value === true) {
+      isFront.value = !isFront.value;
+      isReversed.value = !isReversed.value;
+      gsap.to(".flashcard", {
+        duration: 1,
+        rotationY: "+=180",
+      });
+    }
+  };
+
+  flashCardImg.addEventListener("click", function () {
+    reverseCard();
+  });
+
+  // 카드 넘길때 사라지고 다시 나타나는 애니메이션 구현
+
+  // 여기서 부터 하세요!
 };
+
+// const reverseCard = function () {
+//   isReversed.value = !isReversed.value;
+//   isFront.value = !isFront.value;
+// };
 
 const gotoNextCard = function () {
   idx.value = idx.value += 1;
 };
 
 const gotoPreviousCard = function () {
-  idx.value = idx.value -= 1;
+  if (idx.value > 0) {
+    idx.value = idx.value -= 1;
+  }
 };
 
 // 좋아요 추가 기능 구현하기!
@@ -60,8 +88,8 @@ const buttonCategory = [
 // 버튼 눌렀을 때 호출되는 함수들
 const selectCategory = function (cate) {
   isSelected.value = !isSelected.value;
+  isUp.value = !isUp.value;
   category.value = ref(cate);
-  console.log(category);
   // 여기서 받은 카테고리를 axios로 보내자! 일단 임시로 아무거나 만들어서 쓰겠다
   keywordData.value = [
     "키워드 1",
@@ -143,18 +171,12 @@ const replayFlashcard = function () {
       <p
         class="card_text"
         v-else-if="keywordData && !isReversed"
-        @click="reverseCard"
         :style="{ reverse_effect: !isFront }"
       >
         {{ keywordData[idx] }}
       </p>
-      <p
-        class="card_text"
-        v-else-if="keywordData && isReversed"
-        @click="reverseCard"
-        :style="{ reverse_effect: isFront }"
-      >
-        {{ commentdData[idx] }}
+      <p class="reverse_text" v-else-if="keywordData && isReversed">
+        {{ commentData[idx] }}
       </p>
       <p class="card_text" v-else-if="!keywordData">
         카테고리를<br />
@@ -189,12 +211,12 @@ const replayFlashcard = function () {
         </v-col>
         <v-col cols="12">
           <div class="menu-button" @click="addLike">
-            <p class="gotomain_text">좋아요</p>
+            <p class="button_text">좋아요</p>
           </div>
         </v-col>
         <v-col cols="12">
           <div class="menu-button" @click="gotoNextCard">
-            <p class="gotomain_text">다음</p>
+            <p class="button_text">다음</p>
           </div>
         </v-col>
         <v-col cols="12">
@@ -203,17 +225,7 @@ const replayFlashcard = function () {
             @click="gotoPreviousCard"
             :class="{ disabled: idx === 0 }"
           >
-            <p class="gotomain_text">이전</p>
-          </div>
-        </v-col>
-        <v-col
-          v-for="(func, index) in buttonFunc"
-          :key="index"
-          cols="12"
-          :disabled="buttonValue === 'hihi' && idx === 0"
-        >
-          <div class="menu-button">
-            <p class="button_text">{{ func }}</p>
+            <p class="button_text">이전</p>
           </div>
         </v-col>
       </v-row>
@@ -295,6 +307,14 @@ const replayFlashcard = function () {
     font-size: 3vw;
     width: 20vw;
   }
+  .reverse_text {
+    transform: scale(1, calc(1 / 1.2)) translate(-50%, -50%) rotateY(180deg);
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    font-size: 2vw;
+    width: 20vw;
+  }
 }
 .flashcard_effect {
   /* translate(px - +  = 오른쪽, - = 왼쪽 , % - + = 아래, - = 위 ) 
@@ -308,10 +328,6 @@ const replayFlashcard = function () {
     left: 40%;
     top: 45%;
   }
-}
-
-.reverse_effect {
-  transform: rotateY(180deg);
 }
 
 .button_menu {
@@ -329,6 +345,7 @@ const replayFlashcard = function () {
     position: absolute;
     transform: scale(1, 0.7);
     filter: drop-shadow(5px 5px 5px #000);
+    cursor: pointer;
 
     .button_text {
       width: 10vw;
@@ -342,10 +359,16 @@ const replayFlashcard = function () {
     width: 12vw;
     height: 5vw;
     margin-left: 8vw;
-    border: 3px solid rgb(124, 92, 63);
+    border: 3px solid rgba(81, 60, 58, 1);
     color: rgb(124, 92, 63);
     padding: 2%;
+    cursor: pointer;
 
+    &:hover {
+      transition-duration: 0.5s;
+      background-color: #7c5c3f;
+      color: white;
+    }
     .button_text {
       width: 10vw;
       font-size: 1.8vw;
@@ -353,18 +376,11 @@ const replayFlashcard = function () {
       font-weight: bold;
       // position: absolute;
     }
-    border-radius: 10px;
-
-    &:hover {
-      transition-duration: 0.5s;
-      background-color: rgb(124, 92, 63);
-      color: white;
-    }
 
     .gotomain_text {
       width: 8vw;
       font-size: 1.6vw;
-      transform: translate(20%, -13%);
+      transform: translate(20%, -20%);
       font-weight: bold;
     }
   }
