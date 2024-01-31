@@ -39,30 +39,29 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 			.on(member.point.between(tier.minScore, tier.maxScore))
 			.fetchOne();
 
-		// 0으로 나누기 방지
-		// NumberExpression<Double> correctCountSum =  new CaseBuilder().when(solvedQuiz.correctCount.isNull())
-		// 	.then(0.0)
-		// 	.otherwise(solvedQuiz.correctCount.sum().doubleValue());
-
-		NumberExpression<Integer> correctCountSum = solvedQuiz.correctCount.sum();
-
-		// NumberExpression<Double> failedCountSum =  new CaseBuilder().when(solvedQuiz.failedCount.isNull())
-		// 	.then(0.0)
-		// 	.otherwise(solvedQuiz.failedCount.sum().doubleValue());
-		//
-		// NumberExpression<Double> correctRate =new CaseBuilder().when(correctCountSum.add(failedCountSum).eq(0.0))
-		// 	.then(0.0)
-		// 	.otherwise(correctCountSum.divide(correctCountSum.add(failedCountSum)).multiply(100));
-
-		MemberDto.MyInfoResponse stat  = queryFactory.select(new QMemberDto_MyInfoResponse(solvedQuiz.count().intValue(), 3.0)
-			.from(solvedQuiz)
-			.where(solvedQuiz.member.id.eq(memberId))
-			.f0etchOne();
-
 		if (info == null){
 			log.error(ErrorCode.MEMBER_NOT_FOUND.getMessage());
 			throw new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND.getMessage());
 		}
+
+		NumberExpression<Double> failedCountSum = new CaseBuilder().when(solvedQuiz.failedCount.sum().isNull())
+			.then(0.0)
+			.otherwise(solvedQuiz.failedCount.sum().doubleValue());
+
+		NumberExpression<Double> correctCountSum = new CaseBuilder().when(solvedQuiz.correctCount.sum().isNull())
+			.then(0.0)
+			.otherwise(solvedQuiz.correctCount.sum().doubleValue());
+
+		NumberExpression<Double> tryCountSum = failedCountSum.add(correctCountSum);
+
+		NumberExpression<Double> correctRate = new CaseBuilder().when(tryCountSum.eq(0.0))
+			.then(0.0)
+			.otherwise(correctCountSum.divide(tryCountSum).multiply(100));
+
+		MemberDto.MyInfoResponse stat  = queryFactory.select(new QMemberDto_MyInfoResponse(solvedQuiz.count().intValue(), correctRate))
+			.from(solvedQuiz)
+			.where(solvedQuiz.member.id.eq(memberId))
+			.fetchOne();
 
 		return MemberDto.MyInfoResponse.builder()
 			.nickname(info.getNickname())

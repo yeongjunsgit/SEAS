@@ -50,17 +50,17 @@ public class MemberDto {
 
 		@QueryProjection
 		public MyInfoResponse(Integer solvedCount, Double correctRate) {
-			this.solvedCount = solvedCount;
-			this.correctRate = Math.round(correctRate*10)/10.0;
+			this.solvedCount = solvedCount != null ? solvedCount : 0;
+			this.correctRate = correctRate != null ? Math.round(correctRate * 10) / 10.0 : 0.0;
 		}
 
 		@Builder
 		public MyInfoResponse(String nickname, Integer point, String tier, Integer solvedCount, Double correctRate) {
+			this(solvedCount, correctRate);
+
 			this.nickname = nickname;
 			this.point = point;
 			this.tier = tier;
-			this.solvedCount = solvedCount;
-			this.correctRate = Math.round(correctRate*10)/10.0;
 		}
 	}
 }
