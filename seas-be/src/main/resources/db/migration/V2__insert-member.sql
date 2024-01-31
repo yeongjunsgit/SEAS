@@ -1,0 +1,2 @@
+INSERT INTO seas.member (id, point, created_at, updated_at, email, member_id, nickname, pwd)
+VALUES (1, 0, '2024-01-26 17:48:42.560187', '2024-01-26 17:48:42.560187', 'toast@test.com', 'toast', '토스트', '핫도그');

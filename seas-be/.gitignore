@@ -186,3 +186,6 @@ $RECYCLE.BIN/
 
 # SEAS config
 seas-config.yml
+
+# generated files
+**/generated/**
