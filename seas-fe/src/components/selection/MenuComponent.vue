@@ -1,13 +1,29 @@
 <script setup>
+import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 const props = defineProps(["title", "content", "path"]);
-
 const router = useRouter();
 
 const goToPage = () => {
     router.push({ path: props.path });
 };
+
+// 이미지와 비디오의 경로
+const imageUrl = "https://d2qkxc1ity7pm2.cloudfront.net/images/menu.png";
+
+// 이미지와 비디오를 사전 로딩하는 함수
+onMounted(() => {
+    preloadResource(imageUrl, "image");
+});
+
+function preloadResource(url, type) {
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = type;
+    link.href = url;
+    document.head.appendChild(link);
+}
 </script>
 
 <template>
