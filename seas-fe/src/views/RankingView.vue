@@ -1,5 +1,5 @@
 <script setup>
-import TagComponent from "@/components/commons/TagComponent.vue";
+import TagComponent from "@/components/ranking/TagComponent.vue";
 import { ref } from "vue";
 
 const rankerList = ref([
