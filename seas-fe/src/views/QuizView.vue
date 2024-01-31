@@ -12,7 +12,21 @@ const changeComponent = (component) => {
     currentComponent.value = component;
 };
 
-const correctCount = ref();
+// 이미지와 비디오의 경로 ================================================
+const imageUrl = "https://d2qkxc1ity7pm2.cloudfront.net/images/quiz_bg.png";
+
+// 이미지와 비디오를 사전 로딩하는 함수
+onMounted(() => {
+    preloadResource(imageUrl, "image");
+});
+
+function preloadResource(url, type) {
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = type;
+    link.href = url;
+    document.head.appendChild(link);
+}
 </script>
 
 <template>
