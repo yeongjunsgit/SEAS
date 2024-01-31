@@ -33,7 +33,7 @@ const goMypage = () => {
     </div>
     <div class="quiz-button-container">
         <button class="menu-button" @click="goTutorial">한번 더</button>
-        <button class="menu-button" @click="goHome">홈으로</button>
+        <button class="menu-button" @click="goHome">메인으로</button>
         <button class="menu-button" @click="goMypage">마이페이지로</button>
     </div>
 </template>

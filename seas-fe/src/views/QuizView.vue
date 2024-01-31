@@ -5,10 +5,14 @@ import TutorialComponent from "@/components/quiz/TutorialComponent.vue";
 import QuizComponent from "@/components/quiz/QuizComponent.vue";
 import ResultComponent from "@/components/quiz/ResultComponent.vue";
 
+// 컴포넌트 변수
 const currentComponent = ref("tutorial");
+// 컴포넌트 변경 메소드
 const changeComponent = (component) => {
     currentComponent.value = component;
 };
+
+const correctCount = ref();
 </script>
 
 <template>

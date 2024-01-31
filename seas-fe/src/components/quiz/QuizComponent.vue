@@ -124,6 +124,7 @@ const clearInput = () => {
                 v-model="answerInput"
                 type="text"
                 id="answer"
+                autocomplete="off"
                 placeholder="정답을 입력하시오."
             />
         </div>
@@ -197,6 +198,11 @@ const clearInput = () => {
             height: 100%;
             padding: 7% 10% 7% 10%;
             border: 4px double $primary-color;
+            font-size: larger;
+
+            &:focus {
+                outline: none;
+            }
         }
     }
 

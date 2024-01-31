@@ -13,7 +13,22 @@ const startQuiz = () => {
 <template>
     <div class="quiz-content">
         <div>
-            <p>튜토리얼 내용</p>
+            <h1>퀴즈 주의사항</h1>
+        </div>
+        <div class="tutorial-content">
+            <ul>
+                <li>
+                    퀴즈를 마지막까지 풀지 않고 종료할 경우 결과가 반영되지
+                    않습니다.
+                </li>
+                <li>각 문제당 10점을 획득 할 수 있습니다.</li>
+                <li>힌트 사용 후 정답을 맞출 경우 3점만 부여됩니다.</li>
+                <li>힌트는 사용을 취소할 수 없습니다.</li>
+                <li>
+                    취소를 누를 시 현재 문제에서 입력한 정답이 모두 삭제됩니다.
+                </li>
+                <li>제출 시 각 문제의 정답 여부를 알 수 있습니다.</li>
+            </ul>
         </div>
     </div>
     <div class="quiz-button-container">
@@ -32,7 +47,11 @@ const startQuiz = () => {
     background-image: url($url-path + "images/quiz_bg.png");
     background-size: 100% 100%;
     background-position: center;
-    padding: 5% 7% 7% 7%;
+    padding: 6% 7% 7% 7%;
+
+    li {
+        margin-top: 4%;
+    }
 }
 .quiz-button-container {
     width: 27%;
