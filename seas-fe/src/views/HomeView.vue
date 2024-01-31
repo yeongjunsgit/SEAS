@@ -13,7 +13,6 @@ const videoUrl =
 
 // 비디오를 사전 로딩하는 함수
 onMounted(() => {
-    // preloadResource(imageUrl, "image");
     preloadResource(videoUrl, "video");
 });
 
