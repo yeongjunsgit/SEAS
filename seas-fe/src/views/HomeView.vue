@@ -30,10 +30,6 @@ function preloadResource(url, type) {
     <div class="home-container">
         <video muted autoplay loop>
             <source :src="videoUrl" type="video/mp4" />
-            <!-- <source
-                src="https://d2qkxc1ity7pm2.cloudfront.net/videos/home_compressed.mp4"
-                type="video/mp4"
-            /> -->
         </video>
         <!-- 홈 화면 좌측 부분 -->
         <div class="main-content">
