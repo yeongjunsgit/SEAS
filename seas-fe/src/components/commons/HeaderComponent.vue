@@ -1,10 +1,32 @@
 <script setup>
+import { ref } from "vue";
 import { useRouter } from "vue-router";
+// import { useUserStore } from "@/stores/user-store";
+// import { storeToRefs } from "pinia";
 
+// const userStore = useUserStore();
+// const { isLogin } = storeToRefs(userStore);
 const router = useRouter();
 
+// 임시 변수
+const isLogin = ref(false);
+
+const currentPath = ref("");
 const movePage = (destination) => {
-    router.push({ path: destination });
+    if (currentPath.value == destination) router.go(0);
+    // 로그인 임시 코드
+    if (destination == "/auth") {
+        isLogin.value = true;
+    } else {
+        currentPath.value = destination;
+        router.replace({ path: destination });
+    }
+};
+
+const logout = () => {
+    // 임시 코드
+    isLogin.value = false;
+    console.log("Logged out");
 };
 </script>
 
@@ -23,9 +45,14 @@ const movePage = (destination) => {
                 </div>
 
                 <div class="menu">
-                    <button @click="movePage('/auth')">로그인</button>
-                    <button @click="movePage('/mypage')">마이페이지</button>
-                    <button>로그아웃</button>
+                    <button v-if="!isLogin" @click="movePage('/auth')">
+                        로그인 / 회원가입
+                    </button>
+
+                    <div v-else>
+                        <button @click="movePage('/mypage')">마이페이지</button>
+                        <button @click="logout">로그아웃</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -48,7 +75,7 @@ const movePage = (destination) => {
         width: 100%;
 
         .home-title {
-            width: 20%;
+            width: 33%;
             color: white;
             font-weight: bolder;
             font-size: xx-large;
@@ -59,7 +86,7 @@ const movePage = (destination) => {
             }
         }
         .home-menus {
-            width: 40%;
+            width: 33%;
             display: flex;
             flex-wrap: nowrap;
             color: white;
