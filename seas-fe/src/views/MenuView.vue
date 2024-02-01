@@ -35,7 +35,7 @@ function preloadResource(url, type) {
             :path="paths[idx - 1]"
         />
     </div>
-    <video autoplay loop>
+    <video autoplay loop lazy>
         <source :src="videoUrl" type="video/mp4" />
     </video>
 </template>
@@ -49,6 +49,7 @@ function preloadResource(url, type) {
     display: flex;
     justify-content: space-evenly;
     z-index: 0;
+    animation: fadeInUp 1.5s;
 }
 
 video {
