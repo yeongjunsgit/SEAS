@@ -77,26 +77,10 @@ video {
     color: white;
     text-align: center;
     position: relative;
-    animation: fadeInLeft 1s;
+    animation: fadeInLeft 1.5s;
 
     h1 {
         margin-bottom: 5%;
     }
-}
-
-@keyframes fadeInLeft {
-    0% {
-        opacity: 0;
-        transform: translate3d(-100%, 0, 0);
-    }
-    to {
-        opacity: 1;
-        transform: translateZ(0);
-    }
-}
-
-.test_obj {
-    position: relative;
-    animation: fadeInLeft 1s;
 }
 </style>
