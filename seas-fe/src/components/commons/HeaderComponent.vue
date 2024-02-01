@@ -1,68 +1,34 @@
 <script setup>
 import { useRouter } from "vue-router";
+
 const router = useRouter();
 
-const goHome = () => {
-    router.push({ path: "/" });
-};
-
-const goLogin = () => {
-    router.push({ path: "/auth" });
-};
-
-const goMyPage = () => {
-    router.push({ path: "/mypage" });
-};
-
-const goCard = () => {
-    router.push({ path: "/flashcard" });
-};
-
-const goRank = () => {
-    router.push({ path: "/ranking" });
-};
-
-const goQuiz = () => {
-    router.push({ path: "/quiz" });
+const movePage = (destination) => {
+    router.push({ path: destination });
 };
 </script>
 
 <template>
-    <div class="header-container">
-        <v-toolbar class="transparent">
-            <v-container>
-                <v-row justify="end">
-                    <v-col cols="4">
-                        <v-toolbar-title
-                            class="home-title text-center text-h4 font-weight-bold title-font"
-                            @click="goHome()"
-                            >SEAS</v-toolbar-title
-                        >
-                    </v-col>
-                    <v-col cols="4" class="align-self-center">
-                        <v-toolbar-items class="header-button">
-                            <v-btn class="home-menus" @click="goCard()"
-                                >카드</v-btn
-                            >
-                            <v-btn class="home-menus" @click="goQuiz()"
-                                >퀴즈</v-btn
-                            >
-                            <v-btn class="home-menus" @click="goRank()"
-                                >랭킹</v-btn
-                            >
-                            <v-divider></v-divider>
-                            <v-btn class="home-menus" @click="goLogin()"
-                                >로그인</v-btn
-                            >
-                            <v-btn class="home-menus" @click="goMyPage()"
-                                >마이페이지</v-btn
-                            >
-                            <v-btn class="home-menus">로그아웃</v-btn>
-                        </v-toolbar-items>
-                    </v-col>
-                </v-row>
-            </v-container>
-        </v-toolbar>
+    <div class="header-container transparent">
+        <div class="header-content">
+            <div class="home-menus"></div>
+            <div class="home-title title-font" @click="movePage('/')">SEAS</div>
+            <div class="home-menus header-font">
+                <div class="menu">
+                    <button @click="movePage('/flashcard')">카드</button>
+                    <button @click="movePage('/quiz')">
+                        <p>퀴즈</p>
+                    </button>
+                    <button @click="movePage('/ranking')">랭킹</button>
+                </div>
+
+                <div class="menu">
+                    <button @click="movePage('/auth')">로그인</button>
+                    <button @click="movePage('/mypage')">마이페이지</button>
+                    <button>로그아웃</button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -70,19 +36,43 @@ const goQuiz = () => {
 @import "@/assets/style/main.scss";
 
 .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     min-height: 80px;
-    vertical-align: middle;
-}
-.home-title {
-    color: white;
-    &:hover {
-        cursor: pointer;
+
+    .header-content {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        width: 100%;
+
+        .home-title {
+            width: 20%;
+            color: white;
+            font-weight: bolder;
+            font-size: xx-large;
+            text-align: center;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+        .home-menus {
+            width: 40%;
+            display: flex;
+            flex-wrap: nowrap;
+            color: white;
+            gap: 1vw;
+
+            font-size: 1.3vw;
+            font-weight: bold;
+
+            button {
+                padding: 0 10px 0 10px;
+            }
+        }
     }
-}
-.home-menus {
-    font-size: larger;
-    font-weight: bold;
-    color: white;
 }
 .transparent {
     background: transparent !important;
