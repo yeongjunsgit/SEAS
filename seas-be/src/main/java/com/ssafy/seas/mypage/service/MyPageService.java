@@ -19,19 +19,21 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class MyPageService {
 	private final MemberRepository memberRepository;
 	private final MyPageRepository myPageRepository;
 	private final MemberUtil memberUtil;
 	private final CategoryUtil categoryUtil;
 
+	@Transactional(readOnly = true)
 	public MemberDto.MyInfoResponse getMyInfo() {
 		Integer memberId = memberUtil.getLoginMemberId();
 		MemberDto.MyInfoResponse response = memberRepository.getMyInfoResponse(memberId);
 		return response;
 	}
 
+	@Transactional(readOnly = true)
 	public List<MyPageDto.QuizRate> getQuizRate() {
 		Integer memberId = memberUtil.getLoginMemberId();
 		List<CategoryDto.Response> categories = categoryUtil.getCategories();
