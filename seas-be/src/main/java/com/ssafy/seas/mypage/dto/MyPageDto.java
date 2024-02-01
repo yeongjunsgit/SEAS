@@ -23,7 +23,6 @@ public class MyPageDto {
 		}
 	}
 
-	@ToString
 	@Getter
 	public static class CorrectCount {
 		private Integer categoryId;
