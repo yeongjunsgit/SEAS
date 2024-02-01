@@ -30,13 +30,15 @@ public class MyPageRepository {
 
 	public List<MyPageDto.CorrectCount> getQuizCorrectCountPerCategory(Integer memberId) {
 
+
 		List<MyPageDto.CorrectCount> quizCorrectCountPerCategory = queryFactory.select(
 				new QMyPageDto_CorrectCount(category.id, category.name, solvedQuiz.correctCount.count().intValue()))
 			.from(solvedQuiz)
 			.where(solvedQuiz.member.id.eq(memberId), solvedQuiz.correctCount.gt(0))
 			.innerJoin(quiz).on(solvedQuiz.quiz.id.eq(quiz.id))
 			.innerJoin(category).on(quiz.category.id.eq(category.id))
-			.groupBy(category.id, category.name)
+			.groupBy(category.id)
+			.orderBy(category.id.asc())
 			.fetch();
 
 		log.info(quizCorrectCountPerCategory.toString());

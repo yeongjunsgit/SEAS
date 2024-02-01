@@ -2,26 +2,29 @@ package com.ssafy.seas.mypage.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 public class MyPageDto {
 
 	@Getter
 	public static class QuizRate {
-		private String category;
+		private Integer categoryId;
+		private String categoryName;
 		private Double rate;
 
 		@Builder
 		@QueryProjection
-		public QuizRate(String category, Double rate) {
-			this.category = category;
+		public QuizRate(Integer categoryId, String categoryName, Double rate) {
+			this.categoryId = categoryId;
+			this.categoryName = categoryName;
 			this.rate = rate;
 		}
 	}
 
+	@ToString
+	@Getter
 	public static class CorrectCount {
 		private Integer categoryId;
 		private String categoryName;

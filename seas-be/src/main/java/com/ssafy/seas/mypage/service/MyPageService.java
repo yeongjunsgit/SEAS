@@ -34,16 +34,31 @@ public class MyPageService {
 	}
 
 	@Transactional(readOnly = true)
-	public List <MyPageDto.QuizRate> getQuizRate() {
+	public List<MyPageDto.QuizRate> getQuizRate() {
 		Integer memberId = memberUtil.getLoginMemberId();
 		List<CategoryDto.Response> categories = categoryUtil.getCategories();
-		List <MyPageDto.CorrectCount> correctCount = myPageRepository.getQuizCorrectCountPerCategory(memberId);
+		List<MyPageDto.CorrectCount> correctCounts = myPageRepository.getQuizCorrectCountPerCategory(memberId);
 		List<MyPageDto.QuizRate> quizRate = new ArrayList<>();
 
+		int correctCountIndex = 0;
+		int categoryId = -1;
 
+		for (CategoryDto.Response category : categories) {
+			if (correctCountIndex < correctCounts.size()) {
+				categoryId = correctCounts.get(correctCountIndex).getCategoryId();
+			}
 
+			Double correctCount = categoryId == category.getId() ?
+				Double.valueOf(correctCounts.get(correctCountIndex++).getCorrectCount()) : 0.0;
+			Double quizCount = Double.valueOf(category.getQuizCount());
+			Double rate = quizCount != 0 ? Math.round(correctCount / quizCount * 100 * 10) / 10.0 : 0.0;
 
-
-		return null;
+			quizRate.add(MyPageDto.QuizRate.builder()
+				.categoryId(category.getId())
+				.categoryName(category.getName())
+				.rate(rate)
+				.build());
+		}
+		return quizRate;
 	}
 }
