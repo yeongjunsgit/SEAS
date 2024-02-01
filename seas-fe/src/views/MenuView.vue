@@ -49,18 +49,10 @@ function preloadResource(url, type) {
     display: flex;
     justify-content: space-evenly;
     z-index: 0;
-    animation: fadeInUp 1.5s;
+    animation: fadeInUp 1s;
 }
 
 video {
-    // opacity: 0.7;
-    object-fit: cover;
-    position: fixed;
-    min-width: 100%;
-    min-height: 100%;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
     filter: brightness(60%);
 }
 </style>

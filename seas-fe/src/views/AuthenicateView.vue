@@ -202,14 +202,9 @@ const checkDuplicate = async () => {
 
 <style scoped lang="scss">
 @import "@/assets/style/main.scss";
+
 video {
-    object-fit: cover;
-    position: fixed;
-    min-width: 100%;
-    min-height: 100%;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
+    filter: brightness(70%);
 }
 
 .main-container {
