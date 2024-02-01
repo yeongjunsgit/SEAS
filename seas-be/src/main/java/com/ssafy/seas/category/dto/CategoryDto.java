@@ -11,7 +11,7 @@ public class CategoryDto {
 	@NoArgsConstructor
 	@AllArgsConstructor
 	public static class Response {
-		private Long id;
+		private Integer id;
 		private String name;
 		private String backgroundColor;
 		private String lineColor;
