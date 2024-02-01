@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 public class SolvedQuiz extends BaseEntity {
 	int correctCount = 0;
 	int failedCount = 0;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
 	private Member member;

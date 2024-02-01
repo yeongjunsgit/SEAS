@@ -36,4 +36,8 @@ public class MyPageDto {
 			this.correctCount = correctCount;
 		}
 	}
+
+	public static class PerformanceGraph {
+
+	}
 }

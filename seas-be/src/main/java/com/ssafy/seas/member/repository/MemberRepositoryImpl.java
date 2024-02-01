@@ -1,7 +1,7 @@
 package com.ssafy.seas.member.repository;
 
 import static com.ssafy.seas.member.entity.QMember.*;
-import static com.ssafy.seas.quiz.entity.QSolvedQuiz.*;
+import static com.ssafy.seas.quiz.entityt.QSolvedQuiz.*;
 import static com.ssafy.seas.ranking.entity.QTier.*;
 import static org.hibernate.internal.util.NullnessHelper.*;
 
