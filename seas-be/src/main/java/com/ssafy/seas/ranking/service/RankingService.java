@@ -1,18 +1,28 @@
 package com.ssafy.seas.ranking.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import com.ssafy.seas.ranking.repository.RankerRepository;
+import com.ssafy.seas.ranking.dto.RankerDto;
+import com.ssafy.seas.ranking.repository.RankerRepositoryCustom;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class RankingService {
-	private final RankerRepository rankerRepository;
+	private final RankerRepositoryCustom rankerRepositoryCustom;
+	// private final RankerRepositoryImpl rankerRepositoryImpl;
 
-	// public List<RankerDto> getRankers(){
-	// 	return rankerRepository.getRankers();
-	// }
+	public List<RankerDto.RankResponse> getRankers(){
+		return rankerRepositoryCustom.getRankers();
+		// return rankerRepositoryImpl.getRankers();
+	}
+
+	public List<RankerDto.RankResponse> getMyRank(String uuid){
+		return rankerRepositoryCustom.getMyRank(uuid);
+		// return rankerRepositoryImpl.getMyRank(uuid);
+	}
 
 }
