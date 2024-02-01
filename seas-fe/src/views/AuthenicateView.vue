@@ -237,6 +237,7 @@ video {
     max-width: 100%;
     min-height: 480px;
     margin-top: 8%;
+    animation: fadeInUp 1.5s;
 }
 
 /* 컨테이너 내의 문단 스타일링 */
