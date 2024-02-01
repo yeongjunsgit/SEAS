@@ -5,9 +5,9 @@ import { ref } from "vue";
 const props = defineProps(["showResult"]);
 const emit = defineEmits(["showResult"]);
 
-// Start Quiz 버튼 클릭 시 실행되는 함수
+// 퀴즈가 끝날 시 실행되는 함수
 const showResult = () => {
-    // @startQuiz 이벤트를 발생시킵니다.
+    // @showResult 이벤트를 발생시킨다.
     emit("showResult", "result");
 };
 
@@ -56,7 +56,7 @@ const delayResult = () => {
         // 인덱스를 증가시켜 다음 문제로 이동
         currentIndex.value += 1;
 
-        // 인덱스가 배열의 범위를 초과하면 결과 페이지를 보여줌 (현재는 처음으로 돌아감)
+        // 인덱스가 배열의 범위를 초과하면 결과 처리 후 결과 페이지로 이동
         if (currentIndex.value >= content.value.length) {
             showResult();
         }
