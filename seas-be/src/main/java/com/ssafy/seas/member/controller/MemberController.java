@@ -20,15 +20,13 @@ public class MemberController {
 	private final MemberService memberService;
 
 	@PostMapping("/signup")
-	public ApiResponse<String> regist(@RequestBody MemberDto memberDto){
-		try{
-			return ApiResponse.success(SuccessCode.GET_SUCCESS, memberService.signup(memberDto));
-		} catch(Exception e) {
+	public ApiResponse<String> regist(@RequestBody MemberDto.Post memberDto) {
+		try {
+			return ApiResponse.success(SuccessCode.POST_SUCCESS, memberService.signup(memberDto));
+		} catch (Exception e) {
 			e.printStackTrace();
 			return ApiResponse.error(ErrorCode.SERVER_ERROR);
 		}
 	}
-
-
 
 }

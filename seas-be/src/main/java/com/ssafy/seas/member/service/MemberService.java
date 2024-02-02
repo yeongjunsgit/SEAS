@@ -16,7 +16,7 @@ public class MemberService {
 	private final MemberMapper memberMapper;
 
 	@Transactional
-	public String signup(MemberDto memberDto){
+	public String signup(MemberDto.Post memberDto) {
 		memberRepository.save(memberMapper.MemberDtoToMember(memberDto));
 		return "";
 	}
