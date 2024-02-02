@@ -19,44 +19,121 @@ const idx = ref(0);
 const isReversed = ref(false);
 const isUp = ref(false);
 const isFront = ref(true);
+const isInvisible = ref(false);
 
-window.onload = function () {
-  // 카드 뒤집어지는 애니메이션 구현
-  const flashCardImg = document.querySelector(".flashcard");
+// 카드가 뒤집어지는 효과를 담당하는 함수
+const reverseCard = function () {
+  if (isUp.value === true) {
+    isFront.value = !isFront.value;
+    isReversed.value = !isReversed.value;
+    isInvisible.value = !isInvisible.value;
 
-  const reverseCard = function () {
-    if (isUp.value === true) {
-      isFront.value = !isFront.value;
-      isReversed.value = !isReversed.value;
-      gsap.to(".flashcard", {
-        duration: 1,
-        rotationY: "+=180",
-      });
-    }
-  };
+    gsap.to(".flashcard", {
+      duration: 1,
+      rotationY: "+=180",
+      onComplete: () => {
+        isInvisible.value = !isInvisible.value;
+      },
+    });
+  }
+};
 
-  flashCardImg.addEventListener("click", function () {
-    reverseCard();
+// 카드 넘길때 사라지고 다시 나타나는 애니메이션 구현
+const fadeAwayNext = function () {
+  const tl1 = gsap.timeline();
+  tl1.to(".flashcard", {
+    duration: 1,
+    xPercent: -40,
+    opacity: 0,
+    onComplete: () => {
+      isInvisible.value = !isInvisible.value;
+      if (isReversed.value === true) {
+        gsap.to(".flashcard", {
+          delay: 1,
+          duration: 0,
+          rotationY: "-=180",
+        });
+        isReversed.value = false;
+      }
+    },
   });
 
-  // 카드 넘길때 사라지고 다시 나타나는 애니메이션 구현
-
-  // 여기서 부터 하세요!
+  tl1.to(".flashcard", {
+    onStart: () => {
+      idx.value = idx.value += 1;
+    },
+    opacity: 100,
+    xPercent: 25,
+    duration: 0.5,
+    delay: 1,
+    onComplete: () => {
+      isInvisible.value = !isInvisible.value;
+    },
+  });
 };
+// const fadeAwayNext = function () {
+//   gsap.to(".flashcard", {
+//     duration: 1,
+//     xPercent: -40,
+//     opacity: 0,
+//     onComplete: () => {
+//       if (isReversed.value === true) {
+//         gsap.to(".flashcard", {
+//           duration: 0.5,
+//           rotationY: "+=180",
+//         });
+//         isReversed.value = false;
+//       }
+//     },
+//   });
 
-// const reverseCard = function () {
-//   isReversed.value = !isReversed.value;
-//   isFront.value = !isFront.value;
+//   gsap.to(
+//     ".flashcard",
+//     {
+//       opacity: 100,
+//       xPercent: 25,
+//       duration: 1,
+//       onComplete: () => {
+//         idx.value = idx.value += 1;
+//       },
+//     },
+//     "+=1"
+//   );
 // };
 
-const gotoNextCard = function () {
-  idx.value = idx.value += 1;
-};
+const fadeAwayPre = function () {
+  const tl1 = gsap.timeline();
+  tl1.to(".flashcard", {
+    duration: 1,
+    xPercent: -40,
+    opacity: 0,
+    onComplete: () => {
+      isInvisible.value = !isInvisible.value;
+      if (isReversed.value === true) {
+        gsap.to(".flashcard", {
+          delay: 1,
+          duration: 0,
+          rotationY: "-=180",
+        });
+        isReversed.value = false;
+      }
+    },
+  });
 
-const gotoPreviousCard = function () {
-  if (idx.value > 0) {
-    idx.value = idx.value -= 1;
-  }
+  tl1.to(".flashcard", {
+    onStart: () => {
+      if (idx.value > 0) {
+        idx.value = idx.value -= 1;
+      }
+    },
+    opacity: 100,
+    xPercent: 25,
+    duration: 0.5,
+    delay: 1,
+    onComplete: () => {
+      isInvisible.value = !isInvisible.value;
+    },
+  });
 };
 
 // 좋아요 추가 기능 구현하기!
@@ -90,10 +167,18 @@ const selectCategory = function (cate) {
   isSelected.value = !isSelected.value;
   isUp.value = !isUp.value;
   category.value = ref(cate);
+
+  gsap.to(".flashcard", {
+    duration: 1,
+    xPercent: 30,
+    scale: (1.5, 1.6),
+    rotate: 0.2,
+  });
+
   // 여기서 받은 카테고리를 axios로 보내자! 일단 임시로 아무거나 만들어서 쓰겠다
   keywordData.value = [
-    "키워드 1",
-    "키워드 2",
+    "Primary Key",
+    "Foreign Key",
     "키워드 3",
     "키워드 4",
     "키워드 5",
@@ -104,9 +189,9 @@ const selectCategory = function (cate) {
     "키워드 10",
   ];
   commentData.value = [
-    "내용 1",
-    "내용 2",
-    "내용 3",
+    "관계형 데이터베이스에서 조(레코드)의 식별자로 이용하기에 가장 적합한 것을 관계 (테이블)마다 단 한 설계자에 의해 선택, 정의된 후보 키",
+    "다른 테이블의 기본 키를 참조하여 두 테이블을 연결하는 테이블의 속성 집합",
+    "- 컴퓨터의 뇌로서, 프로그램에서 명령어를 해석하고 실행하는 핵심 부품 제어 유닛은 명령어를 해독하고 실행하는 역할을 하며, 산술 논리 연산 장치(ALU)는 산술 연산과 논리 연산을 수행 레지스터는 매우 빠른 속도로 데이터를 저장하고 처리하는데 사용",
     "내용 4",
     "내용 5",
     "내용 6",
@@ -133,52 +218,28 @@ const replayFlashcard = function () {
 
 <template>
   <v-app class="bgbg text-font">
-    <!-- <img :src="backgroundImage" class="bg_position" /> -->
-    <!-- <v-img contain cover :src="backgroundImage" class="bg_position"> </v-img> -->
-    <!-- 할 것을 정리하자!
-
-    흐름:
-    카테고리를 누르면 이미지가 떠오른다 (완료)
-
-    떠오른 이미지를 누르면 뒤집어지며 키워드와, 해당 관련 내용이 나온다
-    - 어떻게 해야할까?
-    1. 카테고리를 눌렀을때 해당 이미지에 클릭 버튼시 스타일이 변화하는 함수를 넣어야한다
-    2. 함수에서 스타일을 바꿔 적용할 수 있어야한다
-    2-1. 어떻게? boolean 값을 가진 변수를 이용해서 on off 한다!
-    - 현재 출력해야 하는 앞뒷면과, 클릭시 스타일을 추가하는 식으로 진행하자!
-    2-2 함수 내에서 스타일을 수정해줄 방법이 있을까?
-    - 챗지피티가 이런거 없다고 한다.
-  - 우선 클릭 이벤트는 이미지에서 이루어져야 한다는 점
-  - 즉, 화면이 띄워 올라가면 바로 이미지 클릭시 스타일에 저장해둔 회전이 작동해야한다는 점
-  - 그 이전에는 회전을 안해야 한다는 점을 구현해야하는 상황이다.
-  - 한번 잘 찾아봐야할듯.... 
-  
-  -->
     <v-img :src="cardImage" class="memo_card">
       <!-- text 박스의 크기를 늘려서 길이가 늘어나도 문제없게 수정하자!! -->
-      <div class="card_text card_box">
+      <div class="memo_card_text card_box">
         <p>{{ category || "암기하기" }}</p>
       </div>
     </v-img>
-    <v-img
-      :src="flashcardImage"
-      class="flashcard"
-      :class="{ flashcard_effect: isSelected }"
-    >
-      <!---->
+    <v-img :src="flashcardImage" class="flashcard" @click="reverseCard">
       <!-- 클릭했을때 내용이 바뀌게 만들자! -->
       <p class="card_text" v-if="isOver && keywordData">THE END</p>
       <p
-        class="card_text"
+        :class="{ card_text: true, invisible: isInvisible }"
         v-else-if="keywordData && !isReversed"
-        :style="{ reverse_effect: !isFront }"
       >
         {{ keywordData[idx] }}
       </p>
-      <p class="reverse_text" v-else-if="keywordData && isReversed">
+      <p
+        :class="{ reverse_text: true, invisible: isInvisible }"
+        v-else-if="keywordData && isReversed"
+      >
         {{ commentData[idx] }}
       </p>
-      <p class="card_text" v-else-if="!keywordData">
+      <p class="start_text" v-else-if="!keywordData">
         카테고리를<br />
         선택하세요<br />
       </p>
@@ -215,16 +276,12 @@ const replayFlashcard = function () {
           </div>
         </v-col>
         <v-col cols="12">
-          <div class="menu-button" @click="gotoNextCard">
+          <div class="menu-button next_btn" @click="fadeAwayNext">
             <p class="button_text">다음</p>
           </div>
         </v-col>
         <v-col cols="12">
-          <div
-            class="menu-button"
-            @click="gotoPreviousCard"
-            :class="{ disabled: idx === 0 }"
-          >
+          <div class="menu-button previous_btn" @click="fadeAwayPre">
             <p class="button_text">이전</p>
           </div>
         </v-col>
@@ -267,7 +324,7 @@ const replayFlashcard = function () {
   margin-top: 11vw;
   margin-left: 18vw;
 
-  .card_text {
+  .memo_card_text {
     transform: scale(1, calc(1 / 1.2)) translate(-50%, -50%);
     position: absolute;
     top: 20%;
@@ -296,39 +353,49 @@ const replayFlashcard = function () {
   margin-left: 19.2vw;
   width: 29vw;
   height: 30vw;
+  transition: all 0.3s linear;
 
   // 회전을 위해 3D 로 선언
   transform-style: preserve-3d;
-  .card_text {
-    transform: scale(1, calc(1 / 1.3)) translate(-50%, -50%);
-    position: absolute;
-    top: 42%;
-    left: 50%;
-    font-size: 3vw;
-    width: 20vw;
-  }
-  .reverse_text {
-    transform: scale(1, calc(1 / 1.2)) translate(-50%, -50%) rotateY(180deg);
-    position: absolute;
-    top: 48%;
-    left: 50%;
-    font-size: 2vw;
-    width: 20vw;
-  }
 }
-.flashcard_effect {
-  /* translate(px - +  = 오른쪽, - = 왼쪽 , % - + = 아래, - = 위 ) 
-            scale(x, y) 1개만 넣으면 x만큼 커짐, x, y를 넣으면 가로 세로 비율 따로 지정 가능  
-        */
-  transition: all 0.3s linear;
-  transform: translate(20px, -15%) scale(1.5, 1.8);
-  .card_text {
-    transform: scale(calc(1 / 1.5), calc(1 / 1.8)) translate(-50%, -50%);
-    font-size: 3vw;
-    left: 40%;
-    top: 45%;
-  }
+.start_text {
+  transform: scale(1, calc(1 / 1.3)) translate(-50%, -50%);
+  position: absolute;
+  top: 41%;
+  left: 50%;
+  font-size: 3vw;
+  width: 20vw;
 }
+
+.card_text {
+  transform: scale(1) translate(-50%, -50%);
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  font-size: 2vw;
+  width: 20vw;
+}
+.reverse_text {
+  transform: scale(1) translate(-50%, -50%) rotateY(180deg);
+  position: absolute;
+  top: 44%;
+  left: 50%;
+  font-size: 1.2vw;
+  width: 25vw;
+}
+// .flashcard_effect {
+//   /* translate(px - +  = 오른쪽, - = 왼쪽 , % - + = 아래, - = 위 )
+//             scale(x, y) 1개만 넣으면 x만큼 커짐, x, y를 넣으면 가로 세로 비율 따로 지정 가능
+//         */
+//   transition: all 0.3s linear;
+//   transform: translate(20px, -15%) scale(1.5, 1.8);
+//   .card_text {
+//     transform: scale(calc(1 / 1.5), calc(1 / 1.8)) translate(-50%, -50%);
+//     font-size: 3vw;
+//     left: 40%;
+//     top: 45%;
+//   }
+// }
 
 .button_menu {
   position: absolute;
@@ -385,7 +452,6 @@ const replayFlashcard = function () {
     }
   }
 }
-
 .bgbg {
   position: fixed;
   min-width: 100%;
@@ -397,5 +463,9 @@ const replayFlashcard = function () {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+.invisible {
+  display: none;
 }
 </style>
