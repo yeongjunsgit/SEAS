@@ -17,6 +17,7 @@ export const data = {
       pointHoverBackgroundColor: "#fff",
       pointHoverBorderColor: "rgba(179,181,198,1)",
       data: [46, 100, 0, 65, 80, 92],
+      // data: [0, 0, 0, 0, 0, 0],
     },
   ],
 };

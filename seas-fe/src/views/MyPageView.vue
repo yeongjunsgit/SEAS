@@ -3,6 +3,7 @@ import MyPageComponent from "@/components/mypage/MyPageComponent.vue";
 import CategoryComponent from "@/components/mypage/CategoryComponent.vue";
 import RadarChart from "@/components/mypage/RadarChart.vue";
 import LineChartVue from "@/components/mypage/LineChart.vue";
+import GrassComponentVue from "@/components/mypage/GrassComponent.vue";
 
 const categories = [
   "자료구조",
@@ -13,13 +14,13 @@ const categories = [
   "컴퓨터 구조",
 ];
 
-const weeks = Array.from({ length: 52 }, (_, index) => index + 1);
-const days = Array.from({ length: 7 }, (_, index) => index + 1);
-const filledDays = [7, 14, 21, 28, 35, 42, 49];
+// const weeks = Array.from({ length: 52 }, (_, index) => index + 1);
+// const days = Array.from({ length: 7 }, (_, index) => index + 1);
+// const filledDays = [7, 14, 21, 28, 35, 42, 49];
 
-const isFilled = function (day) {
-  return filledDays.includes(day);
-};
+// const isFilled = function (day) {
+//   return filledDays.includes(day);
+// };
 </script>
 
 <template>
@@ -47,15 +48,8 @@ const isFilled = function (day) {
         </div>
         <div class="grass">
           <div class="text-center">일일 학습 경과</div>
-          <div class="grass-container">
-            <div v-for="week in weeks" :key="week" class="week">
-              <div
-                v-for="day in days"
-                :key="day"
-                class="day"
-                :class="{ filled: isFilled(day) }"
-              ></div>
-            </div>
+          <div class="grass-component">
+            <GrassComponentVue />
           </div>
         </div>
       </div>
@@ -100,7 +94,10 @@ img {
 .userinfo {
   margin-top: 50px;
   display: grid;
+  align-items: center;
   grid-template-columns: 1fr 1fr;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 .rotate {
   rotate: -90deg;
@@ -128,30 +125,35 @@ img {
 .mychart {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  // grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  // grid-auto-rows: minmax(100px, auto);
+  row-gap: 30px;
 }
-.grass-container {
+
+.grass {
   display: flex;
   flex-wrap: wrap;
-  justify-content: start;
-  padding-left: 20px;
+  justify-content: center;
+  padding-top: 105px;
+  padding-left: 30px;
+}
+
+.grass-component {
+  padding-left: 50px;
 }
 .week {
   display: flex;
 }
 
-.day {
-  width: 16px;
-  height: 16px;
-  margin: 1px;
-  border: 1px solid black;
-  background-color: #ebedf0;
-  transition: background-color 0.3s ease;
-}
-.day.filled {
-  background-color: green;
-}
+// .day {
+//   width: 16px;
+//   height: 16px;
+//   margin: 1px;
+//   border: 1px solid black;
+//   background-color: #ebedf0;
+//   transition: background-color 0.3s ease;
+// }
+// .day.filled {
+//   background-color: green;
+// }
 .chart-box {
   padding-left: 40px;
 }
