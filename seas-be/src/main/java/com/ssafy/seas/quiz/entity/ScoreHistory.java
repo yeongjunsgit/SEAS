@@ -1,4 +1,4 @@
-package com.ssafy.seas.mypage.entity;
+package com.ssafy.seas.quiz.entity;
 
 import com.ssafy.seas.category.entity.Category;
 import com.ssafy.seas.common.entity.BaseEntity;
@@ -15,8 +15,8 @@ import jakarta.persistence.Table;
 @Table(name = "score_history")
 public class ScoreHistory extends BaseEntity {
 
-	@Column(name = "score", nullable = false, columnDefinition = "int default 0")
-	private Integer score;
+	@Column(name = "score", nullable = false)
+	private Integer score = 0;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
