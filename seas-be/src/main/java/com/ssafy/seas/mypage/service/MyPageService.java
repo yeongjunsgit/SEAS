@@ -59,4 +59,13 @@ public class MyPageService {
 		}
 		return quizRate;
 	}
+
+	public Object getQuizPerformanceGraph() {
+		Integer memberId = memberUtil.getLoginMemberId();
+		List<CategoryDto.Response> categories = categoryUtil.getCategories();
+		Object result = myPageRepository.getScoreHistory(memberId);
+
+
+		return result;
+	}
 }

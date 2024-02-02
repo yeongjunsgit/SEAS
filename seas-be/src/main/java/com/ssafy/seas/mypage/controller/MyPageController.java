@@ -35,8 +35,7 @@ public class MyPageController {
 
 	// 성적 추이 그래프
 	@GetMapping("/graph")
-	public ApiResponse<List<MyPageDto.QuizRate>> getQuizRate() {
-
-		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getQuizRate());
+	public ApiResponse<?> getGraph() {
+		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getQuizPerformanceGraph());
 	}
 }
