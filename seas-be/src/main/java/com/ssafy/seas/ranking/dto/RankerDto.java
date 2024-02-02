@@ -40,4 +40,22 @@ public class RankerDto {
 			this.tier = tier;
 		}
 	}
+
+	@Getter
+	@Builder
+	@NoArgsConstructor
+	public static class RankResponseWithRanking {
+		private String nickname;
+		private Integer point;
+		private String tier;
+		private Integer ranking;
+
+		@QueryProjection
+		public RankResponseWithRanking(String nickname, Integer point, String tier, Integer ranking) {
+			this.nickname = nickname;
+			this.point = point;
+			this.tier = tier;
+			this.ranking = ranking;
+		}
+	}
 }

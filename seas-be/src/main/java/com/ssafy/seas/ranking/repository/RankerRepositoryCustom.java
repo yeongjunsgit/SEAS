@@ -7,4 +7,5 @@ import com.ssafy.seas.ranking.dto.RankerDto;
 public interface RankerRepositoryCustom {
 	List<RankerDto.RankResponse> getRankers();
 	List<RankerDto.RankResponse> getMyRank(String uuid);
+	List<RankerDto.RankResponseWithRanking> getRankByNickname(String nickname);
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.seas.common.constants.ErrorCode;
@@ -37,15 +38,16 @@ public class RankingController {
 		}
 	}
 
-	// @GetMapping
-	// public ApiResponse<RankerDto.RankResponse> getMemberRanking(@RequestParam("search") String searchNickname) {
-	// 	try {
-	//
-	// 	} catch (Exception e) {
-	// 		e.printStackTrace();
-	// 		return ApiResponse.error(ErrorCode.SERVER_ERROR);
-	// 	}
-	// }
+	@GetMapping
+	public ApiResponse<RankerDto.RankResponseWithRanking> getMemberRanking(@RequestParam("search") String searchNickname) {
+		try {
+			List<RankerDto.RankResponseWithRanking> result = rankingService.getRankByNickname(searchNickname);
+			return ApiResponse.success(SuccessCode.GET_SUCCESS, result.get(0));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ApiResponse.error(ErrorCode.SERVER_ERROR);
+		}
+	}
 
 
 	// public ApiResponse<String> regist(@RequestBody MemberDto.Post memberDto) {

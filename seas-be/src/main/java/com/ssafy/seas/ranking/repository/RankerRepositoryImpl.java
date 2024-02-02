@@ -5,12 +5,15 @@ package com.ssafy.seas.ranking.repository;
 import static com.ssafy.seas.member.entity.QMember.*;
 import static com.ssafy.seas.ranking.entity.QTier.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.seas.ranking.dto.QRankerDto_RankResponse;
+import com.ssafy.seas.ranking.dto.QRankerDto_RankResponseWithRanking;
 import com.ssafy.seas.ranking.dto.RankerDto;
 
 import jakarta.transaction.Transactional;
@@ -24,19 +27,15 @@ import lombok.RequiredArgsConstructor;
 public class RankerRepositoryImpl implements RankerRepositoryCustom {
 	private final JPAQueryFactory queryFactory;
 
-
 	@Override
 	public List<RankerDto.RankResponse> getRankers() {
-		// List<RankerDto.Response> result = entityManager.createQuery(
-		// 	"select new com.ssafy.seas.ranking.dto.RankerDto.Response("
-		// 		+ "m.memberId, m.nickname, (select t.name "
-		// 		+ 						   "from Tier t "
-		// 		+ 						   "where m.point between t.minScore and t.maxScore)) "
-		// 		+ "from Member m"
-		// ).getResultList();
-
 		return queryFactory
-			.select(new QRankerDto_RankResponse(member.nickname, member.point, tier.name))
+			.select(
+				new QRankerDto_RankResponse(
+						member.nickname,
+						member.point,
+						tier.name
+						))
 			.from(member)
 			.innerJoin(tier)
 			.on(member.point.between(tier.minScore, tier.maxScore))
@@ -48,15 +47,6 @@ public class RankerRepositoryImpl implements RankerRepositoryCustom {
 
 	@Override
 	public List<RankerDto.RankResponse> getMyRank(String uuid) {
-		// List<RankerDto.Response> result = entityManager.createQuery(
-		// 	"select new com.ssafy.seas.ranking.dto.RankerDto.Response("
-		// 		+ "m.memberId, m.nickname, (select t.name "
-		// 		+ 						   "from Tier t "
-		// 		+ 						   "where m.point between t.minScore and t.maxScore)) "
-		// 		+ "from Member m "
-		// 		+ "where m.memberId = :uuid"
-		// ).setParameter("uuid", uuid).getResultList();
-
 		return queryFactory
 			.select(new QRankerDto_RankResponse(member.nickname, member.point, tier.name))
 			.from(member)
@@ -67,6 +57,36 @@ public class RankerRepositoryImpl implements RankerRepositoryCustom {
 	}
 
 
+	public List<RankerDto.RankResponseWithRanking> getRankByNickname(String nickname) {
+		List<RankerDto.RankResponseWithRanking> list = queryFactory
+			.select(
+				new QRankerDto_RankResponseWithRanking(
+					member.nickname,
+					member.point,
+					tier.name,
+					// JPAExpressions
+					// 	.select(Expressions.numberTemplate("COUNT(*) + 1").intValue())
+					// 	.from(member)
+					// 	.where(member.point.gt(member.point)),
+					Expressions.numberTemplate(Integer.class, "(RANK() OVER (ORDER BY {0} DESC))", member.point).as("ranking")
+					))
+			.from(member)
+			// .where(member.nickname.eq(nickname))
+			.innerJoin(tier)
+			.on(member.point.between(tier.minScore, tier.maxScore))
+			.fetch();
+
+		List<RankerDto.RankResponseWithRanking> result = new ArrayList<>();
+
+		for(RankerDto.RankResponseWithRanking dto : list){
+			if(dto.getNickname().equals(nickname)){
+				result.add(dto);
+				break;
+			}
+		}
+
+		return result;
+	}
 
 
 
