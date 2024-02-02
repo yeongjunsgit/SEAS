@@ -12,10 +12,14 @@ import { gsap } from "gsap";
 import { useRouter } from "vue-router";
 const router = useRouter();
 
+// 카테고리 선택시 관리 할 편수들!
 const category = ref(null);
 const keywordData = ref(null);
 const commentData = ref(null);
+const favoriteData = ref(null);
 const idx = ref(0);
+
+// 애니메이션 로직을 위한 변수들!
 const isReversed = ref(false);
 const isUp = ref(false);
 const isFront = ref(true);
@@ -39,10 +43,11 @@ const reverseCard = function () {
 };
 
 // 카드 넘길때 사라지고 다시 나타나는 애니메이션 구현
+// 다음 버튼 눌렀을 때 기믹
 const fadeAwayNext = function () {
   const tl1 = gsap.timeline();
   tl1.to(".flashcard", {
-    duration: 1,
+    duration: 0.3,
     xPercent: -40,
     opacity: 0,
     onComplete: () => {
@@ -71,36 +76,8 @@ const fadeAwayNext = function () {
     },
   });
 };
-// const fadeAwayNext = function () {
-//   gsap.to(".flashcard", {
-//     duration: 1,
-//     xPercent: -40,
-//     opacity: 0,
-//     onComplete: () => {
-//       if (isReversed.value === true) {
-//         gsap.to(".flashcard", {
-//           duration: 0.5,
-//           rotationY: "+=180",
-//         });
-//         isReversed.value = false;
-//       }
-//     },
-//   });
 
-//   gsap.to(
-//     ".flashcard",
-//     {
-//       opacity: 100,
-//       xPercent: 25,
-//       duration: 1,
-//       onComplete: () => {
-//         idx.value = idx.value += 1;
-//       },
-//     },
-//     "+=1"
-//   );
-// };
-
+// 이전 버튼 눌렀을때 기믹
 const fadeAwayPre = function () {
   const tl1 = gsap.timeline();
   tl1.to(".flashcard", {
@@ -136,17 +113,40 @@ const fadeAwayPre = function () {
   });
 };
 
-// 좋아요 추가 기능 구현하기!
-const addLike = function () {
-  console.log("구현해주세요");
-};
 
+// idx개수를 추적하여 THE END를 표시해줄 watch
 watch(idx, (newValue, oldValue) => {
   if (newValue === 10) {
     isOver.value = !isOver.value;
     idx.value = 0;
   }
 });
+
+// 현재 favorteData의 값이 1인지, 0인지에 따라 T/F값을 바꿔줄 computed
+const calculFavorite = computed(() => {
+  if (favoriteData.value && favoriteData.value[idx.value] === '1') {
+    return true
+  } else {
+    return false
+  }
+}) 
+
+
+// 좋아요 추가 기능 구현하기!
+const addLike = function () {
+  if (favoriteData.value[idx.value] === "1") {
+    // axios를 통해 좋아요 취소 기능
+
+    // 끝난 후 false로 변환
+    favoriteData.value[idx.value] = "0"
+  } 
+  else if (favoriteData.value[idx.value] === "0") {
+    // axios를 통해 좋아요 추가 기능
+
+    // 끝난후 true로 변환
+    favoriteData.value[idx.value] = "1"
+  }
+}
 
 // 버튼 출력을 다룰 변수 2개 생성
 const isSelected = ref(false);
@@ -169,7 +169,7 @@ const selectCategory = function (cate) {
   category.value = ref(cate);
 
   gsap.to(".flashcard", {
-    duration: 1,
+    duration: 0.3,
     xPercent: 30,
     scale: (1.5, 1.6),
     rotate: 0.2,
@@ -200,19 +200,42 @@ const selectCategory = function (cate) {
     "내용 9",
     "내용 10",
   ];
+  favoriteData.value = [
+    '1','0','1','0','1','1','0','1','0','1'
+  ]
 };
 
+// 다시하기 눌렀을 때, 맨 처음으로 되돌아가는 함수 replayFlashcard
+const replayFlashcard = function () {
+  isSelected.value = !isSelected.value;
+  isOver.value = !isOver.value;
+  isUp.value = !isUp.value;
+  keywordData.value = null;
+  category.value = null;
+
+  gsap.fromTo(
+    ".flashcard",
+    {
+      xPercent: 30,
+      scale: (1.5, 1.6),
+      rotate: 0.2,
+    },
+    {
+      duration: 1,
+      xPercent: 0,
+      scaleX: 1,
+      scaleY: 1.3,
+      rotation: -20,
+    }
+  );
+};
+
+// 각각 메인과 퀴즈로 보내는 router 함수
 const goToMain = function () {
   router.push({ path: "/" });
 };
 const goToQuiz = function () {
   router.push({ path: "/quiz" });
-};
-const replayFlashcard = function () {
-  isSelected.value = !isSelected.value;
-  isOver.value = !isOver.value;
-  keywordData.value = null;
-  category.value = null;
 };
 </script>
 
@@ -231,6 +254,10 @@ const replayFlashcard = function () {
         :class="{ card_text: true, invisible: isInvisible }"
         v-else-if="keywordData && !isReversed"
       >
+        <div class="category_border">
+          <p class="category_text"> {{ category }}</p>
+        </div>
+        <br />
         {{ keywordData[idx] }}
       </p>
       <p
@@ -271,7 +298,7 @@ const replayFlashcard = function () {
           </div>
         </v-col>
         <v-col cols="12">
-          <div class="menu-button" @click="addLike">
+          <div :class="{'complete_like': favoriteData[idx] === '1', 'yet_like': favoriteData[idx] === '0', 'menu-button': true }" @click="addLike">
             <p class="button_text">좋아요</p>
           </div>
         </v-col>
@@ -312,8 +339,10 @@ const replayFlashcard = function () {
 </template>
 
 <style scoped lang="scss">
-@import url("@/assets/style/main.scss");
+@import "@/assets/style/main.scss";
+@import "@/assets/style/quiz.scss";
 
+// 카드 판에서 쓰이는 CSS - memo_card
 .memo_card {
   position: absolute;
   // top: 20%;
@@ -338,11 +367,8 @@ const replayFlashcard = function () {
     text-align: center;
   }
 }
-.bg_position {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
+
+// 움직이는 메모장에서 쓰일 flashcard
 .flashcard {
   position: absolute;
   // top: 25%;
@@ -358,6 +384,7 @@ const replayFlashcard = function () {
   // 회전을 위해 3D 로 선언
   transform-style: preserve-3d;
 }
+// flashcard에 들어가는 text로 처음 시작할때 출력되는 텍스트 css
 .start_text {
   transform: scale(1, calc(1 / 1.3)) translate(-50%, -50%);
   position: absolute;
@@ -367,6 +394,7 @@ const replayFlashcard = function () {
   width: 20vw;
 }
 
+// 카드가 띄워진 후 출력되는 텍스트 css
 .card_text {
   transform: scale(1) translate(-50%, -50%);
   position: absolute;
@@ -375,6 +403,19 @@ const replayFlashcard = function () {
   font-size: 2vw;
   width: 20vw;
 }
+
+// 플래시 카드에 선택한 카테고리를 띄우는데 쓰이는 텍스트의 css
+.category_text {
+  transform: scale(1) translate(-50%, -50%);
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  font-size: 1vw;
+  width: 15vw;
+  border-bottom: 1px solid black;
+}
+
+// 카드 뒷면에 존재하는 내용에 쓰이는 CSS
 .reverse_text {
   transform: scale(1) translate(-50%, -50%) rotateY(180deg);
   position: absolute;
@@ -383,24 +424,13 @@ const replayFlashcard = function () {
   font-size: 1.2vw;
   width: 25vw;
 }
-// .flashcard_effect {
-//   /* translate(px - +  = 오른쪽, - = 왼쪽 , % - + = 아래, - = 위 )
-//             scale(x, y) 1개만 넣으면 x만큼 커짐, x, y를 넣으면 가로 세로 비율 따로 지정 가능
-//         */
-//   transition: all 0.3s linear;
-//   transform: translate(20px, -15%) scale(1.5, 1.8);
-//   .card_text {
-//     transform: scale(calc(1 / 1.5), calc(1 / 1.8)) translate(-50%, -50%);
-//     font-size: 3vw;
-//     left: 40%;
-//     top: 45%;
-//   }
-// }
 
+
+// 버튼들을 다루는 flex box와 그안에서 쓰이는 세부 css
 .button_menu {
   position: absolute;
   margin-top: 10vw;
-  margin-left: 58vw;
+  margin-left: 62vw;
   text-align: center;
   display: flex;
   width: 35vw;
@@ -422,12 +452,14 @@ const replayFlashcard = function () {
     }
   }
 
+  // 베이직 한 기본 버튼들에 쓰임
   .menu-button {
+    min-width: 40%; 
     width: 12vw;
     height: 5vw;
     margin-left: 8vw;
     border: 3px solid rgba(81, 60, 58, 1);
-    color: rgb(124, 92, 63);
+    color: 000000;
     padding: 2%;
     cursor: pointer;
 
@@ -443,7 +475,7 @@ const replayFlashcard = function () {
       font-weight: bold;
       // position: absolute;
     }
-
+    // 메인으로 가기 텍스트가 너무길어서 따로 조절이 필요해 추가로 css 작성
     .gotomain_text {
       width: 8vw;
       font-size: 1.6vw;
@@ -452,6 +484,8 @@ const replayFlashcard = function () {
     }
   }
 }
+
+// 뒷배경에 쓰이는 css
 .bgbg {
   position: fixed;
   min-width: 100%;
@@ -465,7 +499,20 @@ const replayFlashcard = function () {
   background-repeat: no-repeat;
 }
 
+// 애니메이션 로직중에 텍스트를 안보이게 하기위한 css 
 .invisible {
   display: none;
 }
+
+.complete_like {
+      background-color: #7c5c3f;
+      color: white;
+    }
+  
+.yet_like {
+  transition-duration: 0.5s;
+  background-color: none;
+  color: 000000;
+}
+
 </style>
