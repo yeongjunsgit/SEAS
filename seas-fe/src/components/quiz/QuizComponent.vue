@@ -176,7 +176,7 @@ const clearInput = () => {
 input {
     width: 100%;
     height: 30%;
-    padding: 7% 10% 7% 10%;
+    padding: 7% 10% 6% 10%;
     border: 4px double $primary-color;
     font-size: larger;
 
