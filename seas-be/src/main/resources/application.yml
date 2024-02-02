@@ -20,11 +20,16 @@ spring:
 
 springdoc:
   swagger-ui:
+    # config-url: /v3/api-docs/swagger-config
     path: /swagger
+    url: /v3/api-docs
+    operations-sorter: method
   api-docs:
     enabled: true
     path: /v3/api-docs
+
 server:
+  # forward-headers-strategy: framework
   port: 8080
   servlet:
     context-path: /api
