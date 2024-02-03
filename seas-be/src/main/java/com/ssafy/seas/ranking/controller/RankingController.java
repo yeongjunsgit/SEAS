@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.seas.common.constants.ErrorCode;
 import com.ssafy.seas.common.constants.SuccessCode;
 import com.ssafy.seas.common.dto.ApiResponse;
+import com.ssafy.seas.ranking.dto.BadgeDto;
 import com.ssafy.seas.ranking.dto.RankDto;
 import com.ssafy.seas.ranking.dto.RankerDto;
 import com.ssafy.seas.ranking.service.RankingService;
@@ -28,6 +29,16 @@ public class RankingController {
 			String uuid = "toast";
 			List<RankerDto.RankResponse> rankerDtoList = rankingService.getRankers();
 			List<RankerDto.RankResponse> myRankDto = rankingService.getMyRank(uuid);
+
+			for(RankerDto.RankResponse currentRanker : rankerDtoList){
+				List<BadgeDto.BadgeResponse> badgeList = rankingService.getBadgeList(currentRanker.getNickname());
+				currentRanker.setBadgeList(badgeList);
+			}
+
+			if(myRankDto.size() > 0){
+				RankerDto.RankResponse myDto = myRankDto.get(0);
+				myDto.setBadgeList(rankingService.getBadgeList(myDto.getNickname()));
+			}
 
 			// RankDto.Response result = new RankDto.Response(rankerDtoList, myRankDto.get(0));
 			return ApiResponse.success(SuccessCode.GET_SUCCESS, new RankDto.Response(rankerDtoList, myRankDto.get(0)));

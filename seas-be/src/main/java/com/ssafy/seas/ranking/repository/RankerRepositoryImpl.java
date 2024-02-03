@@ -3,6 +3,8 @@ package com.ssafy.seas.ranking.repository;
 // QClass는 static import를 한다.
 
 import static com.ssafy.seas.member.entity.QMember.*;
+import static com.ssafy.seas.ranking.entity.QBadge.*;
+import static com.ssafy.seas.ranking.entity.QMemberBadge.*;
 import static com.ssafy.seas.ranking.entity.QTier.*;
 
 import java.util.ArrayList;
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.seas.ranking.dto.BadgeDto;
+import com.ssafy.seas.ranking.dto.QBadgeDto_BadgeResponse;
 import com.ssafy.seas.ranking.dto.QRankerDto_RankResponse;
 import com.ssafy.seas.ranking.dto.QRankerDto_RankResponseWithRanking;
 import com.ssafy.seas.ranking.dto.RankerDto;
@@ -41,6 +45,24 @@ public class RankerRepositoryImpl implements RankerRepositoryCustom {
 			.on(member.point.between(tier.minScore, tier.maxScore))
 			.orderBy(member.point.desc())
 			.limit(10)
+			.fetch();
+	}
+
+	@Override
+	public List<BadgeDto.BadgeResponse> getBadgeList(String nickname){
+		return queryFactory
+			.select(
+				new QBadgeDto_BadgeResponse(
+					badge.id,
+					badge.name
+				))
+			.from(memberBadge)
+			.innerJoin(badge)
+			.on(memberBadge.badgeId.eq(badge.id))
+			.innerJoin(member)
+			.on(memberBadge.memberId.eq(member.id))
+			.where(member.nickname.eq(nickname))
+			.orderBy(badge.id.asc())
 			.fetch();
 	}
 

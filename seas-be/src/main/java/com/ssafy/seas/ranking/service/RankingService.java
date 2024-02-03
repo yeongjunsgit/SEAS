@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.ssafy.seas.ranking.dto.BadgeDto;
 import com.ssafy.seas.ranking.dto.RankerDto;
 import com.ssafy.seas.ranking.repository.RankerRepositoryCustom;
 
@@ -18,6 +19,10 @@ public class RankingService {
 	public List<RankerDto.RankResponse> getRankers(){
 		return rankerRepositoryCustom.getRankers();
 		// return rankerRepositoryImpl.getRankers();
+	}
+
+	public List<BadgeDto.BadgeResponse> getBadgeList(String nickname){
+		return rankerRepositoryCustom.getBadgeList(nickname);
 	}
 
 	public List<RankerDto.RankResponse> getMyRank(String uuid){

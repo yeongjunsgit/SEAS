@@ -1,10 +1,14 @@
 package com.ssafy.seas.ranking.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.querydsl.core.annotations.QueryProjection;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 public class RankerDto {
 	@Getter
@@ -32,6 +36,15 @@ public class RankerDto {
 		private String nickname;
 		private Integer point;
 		private String tier;
+		@Setter
+		private List<BadgeDto.BadgeResponse> badgeList = new ArrayList<>();
+
+		public RankResponse(String nickname, Integer point, String tier, List<BadgeDto.BadgeResponse> badgeList) {
+			this.nickname = nickname;
+			this.point = point;
+			this.tier = tier;
+			this.badgeList = badgeList;
+		}
 
 		@QueryProjection
 		public RankResponse(String nickname, Integer point, String tier) {
