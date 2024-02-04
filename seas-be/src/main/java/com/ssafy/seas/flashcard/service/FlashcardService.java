@@ -50,6 +50,16 @@ public class FlashcardService {
 		}
 		return flashcardMapper.FlashcardToResponseDto(flashcard, flashcard.getFlashcardContents(),true);
 	}
+	@Transactional
+	public FlashcardDto.Response deleteFavorite(Integer flashcardId) {
+		Member member = memberUtil.getLoginMember();
+		Flashcard flashcard = getFlashcardById(flashcardId);
+		Optional<Favorite> existFavorite = favoriteRepository.findByMemberIdAndFlashcardId(member.getId(), flashcardId);
+		if (existFavorite.isPresent()) {
+			favoriteRepository.delete(existFavorite.get());
+		}
+		return flashcardMapper.FlashcardToResponseDto(flashcard, flashcard.getFlashcardContents(),false);
+	}
 
 	private Flashcard getFlashcardById(Integer flashcardId) {
 		return flashcardRepository.findById(flashcardId)
