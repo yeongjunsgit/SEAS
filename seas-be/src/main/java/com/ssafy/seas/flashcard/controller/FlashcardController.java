@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,5 +35,11 @@ public class FlashcardController {
 		}
 		return ApiResponse.success(SuccessCode.GET_SUCCESS,
 			flashcardService.getFlashcaradsByCategoryName(categoryName));
+	}
+
+	@PostMapping("/flashcard/{flashcardId}/favorite")
+	public ApiResponse<FlashcardDto.Response> postFavorite(@PathVariable("flashcardId") Integer flashcardId) {
+		return ApiResponse.success(SuccessCode.GET_SUCCESS,
+			flashcardService.postFavorite(flashcardId));
 	}
 }
