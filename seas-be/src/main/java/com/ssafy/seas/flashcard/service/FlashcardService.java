@@ -39,6 +39,14 @@ public class FlashcardService {
 		return flashcards;
 	}
 
+	public FlashcardDto.Response getFlashcaradByFlashcardId(Integer flashcardId) {
+		Member member = memberUtil.getLoginMember();
+		Flashcard flashcard = getFlashcardById(flashcardId);
+		Optional<Favorite> existFavorite = favoriteRepository.findByMemberIdAndFlashcardId(member.getId(), flashcardId);
+		boolean isFavorite = existFavorite.isPresent();
+		return flashcardMapper.FlashcardToResponseDto(flashcard, flashcard.getFlashcardContents(),isFavorite);
+	}
+
 	@Transactional
 	public FlashcardDto.Response postFavorite(Integer flashcardId) {
 		Member member = memberUtil.getLoginMember();
@@ -65,5 +73,6 @@ public class FlashcardService {
 		return flashcardRepository.findById(flashcardId)
 			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.FLASHCARD_NOT_FOUND.getMessage()));
 	}
+
 
 }

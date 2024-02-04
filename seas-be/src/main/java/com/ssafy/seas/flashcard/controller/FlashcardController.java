@@ -43,6 +43,12 @@ public class FlashcardController {
 			flashcardService.getFlashcaradsByCategoryId(categoryId.get()));
 	}
 
+	@GetMapping ("/flashcard/{flashcardId}")
+	public ApiResponse<FlashcardDto.Response> getFlashcard(@PathVariable("flashcardId") Integer flashcardId) {
+		return ApiResponse.success(SuccessCode.GET_SUCCESS,
+			flashcardService.getFlashcaradByFlashcardId(flashcardId));
+	}
+
 	@PostMapping("/flashcard/{flashcardId}/favorite")
 	public ApiResponse<FlashcardDto.Response> postFavorite(@PathVariable("flashcardId") Integer flashcardId) {
 		return ApiResponse.success(SuccessCode.POST_SUCCESS,
