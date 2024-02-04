@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.seas.category.repository.CategoryRepository;
 import com.ssafy.seas.common.constants.ErrorCode;
 import com.ssafy.seas.flashcard.dto.FlashcardDto;
 import com.ssafy.seas.flashcard.entity.Favorite;
@@ -26,20 +27,16 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class FlashcardService {
 	private final FlashcardRepository flashcardRepository;
+	private final CategoryRepository categoryRepository;
 	private final FavoriteRepository favoriteRepository;
 	private final FlashcardMapper flashcardMapper;
 	private final MemberUtil memberUtil;
 
-	public List<FlashcardDto.Response> getFlashcaradsByCategoryName(String categoryName) {
-		// TODO: 즐겨찾기 개발 후 isFavorite 내용 추가
-		List<Flashcard> flashcards = flashcardRepository.findByCategory_Name(categoryName);
-		Boolean isFavorite = false;
+	public List<FlashcardDto.Response> getFlashcaradsByCategoryId(Integer categoryId) {
+		Integer MemberId = memberUtil.getLoginMember().getId();
+		List<FlashcardDto.Response> flashcards = flashcardRepository.findAllFlashcardsByMemberIdAndCategoryId(MemberId, categoryId);
 		// TODO: 가중치 순 정렬
-
-		return flashcards
-			.stream()
-			.map(flashcard -> flashcardMapper.FlashcardToResponseDto(flashcard, isFavorite))
-			.toList();
+		return flashcards;
 	}
 
 	@Transactional
@@ -51,7 +48,7 @@ public class FlashcardService {
 			Favorite favorite = Favorite.builder().member(member).flashcard(flashcard).build();
 			favoriteRepository.save(favorite);
 		}
-		return flashcardMapper.FlashcardToResponseDto(flashcard, true);
+		return flashcardMapper.FlashcardToResponseDto(flashcard, flashcard.getFlashcardContents(),true);
 	}
 
 	private Flashcard getFlashcardById(Integer flashcardId) {
