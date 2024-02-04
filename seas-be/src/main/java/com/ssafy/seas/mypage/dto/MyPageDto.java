@@ -1,10 +1,14 @@
 package com.ssafy.seas.mypage.dto;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.querydsl.core.annotations.QueryProjection;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 public class MyPageDto {
 
@@ -37,8 +41,17 @@ public class MyPageDto {
 		}
 	}
 
+	@Getter
 	public static class PerformanceGraph {
+		Integer categoryId;
+		String categoryName;
+		List<ScoreHistory> history = new ArrayList<>();
 
+		@Builder
+		public PerformanceGraph(Integer categoryId, String categoryName) {
+			this.categoryId = categoryId;
+			this.categoryName = categoryName;
+		}
 	}
 
 	@Getter
