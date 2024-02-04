@@ -14,6 +14,7 @@ public class FlashcardDto {
 		private Long id;
 		private String keyword;
 		private String content;
+		private Boolean isFavorite = false;
 	}
 
 }

@@ -33,11 +33,12 @@ public class FlashcardService {
 	public List<FlashcardDto.Response> getFlashcaradsByCategoryName(String categoryName) {
 		// TODO: 즐겨찾기 개발 후 isFavorite 내용 추가
 		List<Flashcard> flashcards = flashcardRepository.findByCategory_Name(categoryName);
+		Boolean isFavorite = false;
 		// TODO: 가중치 순 정렬
 
 		return flashcards
 			.stream()
-			.map(flashcardMapper::FlashcardToResponseDto)
+			.map(flashcard -> flashcardMapper.FlashcardToResponseDto(flashcard, isFavorite))
 			.toList();
 	}
 
