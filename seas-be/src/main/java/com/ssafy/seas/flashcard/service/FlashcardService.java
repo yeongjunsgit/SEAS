@@ -74,5 +74,10 @@ public class FlashcardService {
 			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.FLASHCARD_NOT_FOUND.getMessage()));
 	}
 
+	public List<Integer> getFavoriteFlashcardIds() {
+		Member member = memberUtil.getLoginMember();
+		List<Favorite> favorites = favoriteRepository.findByMemberId(member.getId());
+		return  favorites.stream().map(favorite -> favorite.getFlashcard().getId()).toList();
 
+	}
 }
