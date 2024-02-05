@@ -35,7 +35,7 @@ public class RankingController {
 				currentRanker.setBadgeList(badgeList);
 			}
 
-			if(myRankDto.size() > 0){
+			if(myRankDto.size() == 1){
 				RankerDto.RankResponse myDto = myRankDto.get(0);
 				myDto.setBadgeList(rankingService.getBadgeList(myDto.getNickname()));
 			}
