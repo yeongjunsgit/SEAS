@@ -36,10 +36,17 @@ public class MyPageController {
 		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getQuizRate());
 	}
 
+
 	// 플래시카드 즐겨찾기 목록
 	@GetMapping("/flashcard/favorite")
 	public ApiResponse<List<Integer>> getFavoriteFlashcardIds() {
 
 		return ApiResponse.success(SuccessCode.GET_SUCCESS, flashcardService.getFavoriteFlashcardIds());
+
+	// 성적 추이 그래프
+	@GetMapping("/graph")
+	public ApiResponse<List<MyPageDto.PerformanceGraph>> getGraph() {
+		
+		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getQuizPerformanceGraph());
 	}
 }

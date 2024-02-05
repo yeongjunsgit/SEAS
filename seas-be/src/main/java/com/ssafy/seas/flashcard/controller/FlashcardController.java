@@ -40,7 +40,7 @@ public class FlashcardController {
 		categoryId.orElseThrow(() -> new NoSuchElementException(ErrorCode.BAD_CATEGORY_NAME.getMessage()));
 
 		return ApiResponse.success(SuccessCode.GET_SUCCESS,
-			flashcardService.getFlashcaradsByCategoryId(categoryId.get()));
+			flashcardService.getFlashcardsByCategoryId(categoryId.get()));
 	}
 
 	@GetMapping ("/flashcard/{flashcardId}")
