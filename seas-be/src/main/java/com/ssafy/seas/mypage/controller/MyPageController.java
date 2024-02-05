@@ -42,6 +42,7 @@ public class MyPageController {
 	public ApiResponse<List<Integer>> getFavoriteFlashcardIds() {
 
 		return ApiResponse.success(SuccessCode.GET_SUCCESS, flashcardService.getFavoriteFlashcardIds());
+	}
 
 	// 성적 추이 그래프
 	@GetMapping("/graph")
