@@ -38,3 +38,7 @@ server:
 logging:
   level:
     root: INFO
+  discord:
+    webhook-url: ${DISCORD_WEBHOOK_URL}
+  config: classpath:logback-spring.xml
+
