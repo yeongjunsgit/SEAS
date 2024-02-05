@@ -7,10 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Configuration
-@Slf4j
 public class WebMvcConfig implements WebMvcConfigurer {
 	private final String host = "https://i10a609.p.ssafy.io";
 	private final String localhost = "http://localhost:";
@@ -32,10 +29,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 			allowedOrigins.add(localhost + allowedPort);
 			allowedPort += 1;
 		}
-
-		log.info(allowedOrigins.toString());
-
-
 
 		registry.addMapping("/**")
 			.allowedOrigins(allowedOrigins.toArray(new String[allowedOrigins.size()]))

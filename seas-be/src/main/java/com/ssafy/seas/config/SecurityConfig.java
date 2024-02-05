@@ -29,10 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
-// @Slf4j
 public class SecurityConfig {
-	
-
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
