@@ -37,6 +37,14 @@ public class FlashcardService {
 		return flashcards;
 	}
 
+	public FlashcardDto.Response getFlashcaradByFlashcardId(Integer flashcardId) {
+		Member member = memberUtil.getLoginMember();
+		Flashcard flashcard = getFlashcardById(flashcardId);
+		Optional<Favorite> existFavorite = favoriteRepository.findByMemberIdAndFlashcardId(member.getId(), flashcardId);
+		boolean isFavorite = existFavorite.isPresent();
+		return flashcardMapper.FlashcardToResponseDto(flashcard, flashcard.getFlashcardContents(),isFavorite);
+	}
+
 	@Transactional
 	public FlashcardDto.Response postFavorite(Integer flashcardId) {
 		Member member = memberUtil.getLoginMember();
@@ -64,4 +72,10 @@ public class FlashcardService {
 			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.FLASHCARD_NOT_FOUND.getMessage()));
 	}
 
+	public List<Integer> getFavoriteFlashcardIds() {
+		Member member = memberUtil.getLoginMember();
+		List<Favorite> favorites = favoriteRepository.findByMemberId(member.getId());
+		return  favorites.stream().map(favorite -> favorite.getFlashcard().getId()).toList();
+
+	}
 }
