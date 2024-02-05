@@ -161,24 +161,22 @@ const clearInput = () => {
 
 .question-container {
     width: 100%;
-    min-height: 200px;
     padding-top: 5%;
+    height: 50%;
 }
 
 .hint-container {
-    height: 50px;
+    height: 10%;
 }
-
 .result-container {
-    padding-top: 3%;
-    height: 50px;
     text-align: center;
+    height: 10%;
 }
 
 input {
     width: 100%;
-    height: 100%;
-    padding: 7% 10% 7% 10%;
+    height: 30%;
+    padding: 7% 10% 6% 10%;
     border: 4px double $primary-color;
     font-size: larger;
 

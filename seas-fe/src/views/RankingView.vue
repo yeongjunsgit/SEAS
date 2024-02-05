@@ -63,19 +63,21 @@ const tagList = ref([
                         </thead>
                         <tbody>
                             <tr
-                                v-for="(ranker, index) in rankerList"
-                                :key="index"
+                                v-for="(ranker, rankerIdx) in rankerList"
+                                :key="rankerIdx"
                             >
-                                <td>{{ index + 1 }}</td>
+                                <td>{{ rankerIdx + 1 }}</td>
                                 <td>{{ ranker.name }}</td>
                                 <td class="tag-container">
+                                    <!-- name: "홍싸피", tag: [1, 2, 3, 4], score: 1442 -->
                                     <div
-                                        v-for="(tag, index) in ranker.tag"
-                                        :key="index"
+                                        v-for="tag in ranker.tag"
+                                        :key="tag"
                                         class="tag"
                                     >
                                         <TagComponent
                                             :title="tagList[tag].title"
+                                            :tagNo="tag"
                                         />
                                     </div>
                                 </td>
@@ -95,7 +97,7 @@ const tagList = ref([
     background-image: url($url-path + "images/ranking_bg.jpg");
     background-size: cover;
     width: 100%;
-    height: 200vh;
+    height: 250vh;
     position: absolute;
     z-index: -1;
 }
@@ -104,7 +106,14 @@ const tagList = ref([
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: 100%;
+    height: 100%;
+    align-items: center;
+
+    .ranking-title {
+        h1 {
+            font-size: xxx-large;
+        }
+    }
 
     img {
         align-self: center;
@@ -115,17 +124,20 @@ const tagList = ref([
     }
 
     .board {
-        position: relative;
         z-index: 1;
         display: flex;
         flex-direction: column;
         text-align: center;
         align-items: center;
+        justify-content: space-evenly;
+
+        height: 70%;
+        width: 70%;
 
         .top-ranker {
             display: flex;
             justify-content: space-around;
-            width: 60%;
+            width: 80%;
             height: 30vh;
             margin: 2% 0 10% 0;
 
@@ -135,7 +147,8 @@ const tagList = ref([
                 width: 25%;
                 max-width: 630px;
                 height: 100%;
-                border: 1px solid black;
+                border: 2px black;
+                border-style: double;
 
                 .ranker-background {
                     width: 100%;
@@ -155,24 +168,34 @@ const tagList = ref([
         }
 
         .rank-table {
-            width: 60%;
-            min-height: 50vh;
-            padding-top: 5%;
-            display: flex;
-            flex-direction: column;
+            margin-top: 7%;
+            padding-top: 7%;
             font-size: larger;
+            width: 80%;
+            border-top: 1px double $primary-color;
 
-            td {
-                min-height: 40px;
-                border-bottom: 1px solid black;
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            tr td,
+            tr th {
+                padding-top: 1%;
+                border: 1px solid #000; /* 테두리 스타일 및 색상 지정 */
             }
 
+            th {
+                min-width: 80px;
+            }
+            td {
+                margin: 2% 0 2% 0;
+            }
             .tag-container {
                 display: flex;
                 text-align: center;
-                margin-top: 1%;
-                max-width: 105vh;
-                overflow: hidden;
+                flex-wrap: wrap;
+                padding: 2% 0 2% 0;
+                margin: 0;
 
                 .tag {
                     margin-left: 1%;
