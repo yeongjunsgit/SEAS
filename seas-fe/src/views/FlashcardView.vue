@@ -8,7 +8,7 @@ import { RouterLink, RouterView } from "vue-router";
 import HeaderComponent from "@/components/commons/HeaderComponent.vue";
 import { ref, watch, computed } from "vue";
 import { gsap } from "gsap";
-
+import axios from "axios"
 import { useRouter } from "vue-router";
 const router = useRouter();
 
@@ -24,19 +24,24 @@ const isReversed = ref(false);
 const isUp = ref(false);
 const isFront = ref(true);
 const isInvisible = ref(false);
+const isAnimating = ref(false);
 
 // 카드가 뒤집어지는 효과를 담당하는 함수
 const reverseCard = function () {
-  if (isUp.value === true) {
+  if (isUp.value === true && isAnimating.value === false) {
     isFront.value = !isFront.value;
     isReversed.value = !isReversed.value;
     isInvisible.value = !isInvisible.value;
 
     gsap.to(".flashcard", {
+      onStart: () => {
+        isAnimating.value = true
+      },
       duration: 1,
       rotationY: "+=180",
       onComplete: () => {
         isInvisible.value = !isInvisible.value;
+        isAnimating.value = false
       },
     });
   }
@@ -45,72 +50,84 @@ const reverseCard = function () {
 // 카드 넘길때 사라지고 다시 나타나는 애니메이션 구현
 // 다음 버튼 눌렀을 때 기믹
 const fadeAwayNext = function () {
-  const tl1 = gsap.timeline();
-  tl1.to(".flashcard", {
-    duration: 0.3,
-    xPercent: -40,
-    opacity: 0,
-    onComplete: () => {
-      isInvisible.value = !isInvisible.value;
-      if (isReversed.value === true) {
-        gsap.to(".flashcard", {
-          delay: 1,
-          duration: 0,
-          rotationY: "-=180",
-        });
-        isReversed.value = false;
-      }
-    },
-  });
-
-  tl1.to(".flashcard", {
-    onStart: () => {
-      idx.value = idx.value += 1;
-    },
-    opacity: 100,
-    xPercent: 25,
-    duration: 0.5,
-    delay: 1,
-    onComplete: () => {
-      isInvisible.value = !isInvisible.value;
-    },
-  });
+  if (isAnimating.value === false) {
+    const tl1 = gsap.timeline();
+    tl1.to(".flashcard", {
+      onStart: () => {
+        isAnimating.value = true
+      },
+      duration: 0.3,
+      xPercent: -40,
+      opacity: 0,
+      onComplete: () => {
+        isInvisible.value = !isInvisible.value;
+        if (isReversed.value === true) {
+          gsap.to(".flashcard", {
+            delay: 1,
+            duration: 0,
+            rotationY: "-=180",
+          });
+          isReversed.value = false;
+        }
+      },
+    });
+  
+    tl1.to(".flashcard", {
+      onStart: () => {
+        idx.value = idx.value += 1;
+      },
+      opacity: 100,
+      xPercent: 25,
+      duration: 0.5,
+      delay: 1,
+      onComplete: () => {
+        isInvisible.value = !isInvisible.value;
+        isAnimating.value = false
+      },
+    });
+  }
 };
 
 // 이전 버튼 눌렀을때 기믹
 const fadeAwayPre = function () {
-  const tl1 = gsap.timeline();
-  tl1.to(".flashcard", {
-    duration: 1,
-    xPercent: -40,
-    opacity: 0,
-    onComplete: () => {
-      isInvisible.value = !isInvisible.value;
-      if (isReversed.value === true) {
-        gsap.to(".flashcard", {
-          delay: 1,
-          duration: 0,
-          rotationY: "-=180",
-        });
-        isReversed.value = false;
-      }
-    },
-  });
-
-  tl1.to(".flashcard", {
-    onStart: () => {
-      if (idx.value > 0) {
-        idx.value = idx.value -= 1;
-      }
-    },
-    opacity: 100,
-    xPercent: 25,
-    duration: 0.5,
-    delay: 1,
-    onComplete: () => {
-      isInvisible.value = !isInvisible.value;
-    },
-  });
+  if (isAnimating.value === false) {
+    const tl1 = gsap.timeline();
+    tl1.to(".flashcard", {
+      onStart: () => {
+        isAnimating.value = true
+      },
+      duration: 0.3,
+      xPercent: -40,
+      opacity: 0,
+      onComplete: () => {
+        isInvisible.value = !isInvisible.value;
+        if (isReversed.value === true) {
+          gsap.to(".flashcard", {
+            delay: 1,
+            duration: 0,
+            rotationY: "-=180",
+          });
+          isReversed.value = false;
+        }
+      },
+    });
+  
+    tl1.to(".flashcard", {
+      onStart: () => {
+        if (idx.value > 0) {
+          idx.value = idx.value -= 1;
+        }
+      },
+      opacity: 100,
+      xPercent: 25,
+      duration: 0.5,
+      delay: 1,
+      onComplete: () => {
+        isInvisible.value = !isInvisible.value;
+        isAnimating.value = false
+      },
+    });
+  }
 };
 
 
@@ -164,70 +181,115 @@ const buttonCategory = [
 
 // 버튼 눌렀을 때 호출되는 함수들
 const selectCategory = function (cate) {
-  isSelected.value = !isSelected.value;
-  isUp.value = !isUp.value;
-  category.value = ref(cate);
-
-  gsap.to(".flashcard", {
-    duration: 0.3,
-    xPercent: 30,
-    scale: (1.5, 1.6),
-    rotate: 0.2,
-  });
-
-  // 여기서 받은 카테고리를 axios로 보내자! 일단 임시로 아무거나 만들어서 쓰겠다
-  keywordData.value = [
-    "Primary Key",
-    "Foreign Key",
-    "키워드 3",
-    "키워드 4",
-    "키워드 5",
-    "키워드 6",
-    "키워드 7",
-    "키워드 8",
-    "키워드 9",
-    "키워드 10",
-  ];
-  commentData.value = [
-    "관계형 데이터베이스에서 조(레코드)의 식별자로 이용하기에 가장 적합한 것을 관계 (테이블)마다 단 한 설계자에 의해 선택, 정의된 후보 키",
-    "다른 테이블의 기본 키를 참조하여 두 테이블을 연결하는 테이블의 속성 집합",
-    "- 컴퓨터의 뇌로서, 프로그램에서 명령어를 해석하고 실행하는 핵심 부품 제어 유닛은 명령어를 해독하고 실행하는 역할을 하며, 산술 논리 연산 장치(ALU)는 산술 연산과 논리 연산을 수행 레지스터는 매우 빠른 속도로 데이터를 저장하고 처리하는데 사용",
-    "내용 4",
-    "내용 5",
-    "내용 6",
-    "내용 7",
-    "내용 8",
-    "내용 9",
-    "내용 10",
-  ];
-  favoriteData.value = [
-    '1','0','1','0','1','1','0','1','0','1'
-  ]
+  if (isAnimating.value === false) {
+    isSelected.value = !isSelected.value;
+    isUp.value = !isUp.value;
+    category.value = ref(cate);
+  
+    gsap.to(".flashcard", {
+      onStart: () => {
+        isAnimating.value = true
+      },
+      duration: 0.3,
+      xPercent: 30,
+      scale: (1.5, 1.6),
+      rotate: 0.2,
+      onComplete: () => {
+        isAnimating.value = false
+      }
+    });
+  
+    // 여기서 받은 카테고리를 axios로 보내자! 일단 임시로 아무거나 만들어서 쓰겠다
+    axios({
+      method: 'get',
+      url: `http://70.12.247.130:8080/api/flashcard?category=${category.value}`,
+  
+    }) .then((res) => {
+      console.log(res.data)
+      keywordData.value = response.data.keyword
+      commentData.value = response.data.content
+    }) .catch((error) => {
+      console.log(error)
+    })
+  
+    keywordData.value = [
+      "Primary Key",
+      "Foreign Key",
+      "키워드 3",
+      "키워드 4",
+      "키워드 5",
+      "키워드 6",
+      "키워드 7",
+      "키워드 8",
+      "키워드 9",
+      "키워드 10",
+    ];
+    commentData.value = [
+      ["1컴퓨터의 뇌로서, 프로그램에서 명령어를 해석하고 실행하는 핵심 부품",
+        "제어 유닛은 명령어를 해독하고 실행하는 역할을 하며, 산술 논리 연산 장치(ALU)는 산술 연산과 논리 연산을 수행",
+        "레지스터는 매우 빠른 속도로 데이터를 저장하고 처리하는데 사용"],
+      ["데이터와 명령을 저장하는 공간",
+        "주 기억장치(RAM)는 현재 실행 중인 프로그램과 데이터를 저장하며, 보조 기억장치(하드 디스크, SSD)는 영구적인 데이터 저장을 담당",
+        "캐시도 메모리의 일종으로, 빠른 데이터 접근을 위해 사용"],
+      ["CPU, 메모리, 그리고 입출력 장치 등 각 구성 요소 간에 데이터, 주소, 제어 신호를 전송하는 통로",
+        "주소 버스는 메모리 위치를 지정하고, 데이터 버스는 실제 데이터를 전송하며, 제어 버스는 명령과 상태 정보를 전송"],
+      ["CPU 내부에 위치한 소량의 고속 기억장치",
+        "현재 수행 중인 명령어나 연산에 필요한 데이터를 일시적으로 저장",
+        "레지스터는 ALU에서의 계산에 필수적이며, 레지스터의 크기와 수는 CPU의 성능에 영향을 미침"],
+      ["CPU가 이해하고 실행하는 명령어의 집합",
+        "각 명령어는 특정한 동작을 수행하며, 이러한 명령어들을 조합하여 프로그램이 동작"],
+      ["명령어 처리를 여러 단계로 분할하여 병렬적으로 실행하는 구조",
+        "이를 통해 여러 명령어가 동시에 처리되어 CPU의 성능이 향상"],
+      ["빠른 속도로 접근 가능한 작은 용량의 메모리",
+        "CPU가 자주 사용하는 데이터를 일시적으로 저장하여 메인 메모리에 접근하는 속도를 향상",
+        "주로 L1, L2, L3 캐시로 구성"],
+      ["전체 시스템의 동기화를 담당하는 신호",
+        "CPU와 다른 시스템 구성 요소의 동작 주기를 조절",
+        "클럭 주파수가 높을수록 더 빠른 연산이 가능"],
+      ["CPU가 현재 수행 중인 작업을 중단하고 외부 이벤트에 대응하는 메커니즘",
+        "하드웨어나 소프트웨어에서 발생할 수 있으며, 시스템의 효율적인 동작과 응답성을 보장"],
+      ["내장된 소프트웨어로, 하드웨어 초기화, 부팅, 기본 시스템 설정 및 제어를 담당",
+        "주로 ROM 또는 플래시 메모리에 저장되며, 시스템의 안정성과 동작을 지원",
+        "펌웨어는 업데이트 가능하며, 제조사가 제공하는 업데이트로 기능 확장 가능"],
+    ];
+    
+    favoriteData.value = [
+      '1','0','1','0','1','1','0','1','0','1'
+    ]
+  }
 };
 
 // 다시하기 눌렀을 때, 맨 처음으로 되돌아가는 함수 replayFlashcard
 const replayFlashcard = function () {
-  isSelected.value = !isSelected.value;
-  isOver.value = !isOver.value;
-  isUp.value = !isUp.value;
-  keywordData.value = null;
-  category.value = null;
-
-  gsap.fromTo(
-    ".flashcard",
-    {
-      xPercent: 30,
-      scale: (1.5, 1.6),
-      rotate: 0.2,
-    },
-    {
-      duration: 1,
-      xPercent: 0,
-      scaleX: 1,
-      scaleY: 1.3,
-      rotation: -20,
-    }
-  );
+  if (isAnimating.value === false) {
+    isSelected.value = !isSelected.value;
+    isOver.value = !isOver.value;
+    isUp.value = !isUp.value;
+    keywordData.value = null;
+    category.value = null;
+  
+    gsap.fromTo(
+      ".flashcard",
+      {
+        onStart: () => {
+          isAnimating.value = true
+        },
+        xPercent: 30,
+        scale: (1.5, 1.6),
+        rotate: 0.2,
+      },
+      {
+        duration: 0.5,
+        xPercent: 0,
+        scaleX: 1,
+        scaleY: 1.3,
+        rotation: -20,
+        onComplete: () => {
+          isAnimating.value = false
+        }
+      }
+    );
+  }
 };
 
 // 각각 메인과 퀴즈로 보내는 router 함수
@@ -264,7 +326,10 @@ const goToQuiz = function () {
         :class="{ reverse_text: true, invisible: isInvisible }"
         v-else-if="keywordData && isReversed"
       >
-        {{ commentData[idx] }}
+      <br>
+        <li v-for="data in commentData[idx]">
+          {{ data }}
+        </li>
       </p>
       <p class="start_text" v-else-if="!keywordData">
         카테고리를<br />
@@ -419,9 +484,10 @@ const goToQuiz = function () {
 .reverse_text {
   transform: scale(1) translate(-50%, -50%) rotateY(180deg);
   position: absolute;
+  text-align: left;
   top: 44%;
   left: 50%;
-  font-size: 1.2vw;
+  font-size: 1vw;
   width: 25vw;
 }
 
