@@ -14,22 +14,11 @@ const rankerList = ref([
     { name: "양싸피", tag: [5], score: 2302 },
 ]);
 
-const tagList = ref([
-    { title: "알고리즘" },
-    { title: "네트워크" },
-    { title: "자료구조" },
-    { title: "데이터베이스" },
-    { title: "컴퓨터구조" },
-    { title: "운영체제" },
-]);
-
+// 검색 ====================================
 const userInput = ref("");
-
 const searchByName = () => {
     console.log(userInput.value);
 };
-
-const isTooltipVisible = ref(false);
 </script>
 
 <template>
@@ -91,13 +80,12 @@ const isTooltipVisible = ref(false);
                             >
                                 <td>{{ rankerIdx + 1 }}</td>
                                 <td>{{ ranker.name }}</td>
-                                <div v-if="isTooltipVisible" class="tooltip">
-                                    말풍선 내용
-                                </div>
+
                                 <td class="tag-container">
                                     <!-- name: "홍싸피", tag: [1, 2, 3, 4], score: 1442 -->
                                     <TagComponent
                                         :tagCount="ranker.tag.length"
+                                        :rankerInfo="ranker.tag"
                                     />
                                 </td>
                                 <td>
