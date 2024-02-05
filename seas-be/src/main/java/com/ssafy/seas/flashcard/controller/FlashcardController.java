@@ -2,8 +2,11 @@ package com.ssafy.seas.flashcard.controller;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,11 +30,21 @@ public class FlashcardController {
 	public ApiResponse<List<FlashcardDto.Response>> getFlashcards(@RequestParam("category") String categoryName) {
 		List<CategoryDto.Response> categories = categoryService.getCategories();
 
-		// categoryName 검증: categoryName과 일치하는 카테고리가 존재하지 않는다면
-		if (categories.stream().noneMatch(category -> categoryName.equals(category.getName()))) {
-			throw new NoSuchElementException(ErrorCode.BAD_CATEGORY_NAME.getMessage());
-		}
+		Optional<Integer> categoryId = categories.stream()
+			.filter(category -> categoryName.equals(category.getName()))
+			.map(category-> category.getId())
+			.findFirst();
+
+		// categoryName과 일치하는 카테고리가 없다면 NoSuchElementException 발생
+		categoryId.orElseThrow(() -> new NoSuchElementException(ErrorCode.BAD_CATEGORY_NAME.getMessage()));
+
 		return ApiResponse.success(SuccessCode.GET_SUCCESS,
-			flashcardService.getFlashcaradsByCategoryName(categoryName));
+			flashcardService.getFlashcaradsByCategoryId(categoryId.get()));
+	}
+
+	@PostMapping("/flashcard/{flashcardId}/favorite")
+	public ApiResponse<FlashcardDto.Response> postFavorite(@PathVariable("flashcardId") Integer flashcardId) {
+		return ApiResponse.success(SuccessCode.GET_SUCCESS,
+			flashcardService.postFavorite(flashcardId));
 	}
 }
