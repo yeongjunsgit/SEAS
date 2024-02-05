@@ -13,14 +13,6 @@ const categories = [
   "네트워크",
   "컴퓨터 구조",
 ];
-
-// const weeks = Array.from({ length: 52 }, (_, index) => index + 1);
-// const days = Array.from({ length: 7 }, (_, index) => index + 1);
-// const filledDays = [7, 14, 21, 28, 35, 42, 49];
-
-// const isFilled = function (day) {
-//   return filledDays.includes(day);
-// };
 </script>
 
 <template>
@@ -28,8 +20,9 @@ const categories = [
     <div class="container">
       <div class="mypage-component-background userinfo">
         <div>
-          <div class="user-box">
-            <div class="text-center">
+          <p class="text-center">유저 정보</p>
+          <div class="user-container">
+            <div class="user-box">
               <div>
                 <img src="@/assets/images/Logo.png" alt="" />
               </div>
@@ -39,15 +32,14 @@ const categories = [
               <p>정답률 : 75%</p>
             </div>
             <div>
-              <p>유저 정보</p>
-              <div>
+              <div class="radar">
                 <RadarChart />
               </div>
             </div>
           </div>
         </div>
         <div class="grass">
-          <div class="text-center">일일 학습 경과</div>
+          <p class="text-center">일일 학습 경과</p>
           <div class="grass-component">
             <GrassComponentVue />
           </div>
@@ -77,9 +69,15 @@ const categories = [
 <style scoped lang="scss">
 @import url("@/assets/style/main.scss");
 
-img {
-  max-width: 100%;
+.container {
+  display: flex;
+  flex-direction: column;
 }
+.user-container {
+  display: flex;
+  justify-content: space-between;
+}
+
 .text-center {
   text-align: center;
 }
@@ -96,9 +94,13 @@ img {
   display: grid;
   align-items: center;
   grid-template-columns: 1fr 1fr;
-  margin-bottom: 0;
-  padding-bottom: 0;
+  // margin-bottom: 0;
+  // padding-bottom: 0;
+  img {
+    width: 100%;
+  }
 }
+
 .rotate {
   rotate: -90deg;
 }
@@ -114,13 +116,10 @@ img {
   background-position-x: center;
 }
 .user-box {
-  margin-left: 50px;
-  border: 2px brown;
-  border-style: none;
-  border-radius: 0.5cap;
-  display: grid;
-  grid-template-columns: 5fr 7fr;
-  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
 }
 .mychart {
   display: grid;
@@ -132,28 +131,14 @@ img {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding-top: 105px;
-  padding-left: 30px;
+  // padding-top: 105px;
+  // padding-left: 30px;
 }
 
-.grass-component {
-  padding-left: 50px;
-}
-.week {
-  display: flex;
-}
-
-// .day {
-//   width: 16px;
-//   height: 16px;
-//   margin: 1px;
-//   border: 1px solid black;
-//   background-color: #ebedf0;
-//   transition: background-color 0.3s ease;
+// .grass-component {
+//   padding-left: 50px;
 // }
-// .day.filled {
-//   background-color: green;
-// }
+//
 .chart-box {
   padding-left: 40px;
 }
@@ -165,5 +150,39 @@ img {
 .mycard {
   display: grid;
   grid-template-columns: 1fr 1fr;
+}
+
+@media screen and (max-width: 1350px) {
+  .mychart {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 30px;
+  }
+}
+@media screen and (max-width: 1150px) {
+  .userinfo {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mycard {
+    padding-top: 90px;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+  }
+}
+@media screen and (max-width: 960px) {
+  .mychart {
+    grid-template-columns: repeat(1, 1fr);
+    row-gap: 30px;
+  }
+}
+@media screen and (max-width: 600px) {
+  body {
+    overflow: auto; /* 모든 방향으로 스크롤 생성 */
+    width: 600px; /* 또는 원하는 크기로 설정 */
+    margin: 0 auto; /* 가운데 정렬을 위해 사용 */
+    /* 추가로 필요한 스타일 설정 */
+  }
 }
 </style>
