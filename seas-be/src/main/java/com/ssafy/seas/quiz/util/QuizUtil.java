@@ -2,6 +2,7 @@ package com.ssafy.seas.quiz.util;
 
 import com.ssafy.seas.quiz.dto.QuizDto;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -12,6 +13,12 @@ import java.util.List;
 @Configuration
 public class QuizUtil {
 
+
+    private final RedisTemplate<String, QuizDto.QuizFactorDto> redisTemplate;
+
+    public QuizUtil(RedisTemplate<String, QuizDto.QuizFactorDto> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     public double[][] getPrefixWeightMap(List<QuizDto.QuizWeightInfo> weightInfo){
 
@@ -40,6 +47,7 @@ public class QuizUtil {
 
 
     // quizzes의 배열은 {quizId, ef}로 이루어짐
+
     public double[] selectQuizzes(double[][] quizWeightInfo) {
 
         double[] selectedQuizInfo = new double[3];
@@ -78,7 +86,16 @@ public class QuizUtil {
         return BigDecimal.valueOf(value).setScale(digit, RoundingMode.HALF_UP).doubleValue();
     }
 
-    public void storeToRedis(){
+    public void storeQuizToRedis(List<QuizDto.QuizFactorDto> quizInfoList){
 
+        for(QuizDto.QuizFactorDto quizInfo : quizInfoList) {
+            String key = quizInfo.getMemberId() + "-" + quizInfo.getQuizId();
+            redisTemplate.opsForValue().set(key, quizInfo);
+        }
+    }
+
+    public QuizDto.QuizFactorDto getQuizHint(Integer quizId, Integer memberId){
+        String key = memberId + "-" + quizId;
+        return redisTemplate.opsForValue().get(key);
     }
 }
