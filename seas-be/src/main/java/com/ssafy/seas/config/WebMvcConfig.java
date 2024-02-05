@@ -1,6 +1,5 @@
 package com.ssafy.seas.config;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.context.annotation.Configuration;

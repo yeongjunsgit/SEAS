@@ -31,57 +31,12 @@ import lombok.extern.slf4j.Slf4j;
 @EnableWebSecurity
 // @Slf4j
 public class SecurityConfig {
-	@Bean
-	CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173/", "http://localhost:5173"));
-		configuration.setAllowedMethods(Arrays.asList("GET","POST", "OPTIONS"));
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
-		return source;
-	}
-
-	// @Bean
-	// public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-	// 	httpSecurity
-	// 		.cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
-	// 		.authorizeHttpRequests(request ->
-	// 			request
-	// 				.requestMatchers("/**").permitAll()
-	// 		);
-	//
-	// 	return httpSecurity.build();
-	// }
-
-
-	// @Bean
-	// public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-	// 	http
-	// 		// if Spring MVC is on classpath and no CorsConfigurationSource is provided,
-	// 		// Spring Security will use CORS configuration provided to Spring MVC
-	// 		// .cors(withDefaults())
-	// 		.cors((corsConfigurer) -> corsConfigurer.configurationSource(corsConfigurationSource()));
-	// 		// .authorizeHttpRequests(request ->
-	// 		// 	request
-	// 		// 		.requestMatchers("/**").permitAll()
-	// 		// );
-	// 	return http.build();
-	// }
+	
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
-			// if Spring MVC is on classpath and no CorsConfigurationSource is provided,
-			// Spring Security will use CORS configuration provided to Spring MVC
-			.cors(CorsConfigurer::disable);
-
-			// .cors(Customizer.withDefaults());
-			// .cors((corsConfigurer) -> corsConfigurer.configurationSource(corsConfigurationSource()));
-			// .authorizeHttpRequests(request ->
-			// 	request
-			// 		.requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
-			// 		.requestMatchers("/**").permitAll()
-			// );
+			.cors(CorsConfigurer::disable); // WebMvcConfig에 있는 cors 설정 사용
 		return http.build();
 	}
 
