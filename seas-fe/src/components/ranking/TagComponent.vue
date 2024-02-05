@@ -1,26 +1,30 @@
 <script setup>
-const props = defineProps(["title", "tagNo"]);
+import { ref } from "vue";
+const props = defineProps(["tagCount"]);
+
+const levelList = [
+    "선원",
+    "포수장",
+    "갑판장",
+    "항해사",
+    "일등항해사",
+    "부선장",
+    "선장",
+];
 </script>
 
 <template>
-    <div
-        :class="{
-            container: true,
-            'text-font': true,
-            'master-tag': tagNo === 0,
-        }"
-    >
-        <p>{{ title }}</p>
+    <div class="container" :class="{ 'master-tag': tagCount == 6 }">
+        <p>{{ levelList[tagCount] }}</p>
     </div>
 </template>
 
 <style scoped lang="scss">
 @import "@/assets/style/main.scss";
 .container {
+    display: flex;
+    justify-content: center;
     border-radius: 20px;
-    min-width: 15vh;
-    margin: 1px 3px 0 3px;
-    padding-top: 1px;
     background-color: $primary-color;
 
     p {
@@ -29,13 +33,12 @@ const props = defineProps(["title", "tagNo"]);
         text-align: center;
         font-weight: 700;
         font-size: medium;
-        vertical-align: middle;
-        margin-top: 3%;
+        display: flex;
+        justify-content: center;
     }
 }
 
 .master-tag {
-    background-color: rgba(255, 0, 0, 1);
-    border-color: red;
+    background-color: #ff0000;
 }
 </style>

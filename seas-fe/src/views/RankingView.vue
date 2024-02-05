@@ -3,19 +3,18 @@ import TagComponent from "@/components/ranking/TagComponent.vue";
 import { ref } from "vue";
 
 const rankerList = ref([
-    { name: "김싸피", tag: [1], score: 3000 },
+    { name: "김싸피더안드로메다", tag: [1], score: 3000 },
     { name: "최싸피", tag: [2, 3], score: 1231 },
     { name: "홍싸피", tag: [1, 2, 3, 4], score: 1442 },
     { name: "임싸피", tag: [1, 2, 3], score: 1232 },
     { name: "이싸피", tag: [0], score: 9292 },
     { name: "배싸피", tag: [1, 2, 3], score: 1231 },
     { name: "엄싸피", tag: [4], score: 6463 },
-    { name: "송싸피", tag: [1, 2, 3, 4, 5], score: 3901 },
+    { name: "송싸피", tag: [0, 1, 2, 3, 4, 5], score: 3901 },
     { name: "양싸피", tag: [5], score: 2302 },
 ]);
 
 const tagList = ref([
-    { title: "CS 선장" },
     { title: "알고리즘" },
     { title: "네트워크" },
     { title: "자료구조" },
@@ -23,6 +22,14 @@ const tagList = ref([
     { title: "컴퓨터구조" },
     { title: "운영체제" },
 ]);
+
+const userInput = ref("");
+
+const searchByName = () => {
+    console.log(userInput.value);
+};
+
+const isTooltipVisible = ref(false);
 </script>
 
 <template>
@@ -51,7 +58,22 @@ const tagList = ref([
                         <h2>최싸피</h2>
                     </div>
                 </div>
+
                 <div class="rank-table">
+                    <div class="search-container">
+                        <label for="searchName">사용자 이름 검색 :</label>
+                        <div class="input-container">
+                            <input
+                                id="searchName"
+                                type="text"
+                                v-model="userInput"
+                                @keyup.enter="searchByName"
+                            />
+                            <button class="search-button" @click="searchByName">
+                                검색
+                            </button>
+                        </div>
+                    </div>
                     <table>
                         <thead>
                             <tr>
@@ -65,23 +87,24 @@ const tagList = ref([
                             <tr
                                 v-for="(ranker, rankerIdx) in rankerList"
                                 :key="rankerIdx"
+                                class="non-header"
                             >
                                 <td>{{ rankerIdx + 1 }}</td>
                                 <td>{{ ranker.name }}</td>
+                                <div v-if="isTooltipVisible" class="tooltip">
+                                    말풍선 내용
+                                </div>
                                 <td class="tag-container">
                                     <!-- name: "홍싸피", tag: [1, 2, 3, 4], score: 1442 -->
-                                    <div
-                                        v-for="tag in ranker.tag"
-                                        :key="tag"
-                                        class="tag"
-                                    >
-                                        <TagComponent
-                                            :title="tagList[tag].title"
-                                            :tagNo="tag"
-                                        />
+                                    <TagComponent
+                                        :tagCount="ranker.tag.length"
+                                    />
+                                </td>
+                                <td>
+                                    <div>
+                                        {{ ranker.score }}
                                     </div>
                                 </td>
-                                <td>{{ ranker.score }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -92,7 +115,6 @@ const tagList = ref([
 </template>
 <style scoped lang="scss">
 @import "@/assets/style/main.scss";
-
 .ranking-container {
     background-image: url($url-path + "images/ranking_bg.jpg");
     background-size: cover;
@@ -134,6 +156,7 @@ const tagList = ref([
         height: 70%;
         width: 70%;
 
+        // 탑 랭커 섹션 =========================
         .top-ranker {
             display: flex;
             justify-content: space-around;
@@ -147,8 +170,7 @@ const tagList = ref([
                 width: 25%;
                 max-width: 630px;
                 height: 100%;
-                border: 2px black;
-                border-style: double;
+                border: 2px double black;
 
                 .ranker-background {
                     width: 100%;
@@ -167,39 +189,82 @@ const tagList = ref([
             }
         }
 
+        // 랭크 테이블 섹션 ===================
         .rank-table {
-            margin-top: 7%;
-            padding-top: 7%;
             font-size: larger;
             width: 80%;
-            border-top: 1px double $primary-color;
 
+            // 검색 섹션 ======================
+            .search-container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: end;
+                padding: 1% 0 1% 0;
+                z-index: 1;
+                border-top: 2px double black;
+                max-height: 60px;
+                width: 100%;
+
+                label {
+                    margin: 1% 1% 0 0;
+                    font-size: larger;
+                }
+                .input-container {
+                    display: flex;
+
+                    input {
+                        padding: 2% 0 0 2%;
+                        border: 2px solid black;
+                        border-radius: 10px;
+                        font-size: large;
+                        font-weight: bold;
+                        height: 100%;
+
+                        &:focus {
+                            outline: none;
+                            background-color: rgba($gradation-color, 0.1);
+                        }
+                    }
+
+                    .search-button {
+                        border: 2px solid $primary-color;
+                        border-radius: 10px;
+                        margin-left: 10px;
+                        padding: 2% 1% 0 1%;
+                        min-width: 50px;
+
+                        &:hover {
+                            background-color: $primary-color;
+                            color: white;
+                            transition-duration: 0.5s;
+                        }
+                    }
+                }
+            }
             table {
                 width: 100%;
                 border-collapse: collapse;
-            }
-            tr td,
-            tr th {
-                padding-top: 1%;
-                border: 1px solid #000; /* 테두리 스타일 및 색상 지정 */
-            }
+                padding: 0;
 
-            th {
-                min-width: 80px;
-            }
-            td {
-                margin: 2% 0 2% 0;
+                tr th,
+                tr td {
+                    height: 50px;
+                    padding-top: 1%;
+                    border-bottom: 1px solid #000; /* 테두리 스타일 및 색상 지정 */
+                }
+
+                th {
+                    background-color: rgba($secondary-color, 0.4);
+                }
+
+                .non-header:hover {
+                    background-color: rgba($gradation-color, 0.2);
+                    transition-duration: 0.5s;
+                }
             }
             .tag-container {
-                display: flex;
-                text-align: center;
-                flex-wrap: wrap;
-                padding: 2% 0 2% 0;
-                margin: 0;
-
-                .tag {
-                    margin-left: 1%;
-                }
+                widows: 50%;
+                padding-bottom: 1%;
             }
         }
     }
