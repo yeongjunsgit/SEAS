@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,12 +40,18 @@ public class FlashcardController {
 		categoryId.orElseThrow(() -> new NoSuchElementException(ErrorCode.BAD_CATEGORY_NAME.getMessage()));
 
 		return ApiResponse.success(SuccessCode.GET_SUCCESS,
-			flashcardService.getFlashcaradsByCategoryId(categoryId.get()));
+			flashcardService.getFlashcardsByCategoryId(categoryId.get()));
 	}
 
 	@PostMapping("/flashcard/{flashcardId}/favorite")
 	public ApiResponse<FlashcardDto.Response> postFavorite(@PathVariable("flashcardId") Integer flashcardId) {
-		return ApiResponse.success(SuccessCode.GET_SUCCESS,
+		return ApiResponse.success(SuccessCode.POST_SUCCESS,
 			flashcardService.postFavorite(flashcardId));
+	}
+
+	@DeleteMapping("/flashcard/{flashcardId}/favorite")
+	public ApiResponse<FlashcardDto.Response> deleteFavorite(@PathVariable("flashcardId") Integer flashcardId) {
+		return ApiResponse.success(SuccessCode.DELETE_SUCCESS,
+			flashcardService.deleteFavorite(flashcardId));
 	}
 }
