@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssafy.seas.category.dto.CategoryDto;
 import com.ssafy.seas.category.util.CategoryUtil;
 import com.ssafy.seas.member.dto.MemberDto;
-import com.ssafy.seas.member.mapper.MemberMapper;
 import com.ssafy.seas.member.repository.MemberRepository;
 import com.ssafy.seas.member.util.MemberUtil;
 import com.ssafy.seas.mypage.dto.MyPageDto;
@@ -58,5 +57,34 @@ public class MyPageService {
 				.build());
 		}
 		return quizRate;
+	}
+
+	public List<MyPageDto.PerformanceGraph> getQuizPerformanceGraph() {
+		Integer memberId = memberUtil.getLoginMemberId();
+		List<CategoryDto.Response> categories = categoryUtil.getCategories();
+		List<MyPageDto.ScoreHistoryDetail> scoreHistoryDetails = myPageRepository.getScoreHistory(memberId);
+		List<MyPageDto.PerformanceGraph> result = new ArrayList<>();
+
+		int scoreHistoryIndex = 0;
+
+		for (CategoryDto.Response category : categories) {
+			MyPageDto.PerformanceGraph data = MyPageDto.PerformanceGraph.builder()
+				.categoryId(category.getId())
+				.categoryName(category.getName())
+				.build();
+
+			while (scoreHistoryIndex < scoreHistoryDetails.size()
+				&& category.getId().equals(scoreHistoryDetails.get(scoreHistoryIndex).getCategoryId())) {
+				MyPageDto.ScoreHistoryDetail score = scoreHistoryDetails.get(scoreHistoryIndex++);
+				data.getHistory()
+					.add(MyPageDto.ScoreHistory.builder()
+						.createdAt(score.getCreatedAt())
+						.score(score.getScore())
+						.round(score.getRound())
+						.build());
+			}
+			result.add(data);
+		}
+		return result;
 	}
 }
