@@ -1,9 +1,15 @@
 <script setup>
-const props = defineProps(["title"]);
+const props = defineProps(["title", "tagNo"]);
 </script>
 
 <template>
-    <div class="container text-font">
+    <div
+        :class="{
+            container: true,
+            'text-font': true,
+            'master-tag': tagNo === 0,
+        }"
+    >
         <p>{{ title }}</p>
     </div>
 </template>
@@ -11,10 +17,10 @@ const props = defineProps(["title"]);
 <style scoped lang="scss">
 @import "@/assets/style/main.scss";
 .container {
-    border: 3px solid $primary-color;
     border-radius: 20px;
-    min-width: 18vh;
-    margin: 0 3px 0 3px;
+    min-width: 15vh;
+    margin: 1px 3px 0 3px;
+    padding-top: 1px;
     background-color: $primary-color;
 
     p {
@@ -26,5 +32,10 @@ const props = defineProps(["title"]);
         vertical-align: middle;
         margin-top: 3%;
     }
+}
+
+.master-tag {
+    background-color: rgba(255, 0, 0, 1);
+    border-color: red;
 }
 </style>

@@ -33,6 +33,7 @@ function preloadResource(url, type) {
         <!-- 홈 화면 좌측 부분 -->
         <div class="main-content">
             <div class="text-font">
+                <h1>오늘의 바다는 우울합니다</h1>
                 <h1>분당 CS 10개</h1>
                 <h1>카드를 통한 간단한 암기</h1>
                 <h1>퀴즈를 통한 복기</h1>

@@ -26,6 +26,17 @@ onBeforeMount(() => {
   margin: 0px;
   padding: 0px;
 }
+
+/* 수평 스크롤 바 감추기 */
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/* 수직 스크롤 바 감추기 */
+body::-webkit-scrollbar-thumb {
+    display: none;
+}
+
 a {
   text-decoration: none;
 }
