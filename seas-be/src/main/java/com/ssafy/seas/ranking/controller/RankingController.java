@@ -40,9 +40,7 @@ public class RankingController {
 				myDto.setBadgeList(rankingService.getBadgeList(myDto.getNickname()));
 			}
 
-			// RankDto.Response result = new RankDto.Response(rankerDtoList, myRankDto.get(0));
 			return ApiResponse.success(SuccessCode.GET_SUCCESS, new RankDto.Response(rankerDtoList, myRankDto.get(0)));
-			// return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ApiResponse.error(ErrorCode.SERVER_ERROR);
@@ -59,14 +57,4 @@ public class RankingController {
 			return ApiResponse.error(ErrorCode.SERVER_ERROR);
 		}
 	}
-
-
-	// public ApiResponse<String> regist(@RequestBody MemberDto.Post memberDto) {
-	// 	try {
-	// 		return ApiResponse.success(SuccessCode.POST_SUCCESS, memberService.signup(memberDto));
-	// 	} catch (Exception e) {
-	// 		e.printStackTrace();
-	// 		return ApiResponse.error(ErrorCode.SERVER_ERROR);
-	// 	}
-	// }
 }

@@ -1,7 +1,6 @@
 package com.ssafy.seas.ranking.repository;
 
 // QClass는 static import를 한다.
-
 import static com.ssafy.seas.member.entity.QMember.*;
 import static com.ssafy.seas.ranking.entity.QBadge.*;
 import static com.ssafy.seas.ranking.entity.QMemberBadge.*;
@@ -86,14 +85,9 @@ public class RankerRepositoryImpl implements RankerRepositoryCustom {
 					member.nickname,
 					member.point,
 					tier.name,
-					// JPAExpressions
-					// 	.select(Expressions.numberTemplate("COUNT(*) + 1").intValue())
-					// 	.from(member)
-					// 	.where(member.point.gt(member.point)),
 					Expressions.numberTemplate(Integer.class, "(RANK() OVER (ORDER BY {0} DESC))", member.point).as("ranking")
 					))
 			.from(member)
-			// .where(member.nickname.eq(nickname))
 			.innerJoin(tier)
 			.on(member.point.between(tier.minScore, tier.maxScore))
 			.fetch();
