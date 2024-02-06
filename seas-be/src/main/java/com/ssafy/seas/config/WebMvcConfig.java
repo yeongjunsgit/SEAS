@@ -1,4 +1,5 @@
 package com.ssafy.seas.config;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	private final String host = "https://i10a609.p.ssafy.io";
 	private final String localhost = "http://localhost:";
 	private final String secureLocalhost = "https://localhost:";
+
+	private final String[] allowedHosts = new String[] {
+		localhost,
+		secureLocalhost,
+		"http://127.0.0.1:"
+	};
 	private final int defaultPort = 80;
 	private final int allowedMinPort = 5173;
 	private final int allowedMaxPort = 5175;
@@ -26,9 +33,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		allowedOrigins.add(localhost + defaultPort);
 		allowedOrigins.add(secureLocalhost + defaultPort);
 		while (allowedPort <= allowedMaxPort) {
-			allowedOrigins.add(localhost + allowedPort);
+			for (String host : allowedHosts) {
+				allowedOrigins.add(host + allowedPort);
+			}
 			allowedPort += 1;
 		}
+
+		System.out.println(allowedOrigins.toString());
 
 		registry.addMapping("/**")
 			.allowedOrigins(allowedOrigins.toArray(new String[allowedOrigins.size()]))
