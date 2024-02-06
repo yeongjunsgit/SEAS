@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.ssafy.seas.common.entity.BaseEntity;
 import com.ssafy.seas.flashcard.entity.Favorite;
+import com.ssafy.seas.mypage.entity.Streak;
 import com.ssafy.seas.quiz.entity.Quiz;
 
 import jakarta.persistence.Column;
@@ -33,4 +34,7 @@ public class Member extends BaseEntity {
 
 	@OneToMany(mappedBy = "member")
 	private List<Favorite> favorites = new ArrayList<>();
+
+	@OneToMany(mappedBy = "member")
+	private List<Streak> streaks = new ArrayList<>();
 }
