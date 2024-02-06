@@ -27,7 +27,7 @@ public class QuizUtil {
         double[][] quizWeight = new double[size][2];
 
         quizWeight[0][0] = weightInfo.get(0).getQuizId();
-        quizWeight[0][1] = 1 / (weightInfo.get(0).getQuizInterval() * weightInfo.get(0).getEf());
+        quizWeight[0][1] = toFixed(1 / (weightInfo.get(0).getQuizInterval() * weightInfo.get(0).getEf()), 1);
 
         for(int factorIndex = 1; factorIndex < size; factorIndex++){
             QuizDto.QuizWeightInfo quizWeightInfo = weightInfo.get(factorIndex);
@@ -62,7 +62,7 @@ public class QuizUtil {
         
         // 1.3 ~ max 구간의 랜덤값이 나옴
         double random = toFixed(Math.random() * (max - min) + min, 1);
-
+        log.info("RAMDON : {} ", random);
         int selectedQuizIndex = Arrays.binarySearch(weightArray, random);
 
         // binarySearch에서는 정확한 값이 아니면, 음수로 (- (이 값이 배열에 있을 시 위치할 인덱스 + 1))를 돌려주므로 절댓값 - 1으로 해준다.
@@ -80,7 +80,7 @@ public class QuizUtil {
     public void checkWeightArray(double[] weights){
         int size = weights.length;
 
-        log.info(weights.toString());
+        log.info(Arrays.toString(weights));
     }
 
     // 소숫점 digit 자리까지 반올림하는 함수
