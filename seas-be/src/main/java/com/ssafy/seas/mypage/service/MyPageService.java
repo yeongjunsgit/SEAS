@@ -9,10 +9,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssafy.seas.category.dto.CategoryDto;
 import com.ssafy.seas.category.util.CategoryUtil;
 import com.ssafy.seas.member.dto.MemberDto;
+import com.ssafy.seas.member.entity.Member;
 import com.ssafy.seas.member.repository.MemberRepository;
 import com.ssafy.seas.member.util.MemberUtil;
 import com.ssafy.seas.mypage.dto.MyPageDto;
 import com.ssafy.seas.mypage.repository.MyPageRepository;
+import com.ssafy.seas.ranking.dto.BadgeDto;
+import com.ssafy.seas.ranking.repository.RankerRepositoryCustom;
+import com.ssafy.seas.ranking.repository.RankerRepositoryImpl;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class MyPageService {
 	private final MemberRepository memberRepository;
 	private final MyPageRepository myPageRepository;
+	private final RankerRepositoryCustom rankerRepository;
 	private final MemberUtil memberUtil;
 	private final CategoryUtil categoryUtil;
 
@@ -86,5 +91,10 @@ public class MyPageService {
 			result.add(data);
 		}
 		return result;
+	}
+
+	public List<BadgeDto.BadgeResponse> getBadges() {
+		Member member = memberUtil.getLoginMember();
+		return rankerRepository.getBadgeListByMemberId(member.getId());
 	}
 }

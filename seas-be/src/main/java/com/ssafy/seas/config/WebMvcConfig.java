@@ -39,8 +39,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 			allowedPort += 1;
 		}
 
-		System.out.println(allowedOrigins.toString());
-
 		registry.addMapping("/**")
 			.allowedOrigins(allowedOrigins.toArray(new String[allowedOrigins.size()]))
 			.allowedMethods(
