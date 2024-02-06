@@ -14,6 +14,7 @@ import com.ssafy.seas.flashcard.service.FlashcardService;
 import com.ssafy.seas.member.dto.MemberDto;
 import com.ssafy.seas.mypage.dto.MyPageDto;
 import com.ssafy.seas.mypage.service.MyPageService;
+import com.ssafy.seas.ranking.dto.BadgeDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,7 +42,6 @@ public class MyPageController {
 	// 플래시카드 즐겨찾기 목록
 	@GetMapping("/flashcard/favorite")
 	public ApiResponse<List<FavoriteDto.CardIdPerCategory>> getFavoriteFlashcardIds() {
-
 		return ApiResponse.success(SuccessCode.GET_SUCCESS, flashcardService.getFavoriteFlashcardIds());
 	}
 
@@ -50,5 +50,11 @@ public class MyPageController {
 	public ApiResponse<List<MyPageDto.PerformanceGraph>> getGraph() {
 		
 		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getQuizPerformanceGraph());
+	}
+
+	@GetMapping("/badge")
+	public ApiResponse<List<BadgeDto.BadgeResponse>> getBadges() {
+
+		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getBadges());
 	}
 }

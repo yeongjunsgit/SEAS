@@ -10,4 +10,6 @@ public interface RankerRepositoryCustom {
 	List<BadgeDto.BadgeResponse> getBadgeList(String nickname);
 	List<RankerDto.RankResponse> getMyRank(String uuid);
 	List<RankerDto.RankResponseWithRanking> getRankByNickname(String nickname);
+
+	List<BadgeDto.BadgeResponse> getBadgeListByMemberId(Integer memberId);
 }
