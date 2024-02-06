@@ -224,7 +224,6 @@ const closeModal = () => {
                 padding: 1% 0 1% 0;
                 z-index: 1;
                 border-top: 2px double black;
-                max-height: 60px;
                 width: 100%;
 
                 label {
@@ -240,6 +239,7 @@ const closeModal = () => {
                         border-radius: 10px;
                         font-size: large;
                         font-weight: bold;
+                        width: 80%;
                         height: 100%;
 
                         &:focus {

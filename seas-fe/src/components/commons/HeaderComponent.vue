@@ -11,14 +11,11 @@ const router = useRouter();
 // 임시 변수
 const isLogin = ref(false);
 
-const currentPath = ref("");
 const movePage = (destination) => {
-    if (currentPath.value == destination) router.go(0);
     // 로그인 임시 코드
     if (destination == "/auth") {
         isLogin.value = true;
     } else {
-        currentPath.value = destination;
         router.replace({ path: destination });
     }
 };
