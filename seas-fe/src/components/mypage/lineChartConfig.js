@@ -14,15 +14,33 @@ export const options = {
   maintainAspectRatio: false,
   borderColor: "rgba(81,60,58, 1)",
   borderWidth: 2,
-  scale: {
-    beginAtZero: true,
-    ticks: {
-      // display: false,
-      backdropColor: "rgba(81,60,58, 0)",
-      color: "rgba(81,60,58, 1)",
-      stepSize: 20,
-      font: {
-        size: 10,
+  scales: {
+    x: {
+      ticks: {
+        stepSize: 20,
+        font: {
+          size: 14,
+          family: "Ahnjunggeun",
+          weight: "bold",
+        },
+        color: "black",
+      },
+      grid: {
+        color: "rgba(0,0,0, 0.3)",
+      },
+    },
+    y: {
+      ticks: {
+        stepSize: 20,
+        font: {
+          size: 14,
+          family: "Ahnjunggeun",
+          weight: "bold",
+        },
+        color: "black",
+      },
+      grid: {
+        color: "rgba(0,0,0, 0.3)",
       },
     },
   },
@@ -31,6 +49,11 @@ export const options = {
       display: true,
       onClick: false,
       labels: {
+        font: {
+          family: "Ahnjunggeun",
+          weight: "bold",
+          size: 17,
+        },
         boxHeight: 0.1,
         color: "rgba(81,60,58, 1)",
       },
