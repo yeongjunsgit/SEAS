@@ -18,7 +18,7 @@ public class MemberUtil {
 	private final MemberMapper memberMapper;
 
 	public static Integer getLoginMemberId() {
-		// TODO: 현재 로그인한 유저의 id(pk)를 반환하는 로직 구현
+		// TODO: 현재 로그인한 유저의 memberId 반환하는 로직 구현
 		return 1;
 	}
 

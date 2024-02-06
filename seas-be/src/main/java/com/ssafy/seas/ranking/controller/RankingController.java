@@ -35,7 +35,7 @@ public class RankingController {
 				currentRanker.setBadgeList(badgeList);
 			}
 
-			if(myRankDto.size() == 1){
+			if(myRankDto.size() > 0){
 				RankerDto.RankResponse myDto = myRankDto.get(0);
 				myDto.setBadgeList(rankingService.getBadgeList(myDto.getNickname()));
 			}
@@ -47,7 +47,7 @@ public class RankingController {
 		}
 	}
 
-	@GetMapping("/search")
+	@GetMapping
 	public ApiResponse<RankerDto.RankResponseWithRanking> getMemberRanking(@RequestParam("search") String searchNickname) {
 		try {
 			List<RankerDto.RankResponseWithRanking> result = rankingService.getRankByNickname(searchNickname);
