@@ -184,7 +184,7 @@ const closeModal = () => {
             justify-content: space-around;
             width: 80%;
             height: 30vh;
-            margin: 2% 0 10% 0;
+            margin: 2% 0 15% 0;
 
             .ranker {
                 display: flex;
