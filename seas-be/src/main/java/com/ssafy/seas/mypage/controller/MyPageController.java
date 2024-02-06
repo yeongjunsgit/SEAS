@@ -13,6 +13,7 @@ import com.ssafy.seas.flashcard.dto.FlashcardDto;
 import com.ssafy.seas.flashcard.service.FlashcardService;
 import com.ssafy.seas.member.dto.MemberDto;
 import com.ssafy.seas.mypage.dto.MyPageDto;
+import com.ssafy.seas.mypage.dto.StreakDto;
 import com.ssafy.seas.mypage.service.MyPageService;
 import com.ssafy.seas.ranking.dto.BadgeDto;
 
@@ -56,5 +57,12 @@ public class MyPageController {
 	public ApiResponse<List<BadgeDto.BadgeResponse>> getBadges() {
 
 		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getBadges());
+	}
+
+	// 스트릭
+	@GetMapping("/history")
+	public ApiResponse<List<StreakDto.Response>> getStreak() {
+
+		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getStreak());
 	}
 }
