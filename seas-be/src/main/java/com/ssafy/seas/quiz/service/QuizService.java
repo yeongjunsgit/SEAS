@@ -56,7 +56,9 @@ public class QuizService {
     }
 
 
-    public QuizHintDto.Response getHint(Integer quizId, Integer memberId){
+    public QuizHintDto.Response getHint(Integer quizId){
+
+        Integer memberId = MemberUtil.getLoginMemberId();
 
         QuizDto.QuizFactorDto data = quizUtil.getQuizHint(quizId, memberId);
         return new QuizHintDto.Response(data.getQuizId(), data.getHint());

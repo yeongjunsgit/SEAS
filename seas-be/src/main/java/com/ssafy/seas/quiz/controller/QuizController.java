@@ -27,10 +27,10 @@ public class QuizController {
 
 
     @GetMapping("/{quizId}/hint")
-    public ApiResponse<QuizHintDto.Response> getHint(@PathVariable("quizId") Integer quizId, @RequestParam("id") Integer memberId){
+    public ApiResponse<QuizHintDto.Response> getHint(@PathVariable("quizId") Integer quizId){
 
 
-        return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getHint(quizId, memberId));
+        return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getHint(quizId));
     }
 
 
