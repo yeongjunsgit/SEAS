@@ -5,6 +5,7 @@ import com.ssafy.seas.common.dto.ApiResponse;
 import com.ssafy.seas.quiz.dto.QuizListDto;
 import com.ssafy.seas.quiz.service.QuizService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,12 +20,10 @@ public class QuizController {
     }
 
     // 퀴즈 목록 불러오기
-    @GetMapping("")
-    public ApiResponse<QuizListDto.Response> getQuizzezList(QuizListDto.Request request){
-        return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getQuizzes(request));
+    @GetMapping("/{categoryId}")
+    public ApiResponse<QuizListDto.Response> getQuizzezList(@PathVariable("categoryId") int categoryId){
+
+        return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getQuizzes(categoryId));
     }
-
-
-
 
 }
