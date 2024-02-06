@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.seas.common.constants.SuccessCode;
 import com.ssafy.seas.common.dto.ApiResponse;
+import com.ssafy.seas.flashcard.dto.FavoriteDto;
 import com.ssafy.seas.flashcard.dto.FlashcardDto;
 import com.ssafy.seas.flashcard.service.FlashcardService;
 import com.ssafy.seas.member.dto.MemberDto;
@@ -40,7 +41,7 @@ public class MyPageController {
 
 	// 플래시카드 즐겨찾기 목록
 	@GetMapping("/flashcard/favorite")
-	public ApiResponse<List<Integer>> getFavoriteFlashcardIds() {
+	public ApiResponse<List<FavoriteDto.CardIdPerCategory>> getFavoriteFlashcardIds() {
 		return ApiResponse.success(SuccessCode.GET_SUCCESS, flashcardService.getFavoriteFlashcardIds());
 	}
 
