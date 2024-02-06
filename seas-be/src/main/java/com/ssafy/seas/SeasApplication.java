@@ -7,8 +7,11 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.servers.Server;
+
 @PropertySource("classpath:/seas-config.yml")
-// @OpenAPIDefinition(servers = {@Server(url = "https://i10a609.p.ssafy.io/api", description="원격 백엔드 서버입니다.")})
+@OpenAPIDefinition(servers = {@Server(url = "https://i10a609.p.ssafy.io/api", description="원격 백엔드 서버입니다.")})
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 @EnableJpaAuditing
 @EnableCaching
