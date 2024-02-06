@@ -42,7 +42,7 @@ public class RankerRepositoryImpl implements RankerRepositoryCustom {
 			.from(member)
 			.innerJoin(tier)
 			.on(member.point.between(tier.minScore, tier.maxScore))
-			.orderBy(member.point.desc(), member.updatedAt.asc())
+			.orderBy(member.point.desc())
 			.limit(10)
 			.fetch();
 	}

@@ -12,9 +12,7 @@ import com.ssafy.seas.member.dto.MemberDto;
 import com.ssafy.seas.member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
@@ -25,23 +23,6 @@ public class MemberController {
 	public ApiResponse<String> regist(@RequestBody MemberDto.Post memberDto) {
 		try {
 			return ApiResponse.success(SuccessCode.POST_SUCCESS, memberService.signup(memberDto));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ApiResponse.error(ErrorCode.SERVER_ERROR);
-		}
-	}
-
-	@PostMapping("/signin")
-	public ApiResponse<MemberDto.Response> login(@RequestBody MemberDto.Post memberDto) {
-		try{
-			log.info("로그인 시도 : {}", memberDto.getMemberId());
-			MemberDto.Response member = memberService.signin(memberDto);
-			log.info("로그인 결과 : {}", member.getMemberId());
-			if(member.getMemberId() != null) {
-				return ApiResponse.success(SuccessCode.POST_SUCCESS, member);
-			} else {
-				return ApiResponse.error(ErrorCode.MEMBER_NOT_FOUND);
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ApiResponse.error(ErrorCode.SERVER_ERROR);
