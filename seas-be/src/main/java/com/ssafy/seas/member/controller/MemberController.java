@@ -33,7 +33,6 @@ public class MemberController {
 
 	@PostMapping("/signin")
 	public ApiResponse<MemberDto.Response> login(@RequestBody MemberDto.Post memberDto) {
-		System.out.println("로그인하자!!");
 		try{
 			log.info("로그인 시도 : {}", memberDto.getMemberId());
 			MemberDto.Response member = memberService.signin(memberDto);
