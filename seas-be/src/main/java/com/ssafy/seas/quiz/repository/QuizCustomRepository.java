@@ -34,7 +34,7 @@ public class QuizCustomRepository{
                         quiz.category.id.eq(categoryId.intValue())
                 ).stream().toList();
 
-        log.info(QuizInfoList.toString());
+        //log.info(QuizInfoList.toString());
 
         return QuizInfoList;
     }
