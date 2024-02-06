@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ssafy.seas.flashcard.entity.Flashcard;
 
-public interface FlashcardRepository extends JpaRepository<Flashcard, Long> {
+public interface FlashcardRepository extends JpaRepository<Flashcard, Integer>, FlashcardRepositoryCustom {
 	List<Flashcard> findByCategory_Name(String categoryName);
 }

@@ -20,6 +20,10 @@ public enum ErrorCode {
 
 	// 카테고리
 	BAD_CATEGORY_NAME(BAD_REQUEST, "키테고리 이름이 잘못되었습니다."),
+
+	// 플래시카드
+	FLASHCARD_NOT_FOUND(BAD_REQUEST, "id에 해당하는 플래시카드가 없습니다."),
+
 	/* 500 INTERNAL_SERVER_ERROR : 서버 오류 */
 	SERVER_ERROR(INTERNAL_SERVER_ERROR, "서버 내부 오류로 인해 응답을 제공할 수 없습니다.");
 

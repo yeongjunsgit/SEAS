@@ -1,16 +1,12 @@
 package com.ssafy.seas.quiz.service;
 
 
+import com.ssafy.seas.member.util.MemberUtil;
 import com.ssafy.seas.quiz.dto.QuizDto;
 import com.ssafy.seas.quiz.dto.QuizHintDto;
 import com.ssafy.seas.quiz.dto.QuizListDto;
 import com.ssafy.seas.quiz.repository.QuizCustomRepository;
 import com.ssafy.seas.quiz.util.QuizUtil;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,16 +18,17 @@ public class QuizService {
 
     private final QuizCustomRepository quizCustomRepository;
     private final QuizUtil quizUtil;
+    private final MemberUtil memberUtil;
 
-    public QuizService(QuizCustomRepository quizCustomRepository, QuizUtil quizUtil, CacheManager cacheManager, RedisTemplate<String, List<String>> redisTemplate) {
+    public QuizService(QuizCustomRepository quizCustomRepository, QuizUtil quizUtil, MemberUtil memberUtil) {
         this.quizCustomRepository = quizCustomRepository;
         this.quizUtil = quizUtil;
+        this.memberUtil = memberUtil;
     }
 
-    public List<QuizListDto.QuizInfo> getQuizzes(QuizListDto.Request request){
+    public QuizListDto.Response getQuizzes(Integer categoryId){
 
-        Integer memberId = request.getMemberId();
-        Integer categoryId = request.getCategoryId();
+        Integer memberId = MemberUtil.getLoginMemberId();
 
         List<QuizListDto.QuizInfo> quizInfoList = new ArrayList<>();
 
@@ -39,16 +36,13 @@ public class QuizService {
 
         List<QuizDto.QuizWeightInfo> quizWeightInfos =
                 quizFactors.stream().map(dto -> {
-            return new QuizDto.QuizWeightInfo(dto.getQuizId(), dto.getQuizInterval(), dto.getEf());
+                return new QuizDto.QuizWeightInfo(dto.getQuizId(), dto.getQuizInterval(), dto.getEf());
         }).collect(Collectors.toList());
 
         for(int i = 0; i < 10; i++) {
-            double[][] prefixWeightList = quizUtil.getPrefixWeightMap(quizWeightInfos);
+            double[][] prefixWeightList = quizUtil.getPrefixWeightArray(quizWeightInfos);
             double[] selectedQuizInfo = quizUtil.selectQuizzes(prefixWeightList);
             int foundIndex = (int) selectedQuizInfo[2];
-//            quizWeightInfos.get(foundIndex).setQuizInterval(0.0);
-//            quizWeightInfos.get(foundIndex).setEf(0.0);
-
             quizWeightInfos.remove(foundIndex);
 
             int quizId = (int) selectedQuizInfo[0];
@@ -58,7 +52,7 @@ public class QuizService {
 
         quizUtil.storeQuizToRedis(quizFactors);
 
-        return quizInfoList;
+        return new QuizListDto.Response(quizInfoList);
     }
 
 

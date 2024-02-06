@@ -1,21 +1,16 @@
 package com.ssafy.seas.member.repository;
 
 import static com.ssafy.seas.member.entity.QMember.*;
+
 import static com.ssafy.seas.quiz.entity.QSolvedQuiz.*;
 import static com.ssafy.seas.ranking.entity.QTier.*;
-import static org.hibernate.internal.util.NullnessHelper.*;
 
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
-import com.querydsl.core.types.dsl.NumberTemplate;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.seas.common.constants.ErrorCode;
 import com.ssafy.seas.member.dto.MemberDto;
 import com.ssafy.seas.member.dto.QMemberDto_MyInfoResponse;
-import com.ssafy.seas.quiz.entity.QSolvedQuiz;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +34,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 			.on(member.point.between(tier.minScore, tier.maxScore))
 			.fetchOne();
 
-		if (info == null){
+		if (info == null) {
 			log.error(ErrorCode.MEMBER_NOT_FOUND.getMessage());
 			throw new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND.getMessage());
 		}
@@ -58,7 +53,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 			.then(0.0)
 			.otherwise(correctCountSum.divide(tryCountSum).multiply(100));
 
-		MemberDto.MyInfoResponse stat  = queryFactory.select(new QMemberDto_MyInfoResponse(solvedQuiz.count().intValue(), correctRate))
+		MemberDto.MyInfoResponse stat = queryFactory.select(
+				new QMemberDto_MyInfoResponse(solvedQuiz.count().intValue(), correctRate))
 			.from(solvedQuiz)
 			.where(solvedQuiz.member.id.eq(memberId))
 			.fetchOne();

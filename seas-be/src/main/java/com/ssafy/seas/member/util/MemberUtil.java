@@ -29,4 +29,12 @@ public class MemberUtil {
 			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND.getMessage()));
 		return memberMapper.MemberToMemberDtoResponse(member);
 	}
+
+	// TODO: getLoginMemberId 구현 이후 로직 최적화
+	public Member getLoginMember() {
+		Integer id = getLoginMemberId();
+		Member member = memberRepository.findById(id)
+			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND.getMessage()));
+		return member;
+	}
 }
