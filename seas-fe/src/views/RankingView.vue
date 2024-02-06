@@ -1,5 +1,6 @@
 <script setup>
 import TagComponent from "@/components/ranking/TagComponent.vue";
+import Modal from "@/components/ranking/Modal.vue";
 import { ref } from "vue";
 
 const rankerList = ref([
@@ -18,6 +19,21 @@ const rankerList = ref([
 const userInput = ref("");
 const searchByName = () => {
     console.log(userInput.value);
+};
+
+// `ref` 함수를 사용하여 반응성 데이터를 선언합니다.
+const isModalOpen = ref(false);
+const rankerInfo = ref({});
+// 모달 열기 함수
+const openModal = (ranker) => {
+    isModalOpen.value = true;
+    rankerInfo.value = ranker;
+    console.log(rankerInfo.value);
+};
+
+// 모달 닫기 함수
+const closeModal = () => {
+    isModalOpen.value = false;
 };
 </script>
 
@@ -79,8 +95,9 @@ const searchByName = () => {
                                 class="non-header"
                             >
                                 <td>{{ rankerIdx + 1 }}</td>
-                                <td>{{ ranker.name }}</td>
-
+                                <td @click="openModal(ranker)" class="detail">
+                                    {{ ranker.name }}
+                                </td>
                                 <td class="tag-container">
                                     <!-- name: "홍싸피", tag: [1, 2, 3, 4], score: 1442 -->
                                     <TagComponent
@@ -99,6 +116,23 @@ const searchByName = () => {
                 </div>
             </div>
         </div>
+        <!-- 모달 컴포넌트 -->
+        <Modal v-if="isModalOpen" @close="closeModal">
+            <!-- 모달 내용 -->
+            <h2>사용자 이름: {{ rankerInfo.name }}</h2>
+            <p>
+                레벨:
+                <TagComponent
+                    :tagCount="rankerInfo.tag.length"
+                    :rankerInfo="rankerInfo.tag"
+                />
+            </p>
+            <p>보유 태그: {{ rankerInfo.tag }}</p>
+            <p>현상금: {{ rankerInfo.score }}</p>
+            <button @click="closeModal" class="search-button">
+                Close Modal
+            </button>
+        </Modal>
     </div>
 </template>
 <style scoped lang="scss">
@@ -213,22 +247,31 @@ const searchByName = () => {
                             background-color: rgba($gradation-color, 0.1);
                         }
                     }
+                }
 
-                    .search-button {
-                        border: 2px solid $primary-color;
-                        border-radius: 10px;
-                        margin-left: 10px;
-                        padding: 2% 1% 0 1%;
-                        min-width: 50px;
+                .search-button {
+                    border: 2px solid $primary-color;
+                    border-radius: 10px;
+                    margin-left: 10px;
+                    padding: 2% 1% 0 1%;
+                    min-width: 50px;
 
-                        &:hover {
-                            background-color: $primary-color;
-                            color: white;
-                            transition-duration: 0.5s;
-                        }
+                    &:hover {
+                        background-color: $primary-color;
+                        color: white;
+                        transition-duration: 0.5s;
                     }
                 }
             }
+
+            // 모달 ==============================
+            .detail {
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+
+            // 테이블 =============================
             table {
                 width: 100%;
                 border-collapse: collapse;
