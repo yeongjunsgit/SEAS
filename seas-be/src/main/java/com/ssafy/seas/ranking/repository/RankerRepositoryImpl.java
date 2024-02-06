@@ -104,4 +104,22 @@ public class RankerRepositoryImpl implements RankerRepositoryCustom {
 		return result;
 	}
 
+	@Override
+	public List<BadgeDto.BadgeResponse> getBadgeListByMemberId(Integer memberId) {
+		return queryFactory
+			.select(
+				new QBadgeDto_BadgeResponse(
+					badge.id,
+					badge.name
+				))
+			.from(member)
+			.where(member.id.eq(memberId))
+			.innerJoin(memberBadge)
+			.on(memberBadge.memberId.eq(member.id))
+			.innerJoin(badge)
+			.on(memberBadge.badgeId.eq(badge.id))
+			.orderBy(badge.id.asc())
+			.fetch();
+	}
+
 }
