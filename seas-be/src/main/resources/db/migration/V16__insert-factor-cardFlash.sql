@@ -1,16 +1,4 @@
 
-INSERT INTO seas.flashcard (id, keyword, created_at, updated_at, category_id)
-VALUES
-    (1, '기본키 (Primary Key)', NOW(), NOW(), 1),
-    (2, '테이블 (Table)', NOW(), NOW(), 1),
-    (3, '외래 키 (Foreign Key)', NOW(), NOW(), 1),
-    (4, '인덱스 (Index)', NOW(), NOW(), 1),
-    (5, '트랜잭션 (Transaction)', NOW(), NOW(), 1),
-    (6, '스키마 (Schema)', NOW(), NOW(), 1),
-    (7, '정규화 (Normalization)', NOW(), NOW(), 1),
-    (8, '뷰 (View)', NOW(), NOW(), 1),
-    (9, 'SQL; Structured Query Language', NOW(), NOW(), 1),
-    (10, '트리거 (Trigger)', NOW(), NOW(), 1);
 
 
 INSERT INTO seas.card_quiz(id, quiz_id, flashcard_id)
