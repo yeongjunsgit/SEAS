@@ -47,7 +47,7 @@ public class RankingController {
 		}
 	}
 
-	@GetMapping
+	@GetMapping("/search")
 	public ApiResponse<RankerDto.RankResponseWithRanking> getMemberRanking(@RequestParam("search") String searchNickname) {
 		try {
 			List<RankerDto.RankResponseWithRanking> result = rankingService.getRankByNickname(searchNickname);
