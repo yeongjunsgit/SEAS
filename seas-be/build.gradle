@@ -61,6 +61,9 @@ dependencies {
 
     // discord logging webhook
     implementation 'club.minnced:discord-webhooks:0.8.4'
+
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 /* Querydsl Start */

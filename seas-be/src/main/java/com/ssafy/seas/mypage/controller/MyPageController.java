@@ -15,6 +15,7 @@ import com.ssafy.seas.member.dto.MemberDto;
 import com.ssafy.seas.mypage.dto.MyPageDto;
 import com.ssafy.seas.mypage.dto.StreakDto;
 import com.ssafy.seas.mypage.service.MyPageService;
+import com.ssafy.seas.quiz.dto.IncorrectNoteDto;
 import com.ssafy.seas.ranking.dto.BadgeDto;
 
 import lombok.RequiredArgsConstructor;
@@ -39,17 +40,22 @@ public class MyPageController {
 		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getQuizRate());
 	}
 
-
 	// 플래시카드 즐겨찾기 목록
 	@GetMapping("/flashcard/favorite")
 	public ApiResponse<List<FavoriteDto.CardIdPerCategory>> getFavoriteFlashcardIds() {
 		return ApiResponse.success(SuccessCode.GET_SUCCESS, flashcardService.getFavoriteFlashcardIds());
 	}
 
+	// 오답노트 목록 불러오기
+	@GetMapping("/incorrect")
+	public ApiResponse<List<IncorrectNoteDto.QuizIdPerCategory>> getIncorrectNotes() {
+		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getIncorrectNotes());
+	}
+
 	// 성적 추이 그래프
 	@GetMapping("/graph")
 	public ApiResponse<List<MyPageDto.PerformanceGraph>> getGraph() {
-		
+
 		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getQuizPerformanceGraph());
 	}
 

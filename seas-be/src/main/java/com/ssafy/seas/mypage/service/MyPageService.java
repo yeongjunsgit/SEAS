@@ -20,6 +20,7 @@ import com.ssafy.seas.mypage.entity.Streak;
 import com.ssafy.seas.mypage.mapper.StreakMapper;
 import com.ssafy.seas.mypage.repository.MyPageRepository;
 import com.ssafy.seas.mypage.repository.StreakRepository;
+import com.ssafy.seas.quiz.dto.IncorrectNoteDto;
 import com.ssafy.seas.ranking.dto.BadgeDto;
 import com.ssafy.seas.ranking.repository.RankerRepositoryCustom;
 import com.ssafy.seas.ranking.repository.RankerRepositoryImpl;
@@ -111,5 +112,10 @@ public class MyPageService {
 		LocalDateTime oneYearAgo = LocalDateTime.now().minusYears(1);
 		List<Streak> streaks = streakRepository.findByMemberIdAndCreatedAtAfter(member.getId(), oneYearAgo);
 		return streaks.stream().map(streakMapper::StreakToResponseDto).toList();
+	}
+
+	public List<IncorrectNoteDto.QuizIdPerCategory> getIncorrectNotes() {
+		Member member = memberUtil.getLoginMember();
+		return myPageRepository.findAllIncorrectQuizByMemberId(member.getId());
 	}
 }
