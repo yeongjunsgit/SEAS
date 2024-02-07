@@ -17,6 +17,7 @@ import com.ssafy.seas.member.util.MemberUtil;
 import com.ssafy.seas.mypage.dto.MyPageDto;
 import com.ssafy.seas.mypage.dto.StreakDto;
 import com.ssafy.seas.mypage.entity.Streak;
+import com.ssafy.seas.mypage.mapper.StreakMapper;
 import com.ssafy.seas.mypage.repository.MyPageRepository;
 import com.ssafy.seas.mypage.repository.StreakRepository;
 import com.ssafy.seas.ranking.dto.BadgeDto;
@@ -35,6 +36,7 @@ public class MyPageService {
 	private final StreakRepository streakRepository;
 	private final MemberUtil memberUtil;
 	private final CategoryUtil categoryUtil;
+	private final StreakMapper streakMapper;
 
 	public MemberDto.MyInfoResponse getMyInfo() {
 		Integer memberId = memberUtil.getLoginMemberId();
@@ -106,9 +108,8 @@ public class MyPageService {
 
 	public List<StreakDto.Response> getStreak() {
 		Member member = memberUtil.getLoginMember();
-		LocalDateTime oneYearAgo = LocalDateTime.now().minus(1, ChronoUnit.YEARS);
+		LocalDateTime oneYearAgo = LocalDateTime.now().minusYears(1);
 		List<Streak> streaks = streakRepository.findByMemberIdAndCreatedAtAfter(member.getId(), oneYearAgo);
-		System.out.println(streaks.toString() );
-		return null;
+		return streaks.stream().map(streakMapper::StreakToResponseDto).toList();
 	}
 }
