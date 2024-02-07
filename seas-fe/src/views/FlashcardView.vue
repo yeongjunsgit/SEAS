@@ -12,12 +12,22 @@ import axios from "axios"
 import { useRouter } from "vue-router";
 const router = useRouter();
 
+
 // 카테고리 선택시 관리 할 편수들!
 const category = ref(null);
 const flashcardData = ref(null);
 const keywordData = ref(false);
 const favoriteData = ref(null);
 const idx = ref(0);
+
+
+const isHaveFlashcardData = ref(false)
+
+const watchFlashcardData = watch (flashcardData, () => {
+  if (flashcardData.value.length > 0) {
+    isHaveFlashcardData.value = true
+  }
+})
 
 // 애니메이션 로직을 위한 변수들!
 const isReversed = ref(false);
@@ -209,18 +219,18 @@ const selectCategory = async function (cate) {
       isSelected.value = !isSelected.value;
       isUp.value = !isUp.value;
       category.value = ref(cate);
-      keywordData.value = true
+      // keywordData.value = true
+
       const response = await axios({
         method: 'get',
         url: `https://i10a609.p.ssafy.io/api/flashcard?category=${category.value.value}`,
       });
 
-      console.log(response.data);
       flashcardData.value = response.data.data;
+      keywordData.value = true
 
     } catch (error) {
       console.log(error);
-      console.log(category.value.value);
     }
     gsap.to(".flashcard", {
       onStart: () => {
@@ -236,39 +246,6 @@ const selectCategory = async function (cate) {
     });
   }
 };
-
-
-    // 여기서 받은 카테고리를 axios로 보내자! 일단 임시로 아무거나 만들어서 쓰겠다
-    
-  //   axios({
-  //     method: 'get',
-  //     url: `https://i10a609.p.ssafy.io/api/flashcard?category=${category.value.value}`,
-  
-  //   }) .then((response) => {
-  //     console.log(response.data)
-  //     flashcardData.value = response.data.data
-      
-  //     gsap.to(".flashcard", {
-  //       onStart: () => {
-  //         isAnimating.value = true
-  //       },
-  //       duration: 0.3,
-  //       xPercent: 30,
-  //       scale: (1.5, 1.6),
-  //       rotate: 0.2,
-  //       onComplete: () => {
-  //         isAnimating.value = false
-  //       }
-  //     });
-
-
-  //   }) .catch((error) => {
-  //     console.log(error)
-  //     console.log(category.value.value)
-  //   })
-
-  // }
-
 
 // 다시하기 눌렀을 때, 맨 처음으로 되돌아가는 함수 replayFlashcard
 const replayFlashcard = function () {
@@ -297,6 +274,21 @@ const replayFlashcard = function () {
         rotation: -20,
         onComplete: () => {
           isAnimating.value = false
+          if (isReversed.value === true) {
+            isReversed.value = !isReversed.value
+            gsap.to(".flashcard", {
+              onStart: () => {
+                isAnimating.value = true
+                isInvisible.value = !isInvisible.value;
+              },
+              duration: 0.5,
+              rotationY: "+=180",
+              onComplete: () => {
+                isInvisible.value = !isInvisible.value;
+                isAnimating.value = false
+              },
+            });
+          }
         }
       }
     );
@@ -322,7 +314,13 @@ const goToQuiz = function () {
     </v-img>
     <v-img :src="flashcardImage" class="flashcard" @click="reverseCard">
       <!-- 클릭했을때 내용이 바뀌게 만들자! -->
-      <p class="card_text" v-if="isOver && keywordData">THE END</p>
+      <!-- 모든 카드를 다 봤을 때 앞면-->
+      <p :class="{ card_text: true, invisible: isInvisible }" v-if="isOver && keywordData && !isReversed">THE END</p>
+
+      <!-- 모든 카드를 다 봤을 때 뒷면-->
+      <p :class="{ reverse_over_text: true, invisible: isInvisible }" v-else-if="isOver && keywordData && isReversed">수고하셨습니다</p>
+
+      <!-- 카드 앞면 -->
       <p
         :class="{ card_text: true, invisible: isInvisible }"
         v-else-if="keywordData && !isReversed"
@@ -333,6 +331,7 @@ const goToQuiz = function () {
         <br />
         {{ flashcardData[idx].keyword }}
       </p>
+      <!-- 카드 뒷면 -->
       <p
         :class="{ reverse_text: true, invisible: isInvisible }"
         v-else-if="keywordData && isReversed"
@@ -342,7 +341,9 @@ const goToQuiz = function () {
           {{ data }}
         </li>
       </p>
-      <p class="start_text" v-else-if="!keywordData">
+
+      <!-- 카테고리 선택 전 -->
+      <p :class="{ start_text: true, invisible: isInvisible }" v-else-if="!keywordData">
         카테고리를<br />
         선택하세요<br />
       </p>
@@ -365,7 +366,7 @@ const goToQuiz = function () {
     </v-container>
 
     <!-- 카테고리 선택 후 진행상황, 좋아요, 이전, 다음 기능 버튼 출력 -->
-    <v-container class="button_menu" v-else-if="isSelected && !isOver && flashcardData.length > 0 ">
+    <v-container class="button_menu" v-else-if="isSelected && !isOver && isHaveFlashcardData ">
       <v-row align="start" no-gutters>
         <v-col cols="12">
           <div class="menu-button">
@@ -392,7 +393,7 @@ const goToQuiz = function () {
     </v-container>
 
     <!-- 모든 암기를 본 후에 이동할 페이지를 보여주는 버튼 출력 -->
-    <v-container class="button_menu" v-else-if="isSelected && isOver && flashcardData.length > 0">
+    <v-container class="button_menu" v-else-if="isSelected && isOver && isHaveFlashcardData">
       <v-row align="start" no-gutters>
         <v-col cols="12">
           <div class="menu-button" @click="goToMain">
@@ -473,6 +474,15 @@ const goToQuiz = function () {
 // 카드가 띄워진 후 출력되는 텍스트 css
 .card_text {
   transform: scale(1) translate(-50%, -50%);
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  font-size: 2vw;
+  width: 20vw;
+}
+
+.reverse_over_text {
+  transform: scale(1) translate(-50%, -50%) rotateY(180deg);
   position: absolute;
   top: 45%;
   left: 50%;
