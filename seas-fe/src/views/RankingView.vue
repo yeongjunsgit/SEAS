@@ -6,7 +6,12 @@ import { getRankList, rankerSearch } from "@/api/rank.js";
 
 const rankList = ref(null); // 탑 10위까지의 랭커 정보 고정 저장 변수
 const rankData = ref(null); // 테이블에 뿌려줄 데이터 저장 변수
-const userInfo = ref(null); // 현재 로그인한 유저의 정보 저장 변수
+const userInfo = ref({
+    ranking: null,
+    nickname: null,
+    badgeList: null,
+    point: null,
+}); // 현재 로그인한 유저의 정보 저장 변수
 
 // 데이터를 받았는지 여부를 판단할 변수 선언
 const isRankData = ref(false);
@@ -25,6 +30,7 @@ const getInitList = () => {
             rankList.value = data.data.rankers;
             console.log(rankList.value);
             userInfo.value = data.data.myInfo;
+            console.log(userInfo.value);
             rankData.value = rankList.value; // 전체 저장해놓은 랭크 리스트를 랭크 데이터 변수에 저장
         },
         (error) => {
@@ -162,6 +168,18 @@ const closeModal = () => {
                                         {{ ranker.point }}
                                     </div>
                                 </td>
+                            </tr>
+                            <tr class="user-row">
+                                <td>{{ userInfo.ranking }}</td>
+                                <td>{{ userInfo.nickname }}(나)</td>
+                                <td class="tag-container">
+                                    <!-- name: "홍싸피", tag: [1, 2, 3, 4], score: 1442 -->
+                                    <TagComponent
+                                        :level="userInfo.tier"
+                                        :tagList="userInfo.badgeList"
+                                    />
+                                </td>
+                                <td>{{ userInfo.point }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -341,6 +359,10 @@ const closeModal = () => {
                 .non-header:hover {
                     background-color: rgba($gradation-color, 0.2);
                     transition-duration: 0.5s;
+                }
+
+                .user-row {
+                    background-color: rgba(red, 0.2);
                 }
             }
             .tag-container {
