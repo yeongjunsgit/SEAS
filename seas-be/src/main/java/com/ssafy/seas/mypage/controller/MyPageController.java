@@ -13,6 +13,7 @@ import com.ssafy.seas.flashcard.dto.FlashcardDto;
 import com.ssafy.seas.flashcard.service.FlashcardService;
 import com.ssafy.seas.member.dto.MemberDto;
 import com.ssafy.seas.mypage.dto.MyPageDto;
+import com.ssafy.seas.mypage.dto.StreakDto;
 import com.ssafy.seas.mypage.service.MyPageService;
 import com.ssafy.seas.quiz.dto.IncorrectNoteDto;
 import com.ssafy.seas.ranking.dto.BadgeDto;
@@ -39,7 +40,6 @@ public class MyPageController {
 		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getQuizRate());
 	}
 
-
 	// 플래시카드 즐겨찾기 목록
 	@GetMapping("/flashcard/favorite")
 	public ApiResponse<List<FavoriteDto.CardIdPerCategory>> getFavoriteFlashcardIds() {
@@ -55,7 +55,7 @@ public class MyPageController {
 	// 성적 추이 그래프
 	@GetMapping("/graph")
 	public ApiResponse<List<MyPageDto.PerformanceGraph>> getGraph() {
-		
+
 		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getQuizPerformanceGraph());
 	}
 
@@ -63,5 +63,12 @@ public class MyPageController {
 	public ApiResponse<List<BadgeDto.BadgeResponse>> getBadges() {
 
 		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getBadges());
+	}
+
+	// 스트릭
+	@GetMapping("/history")
+	public ApiResponse<List<StreakDto.Response>> getStreak() {
+
+		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getStreak());
 	}
 }
