@@ -164,15 +164,16 @@ const clearInput = () => {
     height: 10%;
 }
 .result-container {
-    height: 17%;
+    height: 20%;
     display: flex;
     justify-content: center;
     text-align: center;
-    font-size: 130%;
+    font-size: 140%;
 
     .input-result {
         border: double;
         border-width: 6px;
+        padding-top: 1%;
         width: 60%;
         display: flex;
         flex-direction: column;
@@ -182,7 +183,7 @@ const clearInput = () => {
     }
 
     .correct {
-        color: green;
+        color: rgb(0, 147, 2);
     }
     .wrong {
         color: red;
