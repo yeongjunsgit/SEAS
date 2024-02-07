@@ -4,9 +4,9 @@ import Modal from "@/components/ranking/Modal.vue";
 import { ref, onMounted, watch } from "vue";
 import { getRankList, rankerSearch } from "@/api/rank.js";
 
-const rankList = ref();
-const rankData = ref();
-const userInfo = ref();
+const rankList = ref(null); // 탑 10위까지의 랭커 정보 고정 저장 변수
+const rankData = ref(null); // 테이블에 뿌려줄 데이터 저장 변수
+const userInfo = ref(null); // 현재 로그인한 유저의 정보 저장 변수
 
 // 데이터를 받았는지 여부를 판단할 변수 선언
 const isRankData = ref(false);
@@ -21,9 +21,9 @@ const watchRankData = watch(rankData, () => {
 
 const getInitList = () => {
     getRankList(
-        rankData.value,
         ({ data }) => {
             rankList.value = data.data.rankers;
+            console.log(rankList.value);
             userInfo.value = data.data.myInfo;
             rankData.value = rankList.value; // 전체 저장해놓은 랭크 리스트를 랭크 데이터 변수에 저장
         },
@@ -31,6 +31,11 @@ const getInitList = () => {
             console.log(error);
         }
     );
+};
+
+const setBackTable = () => {
+    userInput.value = null;
+    rankData.value = rankList.value; // 전체 저장해놓은 랭크 리스트를 랭크 데이터 변수에 저장
 };
 
 onMounted(() => {
@@ -42,16 +47,20 @@ const topRankerInfo = ["second", "first", "third"];
 // 검색 ====================================
 const userInput = ref("");
 const searchByName = () => {
-    console.log("serachByName");
-    rankerSearch(
-        userInput.value,
-        ({ data }) => {
-            rankData.value = data.data;
-        },
-        (error) => {
-            console.log(error);
-        }
-    );
+    if (userInput.value == "") {
+        setBackTable();
+    } else {
+        rankerSearch(
+            userInput.value,
+            ({ data }) => {
+                rankData.value = data.data;
+                console.log(rankData.value);
+            },
+            (error) => {
+                console.log(error);
+            }
+        );
+    }
 };
 
 // `ref` 함수를 사용하여 반응성 데이터를 선언합니다.
@@ -98,7 +107,7 @@ const closeModal = () => {
 
                 <div class="rank-table">
                     <div class="search-container">
-                        <button class="search-button" @click="getInitList">
+                        <button class="search-button" @click="setBackTable">
                             초기화
                         </button>
                         <div class="input-container">
@@ -125,16 +134,19 @@ const closeModal = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-if="!rankData">
-                                No Data
-                            </tr>
+                            <div
+                                v-if="!rankData || rankData == null"
+                                class="no-data"
+                            >
+                                검색된 값이 없습니다.
+                            </div>
                             <tr
                                 v-else
                                 v-for="(ranker, rankerIdx) in rankData"
                                 :key="rankerIdx"
                                 class="non-header"
                             >
-                                <td>{{ rankerIdx + 1 }}</td>
+                                <td>{{ ranker.ranking }}</td>
                                 <td @click="openModal(ranker)" class="detail">
                                     {{ ranker.nickname }}
                                 </td>
@@ -337,5 +349,11 @@ const closeModal = () => {
             }
         }
     }
+}
+
+.no-data {
+    margin-top: 30px;
+    position: absolute;
+    width: 57%;
 }
 </style>
