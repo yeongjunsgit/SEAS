@@ -98,11 +98,15 @@ const closeModal = () => {
 
                 <div class="rank-table">
                     <div class="search-container">
-                        <label for="searchName">사용자 이름 검색 :</label>
+                        <button class="search-button" @click="getInitList">
+                            초기화
+                        </button>
                         <div class="input-container">
+                            <label for="searchName">사용자 이름 검색 :</label>
                             <input
                                 id="searchName"
                                 type="text"
+                                autocomplete="off"
                                 v-model="userInput"
                                 @keyup.enter="searchByName"
                             />
@@ -251,27 +255,29 @@ const closeModal = () => {
             // 검색 섹션 ======================
             .search-container {
                 display: flex;
-                flex-wrap: wrap;
-                justify-content: end;
+                flex-wrap: nowrap;
+                justify-content: space-between;
                 padding: 1% 0 1% 0;
                 z-index: 1;
                 border-top: 2px double black;
                 width: 100%;
 
-                label {
-                    margin: 1% 1% 0 0;
-                    font-size: larger;
-                }
                 .input-container {
                     display: flex;
+                    justify-content: space-evenly;
 
+                    label {
+                        margin: 10px 1% 0 0;
+                        width: 40%;
+                        font-size: larger;
+                    }
                     input {
                         padding: 2% 0 0 2%;
                         border: 2px solid black;
                         border-radius: 10px;
                         font-size: large;
                         font-weight: bold;
-                        width: 80%;
+                        width: 40%;
                         height: 100%;
 
                         &:focus {
@@ -284,8 +290,8 @@ const closeModal = () => {
                 .search-button {
                     border: 2px solid $primary-color;
                     border-radius: 10px;
-                    margin-left: 10px;
-                    padding: 2% 1% 0 1%;
+                    margin: 0 10px 0 10px;
+                    padding: 1% 1% 0 1%;
                     min-width: 50px;
 
                     &:hover {
