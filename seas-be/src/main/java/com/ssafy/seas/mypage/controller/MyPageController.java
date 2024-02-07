@@ -14,6 +14,7 @@ import com.ssafy.seas.flashcard.service.FlashcardService;
 import com.ssafy.seas.member.dto.MemberDto;
 import com.ssafy.seas.mypage.dto.MyPageDto;
 import com.ssafy.seas.mypage.service.MyPageService;
+import com.ssafy.seas.quiz.dto.IncorrectNoteDto;
 import com.ssafy.seas.ranking.dto.BadgeDto;
 
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,12 @@ public class MyPageController {
 	@GetMapping("/flashcard/favorite")
 	public ApiResponse<List<FavoriteDto.CardIdPerCategory>> getFavoriteFlashcardIds() {
 		return ApiResponse.success(SuccessCode.GET_SUCCESS, flashcardService.getFavoriteFlashcardIds());
+	}
+
+	// 오답노트 목록 불러오기
+	@GetMapping("/incorrect")
+	public ApiResponse<List<IncorrectNoteDto.QuizIdPerCategory>> getIncorrectNotes() {
+		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getIncorrectNotes());
 	}
 
 	// 성적 추이 그래프
