@@ -218,22 +218,22 @@ const selectCategory = async function (cate) {
       console.log(response.data);
       flashcardData.value = response.data.data;
 
-      gsap.to(".flashcard", {
-        onStart: () => {
-          isAnimating.value = true;
-        },
-        duration: 0.3,
-        xPercent: 30,
-        scale: (1.5, 1.6),
-        rotate: 0.2,
-        onComplete: () => {
-          isAnimating.value = false;
-        }
-      });
     } catch (error) {
       console.log(error);
       console.log(category.value.value);
     }
+    gsap.to(".flashcard", {
+      onStart: () => {
+        isAnimating.value = true;
+      },
+      duration: 0.3,
+      xPercent: 30,
+      scale: (1.5, 1.6),
+      rotate: 0.2,
+      onComplete: () => {
+        isAnimating.value = false;
+      }
+    });
   }
 };
 
