@@ -3,7 +3,7 @@ import { ref, onMounted } from "vue";
 import * as d3 from "d3";
 
 // 차트 사이즈
-const width = 1300;
+const width = 1100;
 const cellSize = 35;
 const height = (cellSize + 10) * 7;
 
@@ -119,7 +119,8 @@ function makesvg() {
     .attr("width", width)
     .attr("height", height * userYears.length)
     .attr("viewBox", [0, 0, width, height * userYears.length - 100])
-    .attr("style", "max-width: 100%; height: auto; font: 25px sans-serif;");
+    .attr("style", "max-width: 100%; height: auto; font: 25px sans-serif;")
+    .attr("preserveAspectRatio", "xMaxYMax");
   return svg;
 }
 
@@ -377,23 +378,31 @@ const selectYear = (year) => {
 </script>
 
 <template>
-  <div class="dropdown">
-    <button @click="toggleDropdown" class="toggle-button">
-      {{ getYear }}
-    </button>
+  <div class="grass">
+    <p class="text-center">일일 학습 경과</p>
+    <div class="grass-component">
+      <div class="dropdown">
+        <button @click="toggleDropdown" class="toggle-button">
+          {{ getYear }}
+        </button>
 
-    <div v-if="dropdownOpen" class="dropdown-content">
-      <div v-for="year in userYears" :key="year" @click="selectYear(year)">
-        {{ year }}
+        <div v-if="dropdownOpen" class="dropdown-content">
+          <div v-for="year in userYears" :key="year" @click="selectYear(year)">
+            {{ year }}
+          </div>
+        </div>
+      </div>
+      <div>
+        <svg ref="svgRef"></svg>
       </div>
     </div>
-  </div>
-  <div>
-    <svg ref="svgRef"></svg>
   </div>
 </template>
 
 <style scoped lang="scss">
+.grass {
+  width: 80vh;
+}
 .dropdown {
   position: relative;
   display: inline-block;

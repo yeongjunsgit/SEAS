@@ -1,55 +1,48 @@
 <script setup>
-import MyPageComponent from "@/components/mypage/MyPageComponent.vue";
+import { ref, onMounted } from "vue";
+import UserInfoComponent from "@/components/mypage/UserInfoComponent.vue";
 import CategoryComponent from "@/components/mypage/CategoryComponent.vue";
-import RadarChart from "@/components/mypage/RadarChart.vue";
 import LineChartVue from "@/components/mypage/LineChart.vue";
 import GrassComponentVue from "@/components/mypage/GrassComponent.vue";
+import axios from "axios";
 
 const categories = [
-  "자료구조",
-  "알고리즘",
-  "운영체제",
   "데이터베이스",
   "네트워크",
-  "컴퓨터 구조",
+  "자료구조",
+  "알고리즘",
+  "컴퓨터구조",
+  "운영체제",
 ];
+const loaded = ref(false);
+const categoryObj = ref();
+onMounted(async () => {
+  loaded.value = false;
+  try {
+    const response = await fetch("https://i10a609.p.ssafy.io/api/mypage/graph");
+
+    const categoryData = await response.json();
+    categoryObj.value = await categoryData.data;
+
+    loaded.value = true;
+  } catch (error) {
+    console.error(error);
+  }
+});
 </script>
 
 <template>
   <div class="mypage-background text-font">
     <div class="container">
       <div class="mypage-component-background userinfo">
-        <div>
-          <p class="text-center">유저 정보</p>
-          <div class="user-container">
-            <div class="user-box">
-              <div>
-                <img src="@/assets/images/Logo.png" alt="" />
-              </div>
-              <p>김싸피</p>
-              <p>현상금액 : $10000</p>
-              <p>전체 푼 횟수 : 40</p>
-              <p>정답률 : 75%</p>
-            </div>
-            <div>
-              <div class="radar">
-                <RadarChart />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="grass">
-          <p class="text-center">일일 학습 경과</p>
-          <div class="grass-component">
-            <GrassComponentVue />
-          </div>
-        </div>
+        <UserInfoComponent />
+        <GrassComponentVue />
       </div>
       <div class="mypage-component-background mychart">
-        <div v-for="(category, n) in categories" :key="n" cols="4">
+        <div v-for="(category, n) in categoryObj" :key="n">
           <div class="transparent-card">
             <div class="chart-box">
-              <LineChartVue />
+              <LineChartVue v-if="loaded" :category="category" />
             </div>
           </div>
         </div>
@@ -68,16 +61,6 @@ const categories = [
 
 <style scoped lang="scss">
 @import url("@/assets/style/main.scss");
-
-.container {
-  display: flex;
-  flex-direction: column;
-}
-.user-container {
-  display: flex;
-  justify-content: space-between;
-}
-
 .text-center {
   text-align: center;
 }
@@ -89,23 +72,23 @@ const categories = [
   background-repeat: no-repeat;
   background-position: center;
 }
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
 .userinfo {
   margin-top: 50px;
-  display: grid;
-  align-items: center;
-  grid-template-columns: 1fr 1fr;
-  // margin-bottom: 0;
-  // padding-bottom: 0;
-  img {
-    width: 100%;
-  }
+  display: flex;
+  flex-direction: row;
+  // flex-wrap: wrap;
+  justify-content: center;
 }
 
 .rotate {
   rotate: -90deg;
 }
 .mypage-component-background {
-  // width: 80%;
   height: auto;
   overflow: hidden;
   margin-inline: 10%;
@@ -115,30 +98,13 @@ const categories = [
   background-repeat: no-repeat;
   background-position-x: center;
 }
-.user-box {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-}
+
 .mychart {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   row-gap: 30px;
 }
 
-.grass {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  // padding-top: 105px;
-  // padding-left: 30px;
-}
-
-// .grass-component {
-//   padding-left: 50px;
-// }
-//
 .chart-box {
   padding-left: 40px;
 }

@@ -1,4 +1,6 @@
-<script>
+<script setup>
+import { Line } from "vue-chartjs";
+import { ref, onMounted } from "vue";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,8 +11,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Line } from "vue-chartjs";
-import * as lineChartConfig from "./lineChartConfig.js";
+import * as d3 from "d3";
 
 ChartJS.register(
   CategoryScale,
@@ -22,17 +23,95 @@ ChartJS.register(
   Legend
 );
 
-export default {
-  name: "LineChart",
-  components: {
-    Line,
+const data = ref({
+  labels: ["Jan 01", "Jan 02", "Jan 03", "Jan 04", "Jan 05"],
+  datasets: [
+    {
+      label: "카테고리",
+      backgroundColor: "rgba(81,60,58, 1)",
+      data: [10, 40, 39, 80, 40],
+    },
+  ],
+});
+
+const options = {
+  responsive: true,
+  maintainAspectRatio: false,
+  borderColor: "rgba(81,60,58, 1)",
+  borderWidth: 2,
+  scales: {
+    x: {
+      ticks: {
+        font: {
+          size: 14,
+          family: "Ahnjunggeun",
+          weight: "bold",
+        },
+        color: "black",
+      },
+      grid: {
+        color: "rgba(0,0,0, 0.3)",
+      },
+    },
+    y: {
+      beginAtZero: true,
+      max: 100,
+      ticks: {
+        stepSize: 20,
+        font: {
+          size: 14,
+          family: "Ahnjunggeun",
+          weight: "bold",
+        },
+        color: "black",
+      },
+      grid: {
+        color: "rgba(0,0,0, 0.3)",
+      },
+    },
   },
-  data() {
-    return lineChartConfig;
+  plugins: {
+    legend: {
+      display: true,
+      onClick: false,
+      labels: {
+        font: {
+          family: "Ahnjunggeun",
+          weight: "bold",
+          size: 17,
+        },
+        boxHeight: 0.1,
+        color: "rgba(81,60,58, 1)",
+      },
+    },
   },
 };
+
+const props = defineProps(["category"]);
+
+// data.value.datasets[0].label = await props.category.categoryName;
+const loaded = ref(false);
+const formatDate = d3.timeFormat("%x");
+onMounted(async () => {
+  loaded.value = false;
+  try {
+    data.value.datasets[0].label = await props.category.categoryName;
+    const graphValues = await props.category.history.map((e) => e.score);
+    const graphDates = await props.category.history.map(function (e) {
+      var studiedDate = new Date(e.createdAt);
+      var shortDate = formatDate(studiedDate);
+      return shortDate;
+    });
+    console.log(graphDates);
+    data.value.datasets[0].data = graphValues;
+    data.value.labels = graphDates;
+    loaded.value = true;
+  } catch (error) {
+    console.error(error);
+  }
+});
 </script>
 
 <template>
-  <Line :data="data" :options="options" />
+  <Line v-if="loaded" :data="data" :options="options" />
 </template>
