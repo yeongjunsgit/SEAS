@@ -14,6 +14,7 @@ import com.ssafy.seas.member.repository.MemberRepository;
 import com.ssafy.seas.member.util.MemberUtil;
 import com.ssafy.seas.mypage.dto.MyPageDto;
 import com.ssafy.seas.mypage.repository.MyPageRepository;
+import com.ssafy.seas.quiz.dto.IncorrectNoteDto;
 import com.ssafy.seas.ranking.dto.BadgeDto;
 import com.ssafy.seas.ranking.repository.RankerRepositoryCustom;
 import com.ssafy.seas.ranking.repository.RankerRepositoryImpl;
@@ -96,5 +97,10 @@ public class MyPageService {
 	public List<BadgeDto.BadgeResponse> getBadges() {
 		Member member = memberUtil.getLoginMember();
 		return rankerRepository.getBadgeListByMemberId(member.getId());
+	}
+
+	public List<IncorrectNoteDto.QuizIdPerCategory> getIncorrectNotes() {
+		Member member = memberUtil.getLoginMember();
+		return myPageRepository.findAllIncorrectQuizByMemberId(member.getId());
 	}
 }

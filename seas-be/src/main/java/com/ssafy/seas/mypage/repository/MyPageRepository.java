@@ -1,16 +1,26 @@
 package com.ssafy.seas.mypage.repository;
 
 import static com.ssafy.seas.category.entity.QCategory.*;
+import static com.ssafy.seas.flashcard.entity.QFavorite.*;
+import static com.ssafy.seas.flashcard.entity.QFlashcard.*;
+import static com.ssafy.seas.flashcard.entity.QFlashcardContent.*;
+import static com.ssafy.seas.quiz.entity.QIncorrectNote.*;
 import static com.ssafy.seas.quiz.entity.QQuiz.*;
 import static com.ssafy.seas.quiz.entity.QSolvedQuiz.*;
 
+import java.util.AbstractMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.seas.category.dto.QCategoryDto_Simple;
+import com.ssafy.seas.flashcard.dto.FavoriteDto;
 import com.ssafy.seas.mypage.dto.MyPageDto;
 import com.ssafy.seas.mypage.dto.QMyPageDto_CorrectCount;
+import com.ssafy.seas.quiz.dto.IncorrectNoteDto;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -25,7 +35,6 @@ public class MyPageRepository {
 	private final EntityManager entityManager;
 
 	public List<MyPageDto.CorrectCount> getQuizCorrectCountPerCategory(Integer memberId) {
-
 
 		List<MyPageDto.CorrectCount> quizCorrectCountPerCategory = queryFactory.select(
 				new QMyPageDto_CorrectCount(category.id, category.name, solvedQuiz.correctCount.count().intValue()))
@@ -78,5 +87,41 @@ public class MyPageRepository {
 		return result;
 	}
 
+	public List<IncorrectNoteDto.QuizIdPerCategory> findAllIncorrectQuizByMemberId(Integer memberId) {
+		QCategoryDto_Simple categoryDtoSimple = new QCategoryDto_Simple(category.id, category.name);
+
+		List<Tuple> result = queryFactory.select(
+				categoryDtoSimple, quiz.id
+			)
+			.from(incorrectNote)
+			.where(incorrectNote.member.id.eq(memberId))
+			.innerJoin(quiz)
+			.on(incorrectNote.quiz.id.eq(quiz.id))
+			.rightJoin(category)
+			.on(quiz.category.id.eq(category.id))
+			.orderBy(category.id.asc(), quiz.id.asc())
+			.fetch();
+
+		log.info(result.toString());
+
+		List<IncorrectNoteDto.QuizIdPerCategory> resultDto = result.stream()
+			.collect(Collectors.groupingBy(
+				tuple -> tuple.get(categoryDtoSimple),
+				Collectors.mapping(
+					tuple -> tuple.get(quiz.id),
+					Collectors.toList()
+				)
+			))
+			.entrySet().stream()
+			.map(entry -> new IncorrectNoteDto.QuizIdPerCategory(
+				entry.getKey().getId(),
+				entry.getKey().getName(),
+				entry.getValue())
+			)
+			.collect(Collectors.toList());
+
+		return resultDto;
+
+	}
 
 }
