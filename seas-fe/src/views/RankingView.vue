@@ -117,12 +117,12 @@ const closeModal = () => {
                             초기화
                         </button>
                         <div class="input-container">
-                            <label for="searchName">사용자 이름 검색 :</label>
                             <input
                                 id="searchName"
                                 type="text"
                                 autocomplete="off"
                                 v-model="userInput"
+                                placeholder="사용자 이름 검색"
                                 @keyup.enter="searchByName"
                             />
                             <button class="search-button" @click="searchByName">
@@ -140,12 +140,12 @@ const closeModal = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <div
-                                v-if="!rankData || rankData == null"
+                            <tr
+                                v-if="!rankData || rankData == ''"
                                 class="no-data"
                             >
-                                검색된 값이 없습니다.
-                            </div>
+                                <td colspan="4">검색된 값이 없습니다.</td>
+                            </tr>
                             <tr
                                 v-else
                                 v-for="(ranker, rankerIdx) in rankData"
@@ -171,7 +171,9 @@ const closeModal = () => {
                             </tr>
                             <tr class="user-row">
                                 <td>{{ userInfo.ranking }}</td>
-                                <td>{{ userInfo.nickname }}(나)</td>
+                                <td @click="openModal(userInfo)" class="detail">
+                                    {{ userInfo.nickname }}(나)
+                                </td>
                                 <td class="tag-container">
                                     <!-- name: "홍싸피", tag: [1, 2, 3, 4], score: 1442 -->
                                     <TagComponent
@@ -296,18 +298,14 @@ const closeModal = () => {
                     display: flex;
                     justify-content: space-evenly;
 
-                    label {
-                        margin: 10px 1% 0 0;
-                        width: 40%;
-                        font-size: larger;
-                    }
                     input {
                         padding: 2% 0 0 2%;
                         border: 2px solid black;
                         border-radius: 10px;
                         font-size: large;
                         font-weight: bold;
-                        width: 40%;
+                        width: 80%;
+                        min-width: 40px;
                         height: 100%;
 
                         &:focus {
@@ -371,11 +369,5 @@ const closeModal = () => {
             }
         }
     }
-}
-
-.no-data {
-    margin-top: 30px;
-    position: absolute;
-    width: 57%;
 }
 </style>
