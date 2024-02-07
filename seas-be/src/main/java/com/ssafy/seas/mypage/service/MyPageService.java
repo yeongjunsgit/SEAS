@@ -110,7 +110,7 @@ public class MyPageService {
 	public List<StreakDto.Response> getStreak() {
 		Member member = memberUtil.getLoginMember();
 		LocalDateTime oneYearAgo = LocalDateTime.now().minusYears(1);
-		List<Streak> streaks = streakRepository.findByMemberIdAndCreatedAtAfter(member.getId(), oneYearAgo);
+		List<Streak> streaks = streakRepository.findByMemberIdAndCreatedAtAfterOrderByCreatedAt(member.getId(), oneYearAgo);
 		return streaks.stream().map(streakMapper::StreakToResponseDto).toList();
 	}
 
