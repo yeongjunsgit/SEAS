@@ -309,6 +309,7 @@ const goToQuiz = function () {
     <v-img :src="cardImage" class="memo_card">
       <!-- text 박스의 크기를 늘려서 길이가 늘어나도 문제없게 수정하자!! -->
       <div class="memo_card_text card_box">
+        <!-- 따옴표 지우게 value 처리하기 v-if로 -->
         <p>{{ category || "암기하기" }}</p>
       </div>
     </v-img>
@@ -326,7 +327,7 @@ const goToQuiz = function () {
         v-else-if="keywordData && !isReversed"
       >
         <div class="category_border">
-          <p class="category_text"> {{ category }}</p>
+          <p class="category_text"> {{ category.value }}</p>
         </div>
         <br />
         {{ flashcardData[idx].keyword }}
@@ -419,159 +420,6 @@ const goToQuiz = function () {
 @import "@/assets/style/main.scss";
 @import "@/assets/style/quiz.scss";
 
-// 카드 판에서 쓰이는 CSS - memo_card
-.memo_card {
-  position: absolute;
-  // top: 20%;
-  // left: 16%;
-  transform: rotate(340deg) scale(1, 1.2);
-  width: 30vw;
-  height: 30vw;
-  margin-top: 11vw;
-  margin-left: 18vw;
-
-  .memo_card_text {
-    transform: scale(1, calc(1 / 1.2)) translate(-50%, -50%);
-    position: absolute;
-    top: 20%;
-    left: 50%;
-    font-size: 3vw;
-    width: 18vw;
-  }
-
-  .card_box {
-    width: 50vw;
-    text-align: center;
-  }
-}
-
-// 움직이는 메모장에서 쓰일 flashcard
-.flashcard {
-  position: absolute;
-  // top: 25%;
-  // left: 17.5%;
-  transform: rotate(340deg) scale(1, 1.3);
-  text-align: center;
-  margin-top: 13vw;
-  margin-left: 19.2vw;
-  width: 29vw;
-  height: 30vw;
-  transition: all 0.3s linear;
-
-  // 회전을 위해 3D 로 선언
-  transform-style: preserve-3d;
-}
-// flashcard에 들어가는 text로 처음 시작할때 출력되는 텍스트 css
-.start_text {
-  transform: scale(1, calc(1 / 1.3)) translate(-50%, -50%);
-  position: absolute;
-  top: 41%;
-  left: 50%;
-  font-size: 3vw;
-  width: 20vw;
-}
-
-// 카드가 띄워진 후 출력되는 텍스트 css
-.card_text {
-  transform: scale(1) translate(-50%, -50%);
-  position: absolute;
-  top: 45%;
-  left: 50%;
-  font-size: 2vw;
-  width: 20vw;
-}
-
-.reverse_over_text {
-  transform: scale(1) translate(-50%, -50%) rotateY(180deg);
-  position: absolute;
-  top: 45%;
-  left: 50%;
-  font-size: 2vw;
-  width: 20vw;
-}
-
-// 플래시 카드에 선택한 카테고리를 띄우는데 쓰이는 텍스트의 css
-.category_text {
-  transform: scale(1) translate(-50%, -50%);
-  position: absolute;
-  top: -20%;
-  left: 50%;
-  font-size: 1vw;
-  width: 15vw;
-  border-bottom: 1px solid black;
-}
-
-// 카드 뒷면에 존재하는 내용에 쓰이는 CSS
-.reverse_text {
-  transform: scale(1) translate(-50%, -50%) rotateY(180deg);
-  position: absolute;
-  text-align: left;
-  top: 44%;
-  left: 50%;
-  font-size: 1vw;
-  width: 25vw;
-}
-
-
-// 버튼들을 다루는 flex box와 그안에서 쓰이는 세부 css
-.button_menu {
-  position: absolute;
-  margin-top: 10vw;
-  margin-left: 62vw;
-  text-align: center;
-  display: flex;
-  width: 35vw;
-  height: 35vw;
-
-  .menu_img {
-    width: 14vw;
-    height: 9vw;
-    position: absolute;
-    transform: scale(1, 0.7);
-    filter: drop-shadow(5px 5px 5px #000);
-    cursor: pointer;
-
-    .button_text {
-      width: 10vw;
-      font-size: 1.8vw;
-      transform: scale(1, calc(1 / 0.7)) translate(20%, 75%);
-      // position: absolute;
-    }
-  }
-
-  // 베이직 한 기본 버튼들에 쓰임
-  .menu-button {
-    min-width: 40%; 
-    width: 12vw;
-    height: 5vw;
-    margin-left: 8vw;
-    border: 3px solid rgba(81, 60, 58, 1);
-    color: 000000;
-    padding: 2%;
-    cursor: pointer;
-
-    &:hover {
-      transition-duration: 0.5s;
-      background-color: #7c5c3f;
-      color: white;
-    }
-    .button_text {
-      width: 10vw;
-      font-size: 1.8vw;
-      transform: translate(8%, 11%);
-      font-weight: bold;
-      // position: absolute;
-    }
-    // 메인으로 가기 텍스트가 너무길어서 따로 조절이 필요해 추가로 css 작성
-    .gotomain_text {
-      width: 8vw;
-      font-size: 1.6vw;
-      transform: translate(20%, -20%);
-      font-weight: bold;
-    }
-  }
-}
-
 // 뒷배경에 쓰이는 css
 .bgbg {
   position: fixed;
@@ -592,14 +440,648 @@ const goToQuiz = function () {
 }
 
 .complete_like {
-      background-color: #7c5c3f;
-      color: white;
-    }
+  background-color: #7c5c3f;
+  color: white;
+}
   
 .yet_like {
   transition-duration: 0.5s;
   background-color: none;
-  color: 000000;
 }
+
+// 1200px 이상에서 쓰일 css (반응형)
+@media screen and (min-width: 1200px) {
+  // 카드 판에서 쓰이는 CSS - memo_card
+  .memo_card {
+    position: absolute;
+    // top: 20%;
+    // left: 16%;
+    transform: rotate(340deg) scale(1, 1.2);
+    width: 30vw;
+    height: 30vw;
+    margin-top: 11vw;
+    margin-left: 18vw;
+  
+    .memo_card_text {
+      transform: scale(1, calc(1 / 1.2)) translate(-50%, -50%);
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      font-size: 3vw;
+      width: 18vw;
+    }
+  
+    .card_box {
+      width: 50vw;
+      text-align: center;
+    }
+  }
+  
+  // 움직이는 메모장에서 쓰일 flashcard
+  .flashcard {
+    position: absolute;
+    // top: 25%;
+    // left: 17.5%;
+    transform: rotate(340deg) scale(1, 1.3);
+    text-align: center;
+    margin-top: 13vw;
+    margin-left: 19.2vw;
+    width: 29vw;
+    height: 30vw;
+    transition: all 0.3s linear;
+  
+    // 회전을 위해 3D 로 선언
+    transform-style: preserve-3d;
+  }
+  // flashcard에 들어가는 text로 처음 시작할때 출력되는 텍스트 css
+  .start_text {
+    transform: scale(1, calc(1 / 1.3)) translate(-50%, -50%);
+    position: absolute;
+    top: 41%;
+    left: 50%;
+    font-size: 3vw;
+    width: 20vw;
+  }
+  
+  // 카드가 띄워진 후 출력되는 텍스트 css
+  .card_text {
+    transform: scale(1) translate(-50%, -50%);
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    font-size: 2vw;
+    width: 20vw;
+  }
+  
+  .reverse_over_text {
+    transform: scale(1) translate(-50%, -50%) rotateY(180deg);
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    font-size: 2vw;
+    width: 20vw;
+  }
+  
+  // 플래시 카드에 선택한 카테고리를 띄우는데 쓰이는 텍스트의 css
+  .category_text {
+    transform: scale(1) translate(-50%, -50%);
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    font-size: 1vw;
+    width: 15vw;
+    border-bottom: 1px solid black;
+  }
+  
+  // 카드 뒷면에 존재하는 내용에 쓰이는 CSS
+  .reverse_text {
+    transform: scale(1) translate(-50%, -50%) rotateY(180deg);
+    position: absolute;
+    text-align: left;
+    top: 44%;
+    left: 50%;
+    font-size: 1vw;
+    width: 25vw;
+  }
+  
+  
+  // 버튼들을 다루는 flex box와 그안에서 쓰이는 세부 css
+  .button_menu {
+    position: absolute;
+    margin-top: 10vw;
+    margin-left: 62vw;
+    text-align: center;
+    display: flex;
+    width: 35vw;
+    height: 35vw;
+  
+    .menu_img {
+      width: 14vw;
+      height: 9vw;
+      position: absolute;
+      transform: scale(1, 0.7);
+      filter: drop-shadow(5px 5px 5px #000);
+      cursor: pointer;
+  
+      .button_text {
+        width: 10vw;
+        font-size: 1.8vw;
+        transform: scale(1, calc(1 / 0.7)) translate(20%, 75%);
+        // position: absolute;
+      }
+    }
+  
+    // 베이직 한 기본 버튼들에 쓰임
+    .menu-button {
+      min-width: 40%; 
+      width: 12vw;
+      height: 5vw;
+      margin-left: 8vw;
+      border: 3px solid rgba(81, 60, 58, 1);
+      color: 000000;
+      padding: 2%;
+      cursor: pointer;
+  
+      &:hover {
+        transition-duration: 0.5s;
+        background-color: #7c5c3f;
+        color: white;
+      }
+      .button_text {
+        width: 10vw;
+        font-size: 1.8vw;
+        transform: translate(8%, 11%);
+        font-weight: bold;
+        // position: absolute;
+      }
+      // 메인으로 가기 텍스트가 너무길어서 따로 조절이 필요해 추가로 css 작성
+      .gotomain_text {
+        width: 8vw;
+        font-size: 1.6vw;
+        transform: translate(20%, -20%);
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+
+
+// 768px 이상에서 쓰일 css (반응형)
+@media screen and (min-width: 768px) and (max-width: 1199px) {
+  // 카드 판에서 쓰이는 CSS - memo_card
+  .memo_card {
+    position: absolute;
+    top: 28%;
+    left: 8%;
+    transform: rotate(340deg) scale(1, 1.2);
+    width: 38vw;
+    height: 40vw;
+    // margin-top: 25vw;
+    // margin-left: 18vw;
+  
+    .memo_card_text {
+      transform: scale(1, calc(1 / 1.2)) translate(-50%, -50%);
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      font-size: 3vw;
+      width: 18vw;
+    }
+  
+    .card_box {
+      width: 50vw;
+      text-align: center;
+    }
+  }
+  
+  // 움직이는 메모장에서 쓰일 flashcard
+  .flashcard {
+    position: absolute;
+    top: 30.5%;
+    left: 10.1%;
+    transform: rotate(340deg) scale(1, 1.3);
+    text-align: center;
+    // margin-top: 13vw;
+    // margin-left: 19.2vw;
+    width: 36vw;
+    height: 40vw;
+    transition: all 0.3s linear;
+  
+    // 회전을 위해 3D 로 선언
+    transform-style: preserve-3d;
+  }
+  // flashcard에 들어가는 text로 처음 시작할때 출력되는 텍스트 css
+  .start_text {
+    transform: scale(1, calc(1 / 1.3)) translate(-50%, -50%);
+    position: absolute;
+    top: 41%;
+    left: 50%;
+    font-size: 3vw;
+    width: 20vw;
+  }
+  
+  // 카드가 띄워진 후 출력되는 텍스트 css
+  .card_text {
+    transform: scale(1) translate(-50%, -50%);
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    font-size: 2.5vw;
+    width: 20vw;
+  }
+  
+  .reverse_over_text {
+    transform: scale(1) translate(-50%, -50%) rotateY(180deg);
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    font-size: 2vw;
+    width: 20vw;
+  }
+  
+  // 플래시 카드에 선택한 카테고리를 띄우는데 쓰이는 텍스트의 css
+  .category_text {
+    transform: scale(1) translate(-50%, -50%);
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    font-size: 1.5vw;
+    width: 15vw;
+    border-bottom: 1px solid black;
+  }
+  
+  // 카드 뒷면에 존재하는 내용에 쓰이는 CSS
+  .reverse_text {
+    transform: scale(1) translate(-50%, -50%) rotateY(180deg);
+    position: absolute;
+    text-align: left;
+    top: 44%;
+    left: 50%;
+    font-size: 1.5vw;
+    width: 31vw;
+  }
+  
+  
+  // 버튼들을 다루는 flex box와 그안에서 쓰이는 세부 css
+  .button_menu {
+    position: absolute;
+    top: 30%;
+    left: 60%;
+    // margin-top: 10vw;
+    // margin-left: 62vw;
+    text-align: center;
+    display: flex;
+    width: 35vw;
+    height: 35vw;
+  
+    .menu_img {
+      width: 14vw;
+      height: 9vw;
+      position: absolute;
+      transform: scale(1, 0.7);
+      filter: drop-shadow(5px 5px 5px #000);
+      cursor: pointer;
+  
+      .button_text {
+        width: 10vw;
+        font-size: 1.8vw;
+        transform: scale(1, calc(1 / 0.7)) translate(20%, 75%);
+        // position: absolute;
+      }
+    }
+  
+    // 베이직 한 기본 버튼들에 쓰임
+    .menu-button {
+      min-width: 40%; 
+      width: 12vw;
+      height: 5vw;
+      margin-top: 3.5vw;
+      margin-left: 15vw;
+      border: 3px solid rgba(81, 60, 58, 1);
+      color: 000000;
+      padding: 2%;
+      cursor: pointer;
+  
+      &:hover {
+        transition-duration: 0.5s;
+        background-color: #7c5c3f;
+        color: white;
+      }
+      .button_text {
+        width: 10vw;
+        font-size: 1.8vw;
+        transform: translate(6%, 10%);
+        font-weight: bold;
+        // position: absolute;
+      }
+      // 메인으로 가기 텍스트가 너무길어서 따로 조절이 필요해 추가로 css 작성
+      .gotomain_text {
+        width: 8vw;
+        font-size: 1.6vw;
+        transform: translate(20%, -20%);
+        font-weight: bold;
+      }
+    }
+  }
+}
+// 360px 이상에서 쓰일 css (반응형)
+@media screen and (min-width: 360px) and (max-width: 767px) {
+  // 카드 판에서 쓰이는 CSS - memo_card
+  .memo_card {
+    position: absolute;
+    top: 28%;
+    left: 8%;
+    transform: rotate(340deg) scale(1, 1.2);
+    width: 45vw;
+    height: 45vw;
+    // margin-top: 30vw;
+    // margin-left: 8vw;
+  
+    .memo_card_text {
+      transform: scale(1, calc(1 / 1.2)) translate(-50%, -50%);
+      position: absolute;
+      top: 18.5%;
+      left: 50%;
+      font-size: 5vw;
+      width: 18vw;
+    }
+  
+    .card_box {
+      width: 50vw;
+      text-align: center;
+    }
+  }
+  
+  // 움직이는 메모장에서 쓰일 flashcard
+  .flashcard {
+    position: absolute;
+    top: 32%;
+    left: 10%;
+    transform: rotate(340deg) scale(1, 1.3);
+    text-align: center;
+    // margin-top: 34vw;
+    // margin-left: 10vw;
+    width: 43vw;
+    height: 43vw;
+    transition: all 0.3s linear;
+  
+    // 회전을 위해 3D 로 선언
+    transform-style: preserve-3d;
+  }
+  // flashcard에 들어가는 text로 처음 시작할때 출력되는 텍스트 css
+  .start_text {
+    transform: scale(1, calc(1 / 1.3)) translate(-50%, -50%);
+    position: absolute;
+    top: 41%;
+    left: 50%;
+    font-size: 4vw;
+    width: 20vw;
+  }
+  
+  // 카드가 띄워진 후 출력되는 텍스트 css
+  .card_text {
+    transform: scale(1) translate(-50%, -50%);
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    font-size: 2.5vw;
+    width: 40vw;
+  }
+  
+  .reverse_over_text {
+    transform: scale(1) translate(-50%, -50%) rotateY(180deg);
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    font-size: 2vw;
+    width: 20vw;
+  }
+  
+  // 플래시 카드에 선택한 카테고리를 띄우는데 쓰이는 텍스트의 css
+  .category_text {
+    transform: scale(1) translate(-50%, -50%);
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    font-size: 1.5vw;
+    width: 20vw;
+    border-bottom: 1px solid black;
+  }
+  
+  // 카드 뒷면에 존재하는 내용에 쓰이는 CSS
+  .reverse_text {
+    transform: scale(1) translate(-50%, -50%) rotateY(180deg);
+    position: absolute;
+    text-align: left;
+    top: 44%;
+    left: 50%;
+    font-size: 1.5vw;
+    width: 35vw;
+  }
+  
+  
+  // 버튼들을 다루는 flex box와 그안에서 쓰이는 세부 css
+  .button_menu {
+    position: absolute;
+    top: 30%;
+    left: 58%;
+    // margin-top: 32vw;
+    // margin-left: 58vw;
+    text-align: center;
+    display: flex;
+    width: 45vw;
+    height: 45vw;
+  
+    .menu_img {
+      width: 17vw;
+      height: 12vw;
+      position: absolute;
+      transform: scale(1, 0.7);
+      filter: drop-shadow(5px 5px 5px #000);
+      cursor: pointer;
+  
+      .button_text {
+        width: 13vw;
+        font-size: 2.4vw;
+        transform: scale(1, calc(1 / 0.7)) translate(16%, 80%);
+        // position: absolute;
+      }
+    }
+  
+    // 베이직 한 기본 버튼들에 쓰임
+    .menu-button {
+      min-width: 40%; 
+      width: 10vw;
+      height: 5vw;
+      margin-left: 20vw;
+      border: 3px solid rgba(81, 60, 58, 1);
+      color: 000000;
+      padding: 2%;
+      cursor: pointer;
+  
+      &:hover {
+        transition-duration: 0.5s;
+        background-color: #7c5c3f;
+        color: white;
+      }
+      .button_text {
+        width: 12vw;
+        font-size: 2.2vw;
+        transform: translate(8%, -10%);
+        font-weight: bold;
+        // position: absolute;
+      }
+      // 메인으로 가기 텍스트가 너무길어서 따로 조절이 필요해 추가로 css 작성
+      .gotomain_text {
+        width: 8vw;
+        font-size: 1.6vw;
+        transform: translate(20%, -20%);
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+
+
+
+// 1200px 이상에서 쓰일 css (반응형)
+@media screen and (max-width: 359px) {
+  // 카드 판에서 쓰이는 CSS - memo_card
+  .memo_card {
+    position: absolute;
+    // top: 20%;
+    // left: 16%;
+    transform: rotate(340deg) scale(1, 1.2);
+    width: 30vw;
+    height: 30vw;
+    margin-top: 11vw;
+    margin-left: 18vw;
+  
+    .memo_card_text {
+      transform: scale(1, calc(1 / 1.2)) translate(-50%, -50%);
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      font-size: 3vw;
+      width: 18vw;
+    }
+  
+    .card_box {
+      width: 50vw;
+      text-align: center;
+    }
+  }
+  
+  // 움직이는 메모장에서 쓰일 flashcard
+  .flashcard {
+    position: absolute;
+    // top: 25%;
+    // left: 17.5%;
+    transform: rotate(340deg) scale(1, 1.3);
+    text-align: center;
+    margin-top: 13vw;
+    margin-left: 19.2vw;
+    width: 29vw;
+    height: 30vw;
+    transition: all 0.3s linear;
+  
+    // 회전을 위해 3D 로 선언
+    transform-style: preserve-3d;
+  }
+  // flashcard에 들어가는 text로 처음 시작할때 출력되는 텍스트 css
+  .start_text {
+    transform: scale(1, calc(1 / 1.3)) translate(-50%, -50%);
+    position: absolute;
+    top: 41%;
+    left: 50%;
+    font-size: 3vw;
+    width: 20vw;
+  }
+  
+  // 카드가 띄워진 후 출력되는 텍스트 css
+  .card_text {
+    transform: scale(1) translate(-50%, -50%);
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    font-size: 2vw;
+    width: 20vw;
+  }
+  
+  .reverse_over_text {
+    transform: scale(1) translate(-50%, -50%) rotateY(180deg);
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    font-size: 2vw;
+    width: 20vw;
+  }
+  
+  // 플래시 카드에 선택한 카테고리를 띄우는데 쓰이는 텍스트의 css
+  .category_text {
+    transform: scale(1) translate(-50%, -50%);
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    font-size: 1vw;
+    width: 15vw;
+    border-bottom: 1px solid black;
+  }
+  
+  // 카드 뒷면에 존재하는 내용에 쓰이는 CSS
+  .reverse_text {
+    transform: scale(1) translate(-50%, -50%) rotateY(180deg);
+    position: absolute;
+    text-align: left;
+    top: 44%;
+    left: 50%;
+    font-size: 1vw;
+    width: 25vw;
+  }
+  
+  
+  // 버튼들을 다루는 flex box와 그안에서 쓰이는 세부 css
+  .button_menu {
+    position: absolute;
+    margin-top: 10vw;
+    margin-left: 62vw;
+    text-align: center;
+    display: flex;
+    width: 35vw;
+    height: 35vw;
+  
+    .menu_img {
+      width: 14vw;
+      height: 9vw;
+      position: absolute;
+      transform: scale(1, 0.7);
+      filter: drop-shadow(5px 5px 5px #000);
+      cursor: pointer;
+  
+      .button_text {
+        width: 10vw;
+        font-size: 1.8vw;
+        transform: scale(1, calc(1 / 0.7)) translate(20%, 75%);
+        // position: absolute;
+      }
+    }
+  
+    // 베이직 한 기본 버튼들에 쓰임
+    .menu-button {
+      min-width: 40%; 
+      width: 12vw;
+      height: 5vw;
+      margin-left: 8vw;
+      border: 3px solid rgba(81, 60, 58, 1);
+      color: 000000;
+      padding: 2%;
+      cursor: pointer;
+  
+      &:hover {
+        transition-duration: 0.5s;
+        background-color: #7c5c3f;
+        color: white;
+      }
+      .button_text {
+        width: 10vw;
+        font-size: 1.8vw;
+        transform: translate(8%, 11%);
+        font-weight: bold;
+        // position: absolute;
+      }
+      // 메인으로 가기 텍스트가 너무길어서 따로 조절이 필요해 추가로 css 작성
+      .gotomain_text {
+        width: 8vw;
+        font-size: 1.6vw;
+        transform: translate(20%, -20%);
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+
 
 </style>
