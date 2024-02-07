@@ -1,24 +1,57 @@
 <script setup>
 import TagComponent from "@/components/ranking/TagComponent.vue";
 import Modal from "@/components/ranking/Modal.vue";
-import { ref } from "vue";
+import { ref, onMounted, watch } from "vue";
+import { getRankList, rankerSearch } from "@/api/rank.js";
 
-const rankerList = ref([
-    { name: "김싸피더안드로메다", tag: [1], score: 3000 },
-    { name: "최싸피", tag: [2, 3], score: 1231 },
-    { name: "홍싸피", tag: [1, 2, 3, 4], score: 1442 },
-    { name: "임싸피", tag: [1, 2, 3], score: 1232 },
-    { name: "이싸피", tag: [0], score: 9292 },
-    { name: "배싸피", tag: [1, 2, 3], score: 1231 },
-    { name: "엄싸피", tag: [4], score: 6463 },
-    { name: "송싸피", tag: [0, 1, 2, 3, 4, 5], score: 3901 },
-    { name: "양싸피", tag: [5], score: 2302 },
-]);
+const rankList = ref();
+const rankData = ref();
+const userInfo = ref();
+
+// 데이터를 받았는지 여부를 판단할 변수 선언
+const isRankData = ref(false);
+
+// watch를 이용해서 데이터가 들어오면 위의 변수를 true 값으로 바꿈
+// 따라서 v-if에서 위의 변수를 토대로 판단하여 데이터가 들어와야만 변경됨
+const watchRankData = watch(rankData, () => {
+    if (rankData.value.length > 0) {
+        isRankData.value = true;
+    }
+});
+
+const getInitList = () => {
+    getRankList(
+        rankData.value,
+        ({ data }) => {
+            rankList.value = data.data.rankers;
+            userInfo.value = data.data.myInfo;
+            rankData.value = rankList.value; // 전체 저장해놓은 랭크 리스트를 랭크 데이터 변수에 저장
+        },
+        (error) => {
+            console.log(error);
+        }
+    );
+};
+
+onMounted(() => {
+    getInitList();
+});
+
+const topRankerInfo = ["second", "first", "third"];
 
 // 검색 ====================================
 const userInput = ref("");
 const searchByName = () => {
-    console.log(userInput.value);
+    console.log("serachByName");
+    rankerSearch(
+        userInput.value,
+        ({ data }) => {
+            rankData.value = data.data;
+        },
+        (error) => {
+            console.log(error);
+        }
+    );
 };
 
 // `ref` 함수를 사용하여 반응성 데이터를 선언합니다.
@@ -46,21 +79,20 @@ const closeModal = () => {
             />
             <div class="board">
                 <div class="ranking-title"><h1>현상금 순위 RANK</h1></div>
-                <div class="top-ranker">
-                    <div class="ranker second">
-                        <h1>2nd</h1>
+                <div class="top-ranker" v-if="isRankData">
+                    <div
+                        v-for="(index, idx) in [1, 0, 2]"
+                        :key="idx"
+                        class="ranker"
+                        :class="topRankerInfo[idx]"
+                    >
+                        <h1>{{ index + 1 }}위</h1>
                         <div class="ranker-background"></div>
-                        <h2>최싸피</h2>
-                    </div>
-                    <div class="ranker first">
-                        <h1>1ST</h1>
-                        <div class="ranker-background"></div>
-                        <h2>최싸피</h2>
-                    </div>
-                    <div class="ranker third">
-                        <h1>3rd</h1>
-                        <div class="ranker-background"></div>
-                        <h2>최싸피</h2>
+                        <div>
+                            <h2>
+                                {{ rankList[index].nickname }}
+                            </h2>
+                        </div>
                     </div>
                 </div>
 
@@ -89,25 +121,29 @@ const closeModal = () => {
                             </tr>
                         </thead>
                         <tbody>
+                            <tr v-if="!rankData">
+                                No Data
+                            </tr>
                             <tr
-                                v-for="(ranker, rankerIdx) in rankerList"
+                                v-else
+                                v-for="(ranker, rankerIdx) in rankData"
                                 :key="rankerIdx"
                                 class="non-header"
                             >
                                 <td>{{ rankerIdx + 1 }}</td>
                                 <td @click="openModal(ranker)" class="detail">
-                                    {{ ranker.name }}
+                                    {{ ranker.nickname }}
                                 </td>
                                 <td class="tag-container">
                                     <!-- name: "홍싸피", tag: [1, 2, 3, 4], score: 1442 -->
                                     <TagComponent
-                                        :tagCount="ranker.tag.length"
-                                        :rankerInfo="ranker.tag"
+                                        :level="ranker.tier"
+                                        :tagList="ranker.badgeList"
                                     />
                                 </td>
                                 <td>
                                     <div>
-                                        {{ ranker.score }}
+                                        {{ ranker.point }}
                                     </div>
                                 </td>
                             </tr>
@@ -119,19 +155,14 @@ const closeModal = () => {
         <!-- 모달 컴포넌트 -->
         <Modal v-if="isModalOpen" @close="closeModal">
             <!-- 모달 내용 -->
-            <h2>사용자 이름: {{ rankerInfo.name }}</h2>
+            <h2>{{ rankerInfo.nickname }}</h2>
             <p>
-                레벨:
                 <TagComponent
-                    :tagCount="rankerInfo.tag.length"
-                    :rankerInfo="rankerInfo.tag"
+                    :level="rankerInfo.tier"
+                    :tagList="rankerInfo.badgeList"
                 />
             </p>
-            <p>보유 태그: {{ rankerInfo.tag }}</p>
-            <p>현상금: {{ rankerInfo.score }}</p>
-            <button @click="closeModal" class="search-button">
-                Close Modal
-            </button>
+            <button @click="closeModal">닫기</button>
         </Modal>
     </div>
 </template>
@@ -174,6 +205,7 @@ const closeModal = () => {
         text-align: center;
         align-items: center;
         justify-content: space-evenly;
+        animation: fadeInUp 2s;
 
         height: 70%;
         width: 70%;
