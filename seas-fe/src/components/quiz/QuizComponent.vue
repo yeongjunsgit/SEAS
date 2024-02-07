@@ -71,18 +71,14 @@ const delayResult = () => {
 // 정답 체크 ====================================================================
 // 정답 여부 변수
 const isCorrect = ref(false);
-const correctMessage = ref(null);
-const answerShown = ref(true);
-const answerColor = ref();
+const answerShown = ref(false);
 
 const checkAnswer = () => {
     // 백으로 input 값 보내주기 (힌트 사용 여부 포함)
-    // isCorrect = sendAnswer();
+    // isCorrect.value = sendAnswer();
     isCorrect.value = answerInput.value != null ? true : false; // 임시 정답 처리 되는지 확인 코드
     // 얻어낸 bool값으로 해당 문제 맞았는지 틀렸는지 알려주기
     answerShown.value = true;
-    correctMessage.value = isCorrect.value ? "맞았습니다!" : "틀렸습니다!";
-    answerColor.value = isCorrect.value ? "green" : "red";
 };
 
 // 백으로 사용자가 입력한 정답 전송
@@ -130,12 +126,11 @@ const clearInput = () => {
         </div>
         <div class="result-container">
             <h3
-                :style="{
-                    visibility: answerShown ? 'visible' : 'hidden',
-                    color: answerColor,
-                }"
+                v-if="answerShown"
+                class="input-result"
+                :class="{ correct: isCorrect, wrong: !isCorrect }"
             >
-                {{ correctMessage }}
+                {{ isCorrect ? "맞았습니다" : "틀렸습니다" }}
             </h3>
         </div>
     </div>
@@ -169,8 +164,29 @@ const clearInput = () => {
     height: 10%;
 }
 .result-container {
+    height: 17%;
+    display: flex;
+    justify-content: center;
     text-align: center;
-    height: 10%;
+    font-size: 130%;
+
+    .input-result {
+        border: double;
+        border-width: 6px;
+        width: 60%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        transform: rotate(-10deg); /* 45도로 요소를 회전 */
+    }
+
+    .correct {
+        color: green;
+    }
+    .wrong {
+        color: red;
+    }
 }
 
 input {
