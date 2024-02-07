@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.ssafy.seas.mypage.entity.Streak;
 
 public interface StreakRepository extends JpaRepository<Streak, Integer> {
-	List<Streak> findByMemberIdAndCreatedAtAfter(Integer memberId, LocalDateTime dateTime);
+	List<Streak> findByMemberIdAndCreatedAtAfterOrderByCreatedAt(Integer memberId, LocalDateTime dateTime);
 }
