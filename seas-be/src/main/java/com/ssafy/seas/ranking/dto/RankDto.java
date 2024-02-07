@@ -13,11 +13,13 @@ public class RankDto {
 	@Builder
 	@NoArgsConstructor
 	public static class Response {
+		List<RankerDto.RankResponse> rankersTop3;
 		List<RankerDto.RankResponse> rankers;
 		RankerDto.RankResponse myInfo;
 
 		@QueryProjection
-		public Response(List<RankerDto.RankResponse> rankers, RankerDto.RankResponse myInfo){
+		public Response(List<RankerDto.RankResponse> rankersTop3, List<RankerDto.RankResponse> rankers, RankerDto.RankResponse myInfo){
+			this.rankersTop3 = rankersTop3;
 			this.rankers = rankers;
 			this.myInfo = myInfo;
 		}
