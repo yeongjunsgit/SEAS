@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import com.querydsl.core.annotations.QueryProjection;
 
+import lombok.Builder;
 import lombok.Getter;
 
 public class StreakDto {
@@ -14,8 +15,9 @@ public class StreakDto {
 		private Integer grade;
 		private LocalDateTime createdAt;
 
-		public Response(Timestamp createdAt, Integer grade) {
-			this.createdAt = createdAt.toLocalDateTime();
+		@Builder
+		public Response(LocalDateTime createdAt, Integer grade) {
+			this.createdAt = createdAt;
 			this.grade = grade;
 		}
 	}
