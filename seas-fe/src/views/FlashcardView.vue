@@ -12,12 +12,22 @@ import axios from "axios"
 import { useRouter } from "vue-router";
 const router = useRouter();
 
+
 // 카테고리 선택시 관리 할 편수들!
 const category = ref(null);
-const keywordData = ref(null);
-const commentData = ref(null);
+const flashcardData = ref(null);
+const keywordData = ref(false);
 const favoriteData = ref(null);
 const idx = ref(0);
+
+
+const isHaveFlashcardData = ref(false)
+
+const watchFlashcardData = watch (flashcardData, () => {
+  if (flashcardData.value.length > 0) {
+    isHaveFlashcardData.value = true
+  }
+})
 
 // 애니메이션 로직을 위한 변수들!
 const isReversed = ref(false);
@@ -25,6 +35,10 @@ const isUp = ref(false);
 const isFront = ref(true);
 const isInvisible = ref(false);
 const isAnimating = ref(false);
+
+// 버튼 출력을 다룰 변수 2개 생성
+const isSelected = ref(false);
+const isOver = ref(false);
 
 // 카드가 뒤집어지는 효과를 담당하는 함수
 const reverseCard = function () {
@@ -151,111 +165,85 @@ const calculFavorite = computed(() => {
 
 // 좋아요 추가 기능 구현하기!
 const addLike = function () {
-  if (favoriteData.value[idx.value] === "1") {
+  if (flashcardData.value[idx.value].isFavorite === true) {
     // axios를 통해 좋아요 취소 기능
+    axios({
+      method: "delete",
+      url: `https://i10a609.p.ssafy.io/api/flashcard/${flashcardData.value[idx.value].id}/favorite`
+
+    })
+      .then((res) => {
+        console.log("Delete complete")
+      })
+      .catch((err) => {
+        console.log(err)
+      })
 
     // 끝난 후 false로 변환
-    favoriteData.value[idx.value] = "0"
+    flashcardData.value[idx.value].isFavorite = false
   } 
-  else if (favoriteData.value[idx.value] === "0") {
+  else if (flashcardData.value[idx.value].isFavorite === false) {
     // axios를 통해 좋아요 추가 기능
+    axios({
+      method: "post",
+      url: `https://i10a609.p.ssafy.io/api/flashcard/${flashcardData.value[idx.value].id}/favorite`
 
+    })
+      .then((res) => {
+        console.log("favorite complete")
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      
     // 끝난후 true로 변환
-    favoriteData.value[idx.value] = "1"
+    flashcardData.value[idx.value].isFavorite = true
   }
 }
 
-// 버튼 출력을 다룰 변수 2개 생성
-const isSelected = ref(false);
-const isOver = ref(false);
 
 // 버튼들에 출력할 내용들 생성
 const buttonCategory = [
   "네트워크",
   "자료구조",
-  "컴퓨터 구조",
+  "컴퓨터구조",
   "운영체제",
   "알고리즘",
   "데이터베이스",
 ];
 
 // 버튼 눌렀을 때 호출되는 함수들
-const selectCategory = function (cate) {
+const selectCategory = async function (cate) {
   if (isAnimating.value === false) {
-    isSelected.value = !isSelected.value;
-    isUp.value = !isUp.value;
-    category.value = ref(cate);
-  
+    try {
+      isSelected.value = !isSelected.value;
+      isUp.value = !isUp.value;
+      category.value = ref(cate);
+      // keywordData.value = true
+
+      const response = await axios({
+        method: 'get',
+        url: `https://i10a609.p.ssafy.io/api/flashcard?category=${category.value.value}`,
+      });
+
+      flashcardData.value = response.data.data;
+      keywordData.value = true
+
+    } catch (error) {
+      console.log(error);
+    }
     gsap.to(".flashcard", {
       onStart: () => {
-        isAnimating.value = true
+        isAnimating.value = true;
       },
       duration: 0.3,
       xPercent: 30,
       scale: (1.5, 1.6),
       rotate: 0.2,
       onComplete: () => {
-        isAnimating.value = false
+        isAnimating.value = false;
       }
     });
-  
-    // 여기서 받은 카테고리를 axios로 보내자! 일단 임시로 아무거나 만들어서 쓰겠다
-    axios({
-      method: 'get',
-      url: `http://70.12.247.130:8080/api/flashcard?category=${category.value}`,
-  
-    }) .then((res) => {
-      console.log(res.data)
-      keywordData.value = response.data.keyword
-      commentData.value = response.data.content
-    }) .catch((error) => {
-      console.log(error)
-    })
-  
-    keywordData.value = [
-      "Primary Key",
-      "Foreign Key",
-      "키워드 3",
-      "키워드 4",
-      "키워드 5",
-      "키워드 6",
-      "키워드 7",
-      "키워드 8",
-      "키워드 9",
-      "키워드 10",
-    ];
-    commentData.value = [
-      ["1컴퓨터의 뇌로서, 프로그램에서 명령어를 해석하고 실행하는 핵심 부품",
-        "제어 유닛은 명령어를 해독하고 실행하는 역할을 하며, 산술 논리 연산 장치(ALU)는 산술 연산과 논리 연산을 수행",
-        "레지스터는 매우 빠른 속도로 데이터를 저장하고 처리하는데 사용"],
-      ["데이터와 명령을 저장하는 공간",
-        "주 기억장치(RAM)는 현재 실행 중인 프로그램과 데이터를 저장하며, 보조 기억장치(하드 디스크, SSD)는 영구적인 데이터 저장을 담당",
-        "캐시도 메모리의 일종으로, 빠른 데이터 접근을 위해 사용"],
-      ["CPU, 메모리, 그리고 입출력 장치 등 각 구성 요소 간에 데이터, 주소, 제어 신호를 전송하는 통로",
-        "주소 버스는 메모리 위치를 지정하고, 데이터 버스는 실제 데이터를 전송하며, 제어 버스는 명령과 상태 정보를 전송"],
-      ["CPU 내부에 위치한 소량의 고속 기억장치",
-        "현재 수행 중인 명령어나 연산에 필요한 데이터를 일시적으로 저장",
-        "레지스터는 ALU에서의 계산에 필수적이며, 레지스터의 크기와 수는 CPU의 성능에 영향을 미침"],
-      ["CPU가 이해하고 실행하는 명령어의 집합",
-        "각 명령어는 특정한 동작을 수행하며, 이러한 명령어들을 조합하여 프로그램이 동작"],
-      ["명령어 처리를 여러 단계로 분할하여 병렬적으로 실행하는 구조",
-        "이를 통해 여러 명령어가 동시에 처리되어 CPU의 성능이 향상"],
-      ["빠른 속도로 접근 가능한 작은 용량의 메모리",
-        "CPU가 자주 사용하는 데이터를 일시적으로 저장하여 메인 메모리에 접근하는 속도를 향상",
-        "주로 L1, L2, L3 캐시로 구성"],
-      ["전체 시스템의 동기화를 담당하는 신호",
-        "CPU와 다른 시스템 구성 요소의 동작 주기를 조절",
-        "클럭 주파수가 높을수록 더 빠른 연산이 가능"],
-      ["CPU가 현재 수행 중인 작업을 중단하고 외부 이벤트에 대응하는 메커니즘",
-        "하드웨어나 소프트웨어에서 발생할 수 있으며, 시스템의 효율적인 동작과 응답성을 보장"],
-      ["내장된 소프트웨어로, 하드웨어 초기화, 부팅, 기본 시스템 설정 및 제어를 담당",
-        "주로 ROM 또는 플래시 메모리에 저장되며, 시스템의 안정성과 동작을 지원",
-        "펌웨어는 업데이트 가능하며, 제조사가 제공하는 업데이트로 기능 확장 가능"],
-    ];
-    
-    favoriteData.value = [
-      '1','0','1','0','1','1','0','1','0','1'
-    ]
   }
 };
 
@@ -265,7 +253,7 @@ const replayFlashcard = function () {
     isSelected.value = !isSelected.value;
     isOver.value = !isOver.value;
     isUp.value = !isUp.value;
-    keywordData.value = null;
+    keywordData.value = false;
     category.value = null;
   
     gsap.fromTo(
@@ -286,6 +274,21 @@ const replayFlashcard = function () {
         rotation: -20,
         onComplete: () => {
           isAnimating.value = false
+          if (isReversed.value === true) {
+            isReversed.value = !isReversed.value
+            gsap.to(".flashcard", {
+              onStart: () => {
+                isAnimating.value = true
+                isInvisible.value = !isInvisible.value;
+              },
+              duration: 0.5,
+              rotationY: "+=180",
+              onComplete: () => {
+                isInvisible.value = !isInvisible.value;
+                isAnimating.value = false
+              },
+            });
+          }
         }
       }
     );
@@ -311,7 +314,13 @@ const goToQuiz = function () {
     </v-img>
     <v-img :src="flashcardImage" class="flashcard" @click="reverseCard">
       <!-- 클릭했을때 내용이 바뀌게 만들자! -->
-      <p class="card_text" v-if="isOver && keywordData">THE END</p>
+      <!-- 모든 카드를 다 봤을 때 앞면-->
+      <p :class="{ card_text: true, invisible: isInvisible }" v-if="isOver && keywordData && !isReversed">THE END</p>
+
+      <!-- 모든 카드를 다 봤을 때 뒷면-->
+      <p :class="{ reverse_over_text: true, invisible: isInvisible }" v-else-if="isOver && keywordData && isReversed">수고하셨습니다</p>
+
+      <!-- 카드 앞면 -->
       <p
         :class="{ card_text: true, invisible: isInvisible }"
         v-else-if="keywordData && !isReversed"
@@ -320,18 +329,21 @@ const goToQuiz = function () {
           <p class="category_text"> {{ category }}</p>
         </div>
         <br />
-        {{ keywordData[idx] }}
+        {{ flashcardData[idx].keyword }}
       </p>
+      <!-- 카드 뒷면 -->
       <p
         :class="{ reverse_text: true, invisible: isInvisible }"
         v-else-if="keywordData && isReversed"
       >
       <br>
-        <li v-for="data in commentData[idx]">
+        <li v-for="data in flashcardData[idx].contents">
           {{ data }}
         </li>
       </p>
-      <p class="start_text" v-else-if="!keywordData">
+
+      <!-- 카테고리 선택 전 -->
+      <p :class="{ start_text: true, invisible: isInvisible }" v-else-if="!keywordData">
         카테고리를<br />
         선택하세요<br />
       </p>
@@ -354,7 +366,7 @@ const goToQuiz = function () {
     </v-container>
 
     <!-- 카테고리 선택 후 진행상황, 좋아요, 이전, 다음 기능 버튼 출력 -->
-    <v-container class="button_menu" v-else-if="isSelected && !isOver">
+    <v-container class="button_menu" v-else-if="isSelected && !isOver && isHaveFlashcardData ">
       <v-row align="start" no-gutters>
         <v-col cols="12">
           <div class="menu-button">
@@ -363,7 +375,7 @@ const goToQuiz = function () {
           </div>
         </v-col>
         <v-col cols="12">
-          <div :class="{'complete_like': favoriteData[idx] === '1', 'yet_like': favoriteData[idx] === '0', 'menu-button': true }" @click="addLike">
+          <div :class="{'complete_like': flashcardData[idx].isFavorite === true, 'yet_like': flashcardData[idx].isFavorite === false, 'menu-button': true }" @click="addLike">
             <p class="button_text">좋아요</p>
           </div>
         </v-col>
@@ -381,7 +393,7 @@ const goToQuiz = function () {
     </v-container>
 
     <!-- 모든 암기를 본 후에 이동할 페이지를 보여주는 버튼 출력 -->
-    <v-container class="button_menu" v-else-if="isSelected && isOver">
+    <v-container class="button_menu" v-else-if="isSelected && isOver && isHaveFlashcardData">
       <v-row align="start" no-gutters>
         <v-col cols="12">
           <div class="menu-button" @click="goToMain">
@@ -462,6 +474,15 @@ const goToQuiz = function () {
 // 카드가 띄워진 후 출력되는 텍스트 css
 .card_text {
   transform: scale(1) translate(-50%, -50%);
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  font-size: 2vw;
+  width: 20vw;
+}
+
+.reverse_over_text {
+  transform: scale(1) translate(-50%, -50%) rotateY(180deg);
   position: absolute;
   top: 45%;
   left: 50%;

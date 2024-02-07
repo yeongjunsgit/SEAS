@@ -50,7 +50,7 @@ function preloadResource(url, type) {
 .menu {
     flex-direction: column;
     justify-content: space-evenly;
-    margin-top: 10%;
+    margin-top: 15%;
     position: relative;
     background-image: url("https://d2qkxc1ity7pm2.cloudfront.net/images/menu.png");
     background-size: contain;

@@ -1,28 +1,73 @@
 <script setup>
 import TagComponent from "@/components/ranking/TagComponent.vue";
-import { ref } from "vue";
+import Modal from "@/components/ranking/Modal.vue";
+import { ref, onMounted, watch } from "vue";
+import { getRankList, rankerSearch } from "@/api/rank.js";
 
-const rankerList = ref([
-    { name: "김싸피", tag: [1], score: 3000 },
-    { name: "최싸피", tag: [2, 3], score: 1231 },
-    { name: "홍싸피", tag: [1, 2, 3, 4], score: 1442 },
-    { name: "임싸피", tag: [1, 2, 3], score: 1232 },
-    { name: "이싸피", tag: [0], score: 9292 },
-    { name: "배싸피", tag: [1, 2, 3], score: 1231 },
-    { name: "엄싸피", tag: [4], score: 6463 },
-    { name: "송싸피", tag: [1, 2, 3, 4, 5], score: 3901 },
-    { name: "양싸피", tag: [5], score: 2302 },
-]);
+const rankList = ref();
+const rankData = ref();
+const userInfo = ref();
 
-const tagList = ref([
-    { title: "CS 선장" },
-    { title: "알고리즘" },
-    { title: "네트워크" },
-    { title: "자료구조" },
-    { title: "데이터베이스" },
-    { title: "컴퓨터구조" },
-    { title: "운영체제" },
-]);
+// 데이터를 받았는지 여부를 판단할 변수 선언
+const isRankData = ref(false);
+
+// watch를 이용해서 데이터가 들어오면 위의 변수를 true 값으로 바꿈
+// 따라서 v-if에서 위의 변수를 토대로 판단하여 데이터가 들어와야만 변경됨
+const watchRankData = watch(rankData, () => {
+    if (rankData.value.length > 0) {
+        isRankData.value = true;
+    }
+});
+
+const getInitList = () => {
+    getRankList(
+        rankData.value,
+        ({ data }) => {
+            rankList.value = data.data.rankers;
+            userInfo.value = data.data.myInfo;
+            rankData.value = rankList.value; // 전체 저장해놓은 랭크 리스트를 랭크 데이터 변수에 저장
+        },
+        (error) => {
+            console.log(error);
+        }
+    );
+};
+
+onMounted(() => {
+    getInitList();
+});
+
+const topRankerInfo = ["second", "first", "third"];
+
+// 검색 ====================================
+const userInput = ref("");
+const searchByName = () => {
+    console.log("serachByName");
+    rankerSearch(
+        userInput.value,
+        ({ data }) => {
+            rankData.value = data.data;
+        },
+        (error) => {
+            console.log(error);
+        }
+    );
+};
+
+// `ref` 함수를 사용하여 반응성 데이터를 선언합니다.
+const isModalOpen = ref(false);
+const rankerInfo = ref({});
+// 모달 열기 함수
+const openModal = (ranker) => {
+    isModalOpen.value = true;
+    rankerInfo.value = ranker;
+    console.log(rankerInfo.value);
+};
+
+// 모달 닫기 함수
+const closeModal = () => {
+    isModalOpen.value = false;
+};
 </script>
 
 <template>
@@ -34,24 +79,42 @@ const tagList = ref([
             />
             <div class="board">
                 <div class="ranking-title"><h1>현상금 순위 RANK</h1></div>
-                <div class="top-ranker">
-                    <div class="ranker second">
-                        <h1>2nd</h1>
+                <div class="top-ranker" v-if="isRankData">
+                    <div
+                        v-for="(index, idx) in [1, 0, 2]"
+                        :key="idx"
+                        class="ranker"
+                        :class="topRankerInfo[idx]"
+                    >
+                        <h1>{{ index + 1 }}위</h1>
                         <div class="ranker-background"></div>
-                        <h2>최싸피</h2>
-                    </div>
-                    <div class="ranker first">
-                        <h1>1ST</h1>
-                        <div class="ranker-background"></div>
-                        <h2>최싸피</h2>
-                    </div>
-                    <div class="ranker third">
-                        <h1>3rd</h1>
-                        <div class="ranker-background"></div>
-                        <h2>최싸피</h2>
+                        <div>
+                            <h2>
+                                {{ rankList[index].nickname }}
+                            </h2>
+                        </div>
                     </div>
                 </div>
+
                 <div class="rank-table">
+                    <div class="search-container">
+                        <button class="search-button" @click="getInitList">
+                            초기화
+                        </button>
+                        <div class="input-container">
+                            <label for="searchName">사용자 이름 검색 :</label>
+                            <input
+                                id="searchName"
+                                type="text"
+                                autocomplete="off"
+                                v-model="userInput"
+                                @keyup.enter="searchByName"
+                            />
+                            <button class="search-button" @click="searchByName">
+                                검색
+                            </button>
+                        </div>
+                    </div>
                     <table>
                         <thead>
                             <tr>
@@ -62,37 +125,53 @@ const tagList = ref([
                             </tr>
                         </thead>
                         <tbody>
+                            <tr v-if="!rankData">
+                                No Data
+                            </tr>
                             <tr
-                                v-for="(ranker, rankerIdx) in rankerList"
+                                v-else
+                                v-for="(ranker, rankerIdx) in rankData"
                                 :key="rankerIdx"
+                                class="non-header"
                             >
                                 <td>{{ rankerIdx + 1 }}</td>
-                                <td>{{ ranker.name }}</td>
+                                <td @click="openModal(ranker)" class="detail">
+                                    {{ ranker.nickname }}
+                                </td>
                                 <td class="tag-container">
                                     <!-- name: "홍싸피", tag: [1, 2, 3, 4], score: 1442 -->
-                                    <div
-                                        v-for="tag in ranker.tag"
-                                        :key="tag"
-                                        class="tag"
-                                    >
-                                        <TagComponent
-                                            :title="tagList[tag].title"
-                                            :tagNo="tag"
-                                        />
+                                    <TagComponent
+                                        :level="ranker.tier"
+                                        :tagList="ranker.badgeList"
+                                    />
+                                </td>
+                                <td>
+                                    <div>
+                                        {{ ranker.point }}
                                     </div>
                                 </td>
-                                <td>{{ ranker.score }}</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
+        <!-- 모달 컴포넌트 -->
+        <Modal v-if="isModalOpen" @close="closeModal">
+            <!-- 모달 내용 -->
+            <h2>{{ rankerInfo.nickname }}</h2>
+            <p>
+                <TagComponent
+                    :level="rankerInfo.tier"
+                    :tagList="rankerInfo.badgeList"
+                />
+            </p>
+            <button @click="closeModal">닫기</button>
+        </Modal>
     </div>
 </template>
 <style scoped lang="scss">
 @import "@/assets/style/main.scss";
-
 .ranking-container {
     background-image: url($url-path + "images/ranking_bg.jpg");
     background-size: cover;
@@ -130,16 +209,18 @@ const tagList = ref([
         text-align: center;
         align-items: center;
         justify-content: space-evenly;
+        animation: fadeInUp 2s;
 
         height: 70%;
         width: 70%;
 
+        // 탑 랭커 섹션 =========================
         .top-ranker {
             display: flex;
             justify-content: space-around;
             width: 80%;
             height: 30vh;
-            margin: 2% 0 10% 0;
+            margin: 2% 0 15% 0;
 
             .ranker {
                 display: flex;
@@ -147,8 +228,7 @@ const tagList = ref([
                 width: 25%;
                 max-width: 630px;
                 height: 100%;
-                border: 2px black;
-                border-style: double;
+                border: 2px double black;
 
                 .ranker-background {
                     width: 100%;
@@ -167,39 +247,93 @@ const tagList = ref([
             }
         }
 
+        // 랭크 테이블 섹션 ===================
         .rank-table {
-            margin-top: 7%;
-            padding-top: 7%;
             font-size: larger;
             width: 80%;
-            border-top: 1px double $primary-color;
 
+            // 검색 섹션 ======================
+            .search-container {
+                display: flex;
+                flex-wrap: nowrap;
+                justify-content: space-between;
+                padding: 1% 0 1% 0;
+                z-index: 1;
+                border-top: 2px double black;
+                width: 100%;
+
+                .input-container {
+                    display: flex;
+                    justify-content: space-evenly;
+
+                    label {
+                        margin: 10px 1% 0 0;
+                        width: 40%;
+                        font-size: larger;
+                    }
+                    input {
+                        padding: 2% 0 0 2%;
+                        border: 2px solid black;
+                        border-radius: 10px;
+                        font-size: large;
+                        font-weight: bold;
+                        width: 40%;
+                        height: 100%;
+
+                        &:focus {
+                            outline: none;
+                            background-color: rgba($gradation-color, 0.1);
+                        }
+                    }
+                }
+
+                .search-button {
+                    border: 2px solid $primary-color;
+                    border-radius: 10px;
+                    margin: 0 10px 0 10px;
+                    padding: 1% 1% 0 1%;
+                    min-width: 50px;
+
+                    &:hover {
+                        background-color: $primary-color;
+                        color: white;
+                        transition-duration: 0.5s;
+                    }
+                }
+            }
+
+            // 모달 ==============================
+            .detail {
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+
+            // 테이블 =============================
             table {
                 width: 100%;
                 border-collapse: collapse;
-            }
-            tr td,
-            tr th {
-                padding-top: 1%;
-                border: 1px solid #000; /* 테두리 스타일 및 색상 지정 */
-            }
+                padding: 0;
 
-            th {
-                min-width: 80px;
-            }
-            td {
-                margin: 2% 0 2% 0;
+                tr th,
+                tr td {
+                    height: 50px;
+                    padding-top: 1%;
+                    border-bottom: 1px solid #000; /* 테두리 스타일 및 색상 지정 */
+                }
+
+                th {
+                    background-color: rgba($secondary-color, 0.4);
+                }
+
+                .non-header:hover {
+                    background-color: rgba($gradation-color, 0.2);
+                    transition-duration: 0.5s;
+                }
             }
             .tag-container {
-                display: flex;
-                text-align: center;
-                flex-wrap: wrap;
-                padding: 2% 0 2% 0;
-                margin: 0;
-
-                .tag {
-                    margin-left: 1%;
-                }
+                widows: 50%;
+                padding-bottom: 1%;
             }
         }
     }
