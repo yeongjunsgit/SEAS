@@ -1,26 +1,6 @@
 <script setup>
 import { ref } from "vue";
-const props = defineProps(["rankerInfo", "tagCount"]);
-const levelList = [
-    "선원",
-    "포수장",
-    "갑판장",
-    "항해사",
-    "일등항해사",
-    "부선장",
-    "선장",
-];
-
-// 말풍선 ==================================
-
-const tagList = ref([
-    { title: "알고리즘" },
-    { title: "네트워크" },
-    { title: "자료구조" },
-    { title: "데이터베이스" },
-    { title: "컴퓨터구조" },
-    { title: "운영체제" },
-]);
+const props = defineProps(["level", "tagList"]);
 
 const isTooltipVisible = ref(false);
 
@@ -37,14 +17,15 @@ const hideTooltip = () => {
     <div class="container-wrapper">
         <div
             class="container"
-            :class="{ 'master-tag': props.tagCount == 6 }"
+            :class="{ 'master-tag': props.level == '선장' }"
             @mouseover="showTooltip"
             @mouseleave="hideTooltip"
         >
-            <p>{{ levelList[tagCount] }}</p>
+            <p>{{ level }}</p>
             <div v-if="isTooltipVisible" class="tooltip">
-                <p v-for="tag in props.rankerInfo" :key="tag">
-                    {{ tagList[tag].title }}
+                <p v-if="props.tagList.length == 0">없음</p>
+                <p v-else v-for="tag in props.tagList" :key="tag">
+                    {{ tag.name }}
                 </p>
             </div>
         </div>
