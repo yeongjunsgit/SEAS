@@ -18,6 +18,11 @@ spring:
   flyway:
     enabled: true
 
+  redis:
+    data:
+      host: seas-redis
+      port: 6379
+
 springdoc:
 
   swagger-ui:
@@ -41,4 +46,3 @@ logging:
   discord:
     webhook-url: ${DISCORD_WEBHOOK_URL}
   config: classpath:logback-spring.xml
-

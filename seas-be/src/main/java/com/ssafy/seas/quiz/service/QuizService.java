@@ -3,6 +3,7 @@ package com.ssafy.seas.quiz.service;
 
 import com.ssafy.seas.member.util.MemberUtil;
 import com.ssafy.seas.quiz.dto.QuizDto;
+import com.ssafy.seas.quiz.dto.QuizHintDto;
 import com.ssafy.seas.quiz.dto.QuizListDto;
 import com.ssafy.seas.quiz.repository.QuizCustomRepository;
 import com.ssafy.seas.quiz.util.QuizUtil;
@@ -32,6 +33,7 @@ public class QuizService {
         List<QuizListDto.QuizInfo> quizInfoList = new ArrayList<>();
 
         List<QuizDto.QuizFactorDto> quizFactors = quizCustomRepository.findAllQuizInnerJoin(memberId, categoryId);
+
         List<QuizDto.QuizWeightInfo> quizWeightInfos =
                 quizFactors.stream().map(dto -> {
                 return new QuizDto.QuizWeightInfo(dto.getQuizId(), dto.getQuizInterval(), dto.getEf());
@@ -48,7 +50,19 @@ public class QuizService {
             quizInfoList.add(new QuizListDto.QuizInfo(quizId, quiz));
         }
 
+        quizUtil.storeQuizToRedis(quizFactors);
+
         return new QuizListDto.Response(quizInfoList);
     }
+
+
+    public QuizHintDto.Response getHint(Integer quizId){
+
+        Integer memberId = MemberUtil.getLoginMemberId();
+
+        QuizDto.QuizFactorDto data = quizUtil.getQuizHint(quizId, memberId);
+        return new QuizHintDto.Response(data.getQuizId(), data.getHint());
+    }
+
 
 }

@@ -5,10 +5,14 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
+@Getter
 public class QuizDto {
 
     @Getter
-    public static class QuizFactorDto{
+    @RequiredArgsConstructor
+    public static class QuizFactorDto implements Serializable{
         private Double quizInterval;
         private Double ef;
 
@@ -18,6 +22,7 @@ public class QuizDto {
         private Integer quizId;
         private String quiz;
         private String hint;
+
 
         @QueryProjection
         public QuizFactorDto(Integer memberId, Integer cardQuizId, Integer quizId, String quiz, String hint, Double quizInterval, Double ef){
@@ -29,7 +34,6 @@ public class QuizDto {
             this.quizInterval = quizInterval;
             this.ef = ef;
         }
-
     }
 
     @RequiredArgsConstructor

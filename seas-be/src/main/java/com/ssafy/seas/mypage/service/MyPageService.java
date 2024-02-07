@@ -1,5 +1,7 @@
 package com.ssafy.seas.mypage.service;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +15,12 @@ import com.ssafy.seas.member.entity.Member;
 import com.ssafy.seas.member.repository.MemberRepository;
 import com.ssafy.seas.member.util.MemberUtil;
 import com.ssafy.seas.mypage.dto.MyPageDto;
+import com.ssafy.seas.mypage.dto.StreakDto;
+import com.ssafy.seas.mypage.entity.Streak;
+import com.ssafy.seas.mypage.mapper.StreakMapper;
 import com.ssafy.seas.mypage.repository.MyPageRepository;
+import com.ssafy.seas.mypage.repository.StreakRepository;
+import com.ssafy.seas.quiz.dto.IncorrectNoteDto;
 import com.ssafy.seas.ranking.dto.BadgeDto;
 import com.ssafy.seas.ranking.repository.RankerRepositoryCustom;
 import com.ssafy.seas.ranking.repository.RankerRepositoryImpl;
@@ -27,8 +34,10 @@ public class MyPageService {
 	private final MemberRepository memberRepository;
 	private final MyPageRepository myPageRepository;
 	private final RankerRepositoryCustom rankerRepository;
+	private final StreakRepository streakRepository;
 	private final MemberUtil memberUtil;
 	private final CategoryUtil categoryUtil;
+	private final StreakMapper streakMapper;
 
 	public MemberDto.MyInfoResponse getMyInfo() {
 		Integer memberId = memberUtil.getLoginMemberId();
@@ -96,5 +105,17 @@ public class MyPageService {
 	public List<BadgeDto.BadgeResponse> getBadges() {
 		Member member = memberUtil.getLoginMember();
 		return rankerRepository.getBadgeListByMemberId(member.getId());
+	}
+
+	public List<StreakDto.Response> getStreak() {
+		Member member = memberUtil.getLoginMember();
+		LocalDateTime oneYearAgo = LocalDateTime.now().minusYears(1);
+		List<Streak> streaks = streakRepository.findByMemberIdAndCreatedAtAfter(member.getId(), oneYearAgo);
+		return streaks.stream().map(streakMapper::StreakToResponseDto).toList();
+	}
+
+	public List<IncorrectNoteDto.QuizIdPerCategory> getIncorrectNotes() {
+		Member member = memberUtil.getLoginMember();
+		return myPageRepository.findAllIncorrectQuizByMemberId(member.getId());
 	}
 }
