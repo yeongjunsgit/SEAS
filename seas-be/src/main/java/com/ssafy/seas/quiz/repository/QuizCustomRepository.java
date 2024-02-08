@@ -12,6 +12,8 @@ import java.util.List;
 import static com.ssafy.seas.quiz.entity.QCardQuiz.cardQuiz;
 import static com.ssafy.seas.quiz.entity.QFactor.factor;
 import static com.ssafy.seas.quiz.entity.QQuiz.quiz;
+import static com.ssafy.seas.quiz.entity.QQuizAnswer.quizAnswer;
+
 
 @Repository
 @Slf4j
@@ -39,13 +41,16 @@ public class QuizCustomRepository{
         return QuizInfoList;
     }
 
-//    public BooleanExpression cardQuizIdEq(QCardQuiz cq) {
-//        return cq != null ? cardQuiz.id.eq(cq.id) : null;
-//    }
-//
-//    public BooleanExpression cardQuizIdEq(QCardQuiz cq) {
-//        return cq != null ? cardQuiz.id.eq(factor.cardQuiz.id) : null;
-//    }
 
+    public List<String> findAllQuizAnswerByQuizId(Integer quizId){
 
+        return jpaQueryFactory
+                            .select(quizAnswer.answer)
+                .from(quiz)
+                .leftJoin(quizAnswer)
+                .on(quiz.id.eq(quizAnswer.quiz.id))
+                .where(quiz.id.eq(quizId))
+                .fetch();
+
+    }
 }
