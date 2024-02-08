@@ -6,8 +6,10 @@ import java.util.Optional;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,6 +55,11 @@ public class FlashcardController {
 	public ApiResponse<FlashcardDto.Response> postFavorite(@PathVariable("flashcardId") Integer flashcardId) {
 		return ApiResponse.success(SuccessCode.POST_SUCCESS,
 			flashcardService.postFavorite(flashcardId));
+	}
+
+	@PatchMapping("/flashcard/weight")
+	public ApiResponse<FlashcardDto.Response> patchWeight(@RequestBody  FlashcardDto.Patch patchDto) {
+		return ApiResponse.success(SuccessCode.PATCH_SUCCESS,flashcardService.patchWeight(patchDto));
 	}
 
 	@DeleteMapping("/flashcard/{flashcardId}/favorite")

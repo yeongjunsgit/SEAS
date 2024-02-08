@@ -14,7 +14,6 @@ import lombok.ToString;
 
 public class FlashcardDto {
 	@Getter
-
 	public static class Response {
 		private Integer id;
 		private String keyword;
@@ -28,6 +27,12 @@ public class FlashcardDto {
 			this.contents = contents;
 			this.isFavorite = isFavorite;
 		}
+	}
+
+	@Getter
+	@NoArgsConstructor
+	public static class Patch {
+		private Integer flashcardId;
 	}
 
 	@ToString

@@ -78,5 +78,14 @@ public class FlashcardService {
 		List<FavoriteDto.CardIdPerCategory> favorites = favoriteRepository.findAllFavoriteFlashcardIdsByMemberId(member.getId());
 		return  favorites;
 
+	public FlashcardDto.Response patchWeight(FlashcardDto.Patch patchDto) {
+		Flashcard flashcard = getFlashcardById(patchDto.getFlashcardId());
+		Member member = memberUtil.getLoginMember();
+		Optional<Favorite> existFavorite = favoriteRepository.findByMemberIdAndFlashcardId(member.getId(), flashcard.getId());
+		
+		// TODO: 가중치 업데이트
+		
+		return flashcardMapper.FlashcardToResponseDto(flashcard, flashcard.getFlashcardContents(),
+			existFavorite.isPresent());
 	}
 }
