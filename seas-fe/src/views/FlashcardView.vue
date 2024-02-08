@@ -9,6 +9,7 @@ import HeaderComponent from "@/components/commons/HeaderComponent.vue";
 import { ref, watch, computed } from "vue";
 import { gsap } from "gsap";
 import axios from "axios"
+import { getCardData, deleteLike, postLike, sendCardID } from "@/api/card.js";
 import { useRouter } from "vue-router";
 const router = useRouter();
 
@@ -69,6 +70,16 @@ const fadeAwayNext = function () {
     tl1.to(".flashcard", {
       onStart: () => {
         isAnimating.value = true
+        sendCardID({
+          "flashcardId": flashcardData.value[idx.value].id,
+        },
+          function(success) {
+            console.log("complete")
+          },
+          function(error) {
+            console.log("error")
+          }
+        )
       },
       duration: 0.3,
       xPercent: -40,
@@ -167,37 +178,31 @@ const calculFavorite = computed(() => {
 const addLike = function () {
   if (flashcardData.value[idx.value].isFavorite === true) {
     // axios를 통해 좋아요 취소 기능
-    axios({
-      method: "delete",
-      url: `https://i10a609.p.ssafy.io/api/flashcard/${flashcardData.value[idx.value].id}/favorite`
-
-    })
-      .then((res) => {
+    deleteLike(flashcardData.value[idx.value].id, 
+      function(success) {
         console.log("Delete complete")
-      })
-      .catch((err) => {
+      },
+      function(error) {
         console.log(err)
-      })
-
+      }
+    )
     // 끝난 후 false로 변환
     flashcardData.value[idx.value].isFavorite = false
+    console.log(flashcardData.value[idx.value].isFavorite)
   } 
   else if (flashcardData.value[idx.value].isFavorite === false) {
     // axios를 통해 좋아요 추가 기능
-    axios({
-      method: "post",
-      url: `https://i10a609.p.ssafy.io/api/flashcard/${flashcardData.value[idx.value].id}/favorite`
-
-    })
-      .then((res) => {
+    postLike(flashcardData.value[idx.value].id, 
+      function(success) {
         console.log("favorite complete")
-      })
-      .catch((err) => {
+      },
+      function(error) {
         console.log(err)
-      })
-      
-    // 끝난후 true로 변환
+      }
+    )
+
     flashcardData.value[idx.value].isFavorite = true
+    console.log(flashcardData.value[idx.value].isFavorite)
   }
 }
 
@@ -221,13 +226,15 @@ const selectCategory = async function (cate) {
       category.value = ref(cate);
       // keywordData.value = true
 
-      const response = await axios({
-        method: 'get',
-        url: `https://i10a609.p.ssafy.io/api/flashcard?category=${category.value.value}`,
-      });
-
-      flashcardData.value = response.data.data;
-      keywordData.value = true
+      getCardData(category.value.value, 
+        function(response) {
+          flashcardData.value = response.data.data;
+          keywordData.value = true;
+        }, 
+        function(error) {
+          console.log(error);
+        }
+      );
 
     } catch (error) {
       console.log(error);
@@ -376,7 +383,7 @@ const goToQuiz = function () {
           </div>
         </v-col>
         <v-col cols="12">
-          <div :class="{'complete_like': flashcardData[idx].isFavorite === true, 'yet_like': flashcardData[idx].isFavorite === false, 'menu-button': true }" @click="addLike">
+          <div :class="{'complete_like': flashcardData[idx].isFavorite === true,  'menu-button': true }" @click="addLike">
             <p class="button_text">좋아요</p>
           </div>
         </v-col>
@@ -442,11 +449,6 @@ const goToQuiz = function () {
 .complete_like {
   background-color: #7c5c3f;
   color: white;
-}
-  
-.yet_like {
-  transition-duration: 0.5s;
-  background-color: none;
 }
 
 // 1200px 이상에서 쓰일 css (반응형)
