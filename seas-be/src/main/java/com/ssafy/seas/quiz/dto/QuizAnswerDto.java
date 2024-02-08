@@ -10,8 +10,9 @@ public class QuizAnswerDto {
     @Getter
     @Setter
     public static class Request{
-        private final String submit;
+        private String submit;
 
+        public Request(){}
         public Request(String submit){
             this.submit = submit;
         }
@@ -32,22 +33,17 @@ public class QuizAnswerDto {
     public static class UpdatedFactors{
         private final Integer quizId;
         private final Integer memberId;
+        private final Integer categoryId;
         private final Double interval;
         private final Double ef;
         private Integer score;
         private Integer point;
 
-        @QueryProjection
-        public UpdatedFactors(Integer quizId, Integer memberId, Double interval, Double ef){
-            this.quizId = quizId;
-            this.memberId = memberId;
-            this.interval = interval;
-            this.ef = ef;
-        }
 
-        public UpdatedFactors(Integer quizId, Integer memberId, Double interval, Double ef, Integer score, Integer point){
+        public UpdatedFactors(Integer quizId, Integer memberId, Integer categoryId, Double interval, Double ef, Integer score, Integer point){
             this.quizId = quizId;
             this.memberId = memberId;
+            this.categoryId = categoryId;
             this.interval = interval;
             this.ef = ef;
             this.score = score;

@@ -31,9 +31,9 @@ public class QuizService {
 
         List<QuizDto.QuizFactorDto> quizFactors = quizCustomRepository.findAllQuizInnerJoin(memberId, categoryId);
 
-        List<QuizDto.QuizWeightInfo> quizWeightInfos =
+        List<QuizDto.QuizWeightInfoDto> quizWeightInfos =
                 quizFactors.stream().map(dto -> {
-                return new QuizDto.QuizWeightInfo(dto.getQuizId(), dto.getQuizInterval(), dto.getEf());
+                return new QuizDto.QuizWeightInfoDto(dto.getQuizId(), dto.getQuizInterval(), dto.getEf());
         }).collect(Collectors.toList());
 
         for(int i = 0; i < 10; i++) {
@@ -58,25 +58,44 @@ public class QuizService {
         Integer memberId = MemberUtil.getLoginMemberId();
 
         QuizDto.QuizFactorDto data = quizUtil.getQuizHint(quizId, memberId);
+        quizUtil.updateHintState(memberId, quizId);
         return new QuizHintDto.Response(data.getQuizId(), data.getHint());
     }
 
 
-    public QuizAnswerDto.Response getSubmitResult(QuizAnswerDto.Request request, Integer quizId){
+    public QuizAnswerDto.Response getSubmitResult(QuizAnswerDto.Request request, Integer categoryId, Integer quizId){
 
         String submit = request.getSubmit().toLowerCase().replace(" ", "");
 
         List<String> quizAnswers = quizCustomRepository.findAllQuizAnswerByQuizId(quizId);
+        Integer memberId = MemberUtil.getLoginMemberId();
 
         for(String quizAnswer : quizAnswers){
             if(quizAnswer.equals(submit)){
+                // 퀴즈 정답 횟수 + 1
+                // 카테고리 별 맞힌 횟수 + 1
+                quizUtil.updateQuizState(memberId, quizId);
+                QuizAnswerDto.UpdatedFactors factors = quizUtil.getNewFactor(memberId, quizId, categoryId);
+                quizCustomRepository.updateCorrectQuizState(factors);
                 return new QuizAnswerDto.Response(true);
             }
         }
 
+        QuizAnswerDto.UpdatedFactors factor = quizUtil.getNewFactor(memberId, quizId, categoryId);
+        quizCustomRepository.updateFailQuizState(factor);
         return new QuizAnswerDto.Response(false);
     }
 
+    public void getTotalResult(){
+
+        Integer memberId = MemberUtil.getLoginMemberId();
+        //
+        // List<QuizWeightFactorDto> newWeight = quizUtil.getNewFactor(memberId);
 
 
+
+        // 만약 데이터가 있으면 업데이트
+        // 없으면 인서트
+        // 점수 + 1
+    }
 }

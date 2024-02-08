@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
-@Getter
 public class QuizDto {
 
     @Getter
@@ -23,6 +22,8 @@ public class QuizDto {
         private String quiz;
         private String hint;
 
+        private Boolean isCorrect;
+        private Boolean isUsedHint;
 
         @QueryProjection
         public QuizFactorDto(Integer memberId, Integer cardQuizId, Integer quizId, String quiz, String hint, Double quizInterval, Double ef){
@@ -34,21 +35,31 @@ public class QuizDto {
             this.quizInterval = quizInterval;
             this.ef = ef;
         }
+
+        public void setIsCorrect(Boolean result){
+            this.isCorrect = result;
+        }
+
+        public void setUsedHint(Boolean isUsed){
+            this.isUsedHint = isUsed;
+        }
+
+        @Override
+        public String toString(){
+            return "[" + this.quiz + " | " + this.hint + "]";
+        }
     }
 
     @RequiredArgsConstructor
     @Getter
     @Setter
-    public static class QuizWeightInfo{
-        private Integer quizId;
-        private Double quizInterval;
-        private Double ef;
+    public static class QuizWeightInfoDto{
+        private final Integer quizId;
+        private final Double quizInterval;
+        private final Double ef;
 
-        public QuizWeightInfo(Integer quizId, Double quizInterval, Double ef) {
-            this.quizId = quizId;
-            this.quizInterval = quizInterval;
-            this.ef = ef;
-        }
     }
+
+
 
 }
