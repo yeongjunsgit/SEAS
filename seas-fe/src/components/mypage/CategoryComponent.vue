@@ -1,24 +1,43 @@
 <script setup>
-import { style } from "d3";
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-
-const categories = [
-  "자료구조",
-  "알고리즘",
-  "운영체제",
-  "데이터베이스",
-  "네트워크",
-  "컴퓨터 구조",
-];
-
-const cardNums = [
-  1, 3, 5, 11, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-];
+import axios from "axios";
+import { ref, onMounted } from "vue";
 
 const props = defineProps(["type"]);
 
-const router = useRouter();
+const favoriteDatas = ref();
+const incorrectDatas = ref();
+
+onMounted(async () => {
+  try {
+    if (props.type == "즐겨찾기") {
+      await axios
+        .get("https://i10a609.p.ssafy.io/api/mypage/flashcard/favorite")
+        .then((response) => (favoriteDatas.value = response.data.data))
+        .catch((error) => console.log(error));
+    }
+    // if (props.type == "오답노트") {
+    else {
+      await axios
+        .get("https://i10a609.p.ssafy.io/api/mypage/incorrect")
+        .then((response) => (incorrectDatas.value = response.data.data))
+        .catch((error) => console.log(error));
+    }
+  } catch (error) {
+    console.error(error);
+  }
+
+  console.log(favoriteDatas.value);
+  console.log(incorrectDatas.value);
+});
+
+const categories = [
+  "데이터베이스",
+  "네트워크",
+  "자료구조",
+  "알고리즘",
+  "컴퓨터구조",
+  "운영체제",
+];
 
 const likes = ref(false);
 const wrongAnswer = ref(false);
@@ -35,8 +54,8 @@ function showToolTips(bool) {
   wrongAnswer.value = false;
 }
 
-function popup(category, cardNum) {
-  var url = `mypage/popup?category=${category}&cardNum=${cardNum}`;
+function popup(categoryName, flashcardIds) {
+  var url = `mypage/popup?category=${categoryName}&cardNum=${flashcardIds}`;
   var name = "";
   var option =
     "width = 500, height = 500, top = 100, left = 200, location = no, scrollbars = no, resizeable = no";
@@ -63,11 +82,26 @@ function popup(category, cardNum) {
       </div>
     </div>
     <table>
-      <tr class="categories" v-for="category in categories">
-        <th>{{ category }}</th>
+      <h1>{{ incorrectDatas }}</h1>
+      <tr class="categories" v-for="Data in favoriteDatas">
+        <th>{{ Data.categoryName }}</th>
         <td>
-          <p v-for="cardNum in cardNums" @click="popup(category, cardNum)">
-            {{ cardNum }}
+          <p
+            v-for="flashcardId in Data.flashcardIds"
+            @click="popup(Data.categoryName, flashcardId)"
+          >
+            {{ flashcardId }}
+          </p>
+        </td>
+      </tr>
+      <tr class="categories" v-for="Data in incorrectDatas">
+        <th>{{ Data.categoryName }}</th>
+        <td>
+          <p
+            v-for="flashcardId in Data.flashcardIds"
+            @click="popup(Data.categoryName, flashcardId)"
+          >
+            {{ flashcardId }}
           </p>
         </td>
       </tr>

@@ -15,8 +15,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    <p class="text-center">유저 정보</p>
+  <div class="info-container">
+    <h2 class="text-center">유저 정보</h2>
     <div class="user-container">
       <div class="user-box">
         <div>
@@ -27,8 +27,8 @@ onMounted(() => {
         <p>전체 푼 횟수 : {{ userinfo.solvedCount }}</p>
         <p>정답률 : {{ userinfo.correctRate }}%</p>
       </div>
-      <div>
-        <div class="radar">
+      <div class="radar">
+        <div>
           <RadarChart />
         </div>
       </div>
@@ -37,6 +37,9 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+.info-container {
+  padding-top: 20px;
+}
 .text-center {
   text-align: center;
 }
@@ -45,14 +48,15 @@ onMounted(() => {
   justify-content: space-around;
 }
 .user-box {
-  width: 300px;
+  padding-left: 80px;
+  width: 230px;
   height: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: center;
   img {
-    width: 80%;
+    width: 100%;
   }
 }
 </style>

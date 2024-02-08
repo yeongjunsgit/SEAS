@@ -74,7 +74,7 @@ const options = {
   },
   plugins: {
     legend: {
-      display: true,
+      display: false,
       onClick: false,
       labels: {
         boxHeight: 1,
