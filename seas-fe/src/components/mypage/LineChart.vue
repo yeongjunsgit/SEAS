@@ -43,7 +43,7 @@ const options = {
     x: {
       ticks: {
         font: {
-          size: 14,
+          size: 11,
           family: "Ahnjunggeun",
           weight: "bold",
         },
@@ -56,6 +56,7 @@ const options = {
     y: {
       beginAtZero: true,
       max: 100,
+      padding: 50,
       ticks: {
         stepSize: 20,
         font: {
@@ -102,7 +103,6 @@ onMounted(async () => {
       var shortDate = formatDate(studiedDate);
       return shortDate;
     });
-    console.log(graphDates);
     data.value.datasets[0].data = graphValues;
     data.value.labels = graphDates;
     loaded.value = true;
@@ -113,5 +113,11 @@ onMounted(async () => {
 </script>
 
 <template>
-  <Line v-if="loaded" :data="data" :options="options" />
+  <Line
+    v-if="loaded"
+    :data="data"
+    :options="options"
+    width="500"
+    height="200"
+  />
 </template>

@@ -16,6 +16,7 @@ const categories = [
 ];
 const loaded = ref(false);
 const categoryObj = ref();
+
 onMounted(async () => {
   loaded.value = false;
   try {
@@ -80,9 +81,8 @@ onMounted(async () => {
 .userinfo {
   margin-top: 50px;
   display: flex;
-  flex-direction: row;
-  // flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
 }
 
 .rotate {
@@ -102,7 +102,6 @@ onMounted(async () => {
 .mychart {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  row-gap: 30px;
 }
 
 .chart-box {
