@@ -1,5 +1,6 @@
 <script setup>
 import TagComponent from "@/components/ranking/TagComponent.vue";
+import UserInfoComponent from "@/components/mypage/UserInfoComponent.vue";
 import Modal from "@/components/ranking/Modal.vue";
 import { ref, onMounted, watch } from "vue";
 import { getRankList, rankerSearch } from "@/api/rank.js";
@@ -13,6 +14,8 @@ const userInfo = ref({
     point: null,
 }); // 현재 로그인한 유저의 정보 저장 변수
 
+// 데이터 확인 =====================================================
+
 // 데이터를 받았는지 여부를 판단할 변수 선언
 const isRankData = ref(false);
 
@@ -24,13 +27,14 @@ const watchRankData = watch(rankData, () => {
     }
 });
 
+// 최초 랭크 리스트 불러오는 함수 =====================================
+
 const getInitList = () => {
+    // axios함수를 통해 데이터를 불러온다.
     getRankList(
         ({ data }) => {
-            rankList.value = data.data.rankers;
-            console.log(rankList.value);
-            userInfo.value = data.data.myInfo;
-            console.log(userInfo.value);
+            rankList.value = data.data.rankers; // 변하지 않는 전체 정보를 rankList에 저장
+            userInfo.value = data.data.myInfo; // 현재 로그인된 유저의 정보 저장 변수
             rankData.value = rankList.value; // 전체 저장해놓은 랭크 리스트를 랭크 데이터 변수에 저장
         },
         (error) => {
@@ -39,18 +43,22 @@ const getInitList = () => {
     );
 };
 
+// 초기화 버튼 누를 시 초기 탑10 랭크 테이블 정보 다시 보여주는 함수
 const setBackTable = () => {
     userInput.value = null;
     rankData.value = rankList.value; // 전체 저장해놓은 랭크 리스트를 랭크 데이터 변수에 저장
 };
 
+// 최초 페이지 로딩 시
 onMounted(() => {
     getInitList();
 });
 
+// 클래스 추가를 위한 배열
 const topRankerInfo = ["second", "first", "third"];
 
-// 검색 ====================================
+// 검색 ==================================================
+
 const userInput = ref("");
 const searchByName = () => {
     if (userInput.value == "") {
@@ -69,7 +77,8 @@ const searchByName = () => {
     }
 };
 
-// `ref` 함수를 사용하여 반응성 데이터를 선언합니다.
+// 모달 ==============================================
+
 const isModalOpen = ref(false);
 const rankerInfo = ref({});
 // 모달 열기 함수
@@ -192,18 +201,13 @@ const closeModal = () => {
         <Modal v-if="isModalOpen" @close="closeModal">
             <!-- 모달 내용 -->
             <h2>{{ rankerInfo.nickname }}</h2>
-            <p>
-                <TagComponent
-                    :level="rankerInfo.tier"
-                    :tagList="rankerInfo.badgeList"
-                />
-            </p>
-            <button @click="closeModal">닫기</button>
+            <UserInfoComponent />
         </Modal>
     </div>
 </template>
 <style scoped lang="scss">
 @import "@/assets/style/main.scss";
+
 .ranking-container {
     background-image: url($url-path + "images/ranking_bg.jpg");
     background-size: cover;
