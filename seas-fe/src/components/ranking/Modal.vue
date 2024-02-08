@@ -5,16 +5,17 @@ const emit = defineEmits(["close"]);
 const rankerInfo = defineProps(["rankerInfo"]);
 
 // 모달 닫기 함수
-const outerClick = () => {
+const closeModal = () => {
     emit("close");
 };
 </script>
 
 <template>
-    <div class="modal-overlay" @click="outerClick">
+    <div class="modal-overlay" @click="closeModal">
         <div class="modal-content" @click.stop>
             <!-- 모달 내용을 슬롯으로 받아옵니다. -->
             <slot :rankerInfo="rankerInfo"></slot>
+            <button class="search-button" @click="closeModal">닫기</button>
         </div>
     </div>
 </template>
@@ -35,17 +36,18 @@ const outerClick = () => {
 }
 
 .modal-content {
-    background: white;
-    padding: 20px;
+    padding: 5%;
     border-radius: 8px;
     text-align: center;
+    background-image: url($url-path + "images/mypage_paper.png");
+    background-size: contain;
+    background-position: center;
 }
 
 .search-button {
     border: 2px solid $primary-color;
     border-radius: 10px;
-    margin-left: 10px;
-    padding: 2% 1% 0 1%;
+    padding: 10px 15px 5px 15px;
     min-width: 50px;
 
     &:hover {
