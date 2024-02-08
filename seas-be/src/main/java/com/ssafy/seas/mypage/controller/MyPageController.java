@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.seas.common.constants.SuccessCode;
@@ -28,16 +29,16 @@ public class MyPageController {
 	private final FlashcardService flashcardService;
 
 	@GetMapping("/my-info")
-	public ApiResponse<MemberDto.MyInfoResponse> getMyInfo() {
+	public ApiResponse<MemberDto.MyInfoResponse> getMyInfo(@RequestParam(required = false) String nickname) {
 
-		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getMyInfo());
+		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getMyInfo(nickname));
 	}
 
 	// 방사형 그래프
 	@GetMapping("/quiz-rate")
-	public ApiResponse<List<MyPageDto.QuizRate>> getQuizRate() {
+	public ApiResponse<List<MyPageDto.QuizRate>> getQuizRate(@RequestParam(required = false) String nickname) {
 
-		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getQuizRate());
+		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getQuizRate(nickname));
 	}
 
 	// 플래시카드 즐겨찾기 목록
@@ -60,9 +61,9 @@ public class MyPageController {
 	}
 
 	@GetMapping("/badge")
-	public ApiResponse<List<BadgeDto.BadgeResponse>> getBadges() {
+	public ApiResponse<List<BadgeDto.BadgeResponse>> getBadges(@RequestParam(required = false) String nickname) {
 
-		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getBadges());
+		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getBadges(nickname));
 	}
 
 	// 스트릭
