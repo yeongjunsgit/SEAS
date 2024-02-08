@@ -1,14 +1,18 @@
 package com.ssafy.seas.member.dto;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
 import com.querydsl.core.annotations.QueryProjection;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 public class MemberDto {
 	@Getter
+	@Setter
 	@Builder
 	@NoArgsConstructor
 	@AllArgsConstructor
@@ -17,6 +21,10 @@ public class MemberDto {
 		private String password;
 		private String nickname;
 		private String email;
+
+		public UsernamePasswordAuthenticationToken toAuthentication() {
+			return new UsernamePasswordAuthenticationToken(memberId, password);
+		}
 	}
 
 	@Getter
