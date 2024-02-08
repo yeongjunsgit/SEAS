@@ -8,16 +8,18 @@ import org.springframework.data.redis.core.RedisTemplate;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Configuration
 @Slf4j
 public class QuizUtil {
 
-    private final RedisTemplate<String, QuizDto.QuizFactorDto> redisTemplate;
+    private final RedisTemplate<Integer, Map<Integer, QuizDto.QuizFactorDto>> redisTemplate;
 
-    public QuizUtil(RedisTemplate<String, QuizDto.QuizFactorDto> redisTemplate) {
+    public QuizUtil(RedisTemplate<Integer, Map<Integer, QuizDto.QuizFactorDto>> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 
@@ -76,10 +78,14 @@ public class QuizUtil {
         return selectedQuizInfo;
     }
 
+
+
+
+
+
     // 가중치 확인하는 함수
     public void checkWeightArray(double[] weights){
         int size = weights.length;
-
         log.info(Arrays.toString(weights));
     }
 
@@ -90,14 +96,19 @@ public class QuizUtil {
 
     public void storeQuizToRedis(List<QuizDto.QuizFactorDto> quizInfoList){
 
+        Integer key = quizInfoList.get(0).getMemberId();
+        Map<Integer, QuizDto.QuizFactorDto> value = new HashMap<>();
+
         for(QuizDto.QuizFactorDto quizInfo : quizInfoList) {
-            String key = quizInfo.getMemberId() + "-" + quizInfo.getQuizId();
-            redisTemplate.opsForValue().set(key, quizInfo);
+            Integer quizId = quizInfo.getQuizId();
+            value.put(quizId, quizInfo);
         }
+
+        redisTemplate.opsForValue().set(key, value);
     }
 
     public QuizDto.QuizFactorDto getQuizHint(Integer quizId, Integer memberId){
-        String key = memberId + "-" + quizId;
-        return redisTemplate.opsForValue().get(key);
+        Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
+        return value.get(quizId);
     }
 }

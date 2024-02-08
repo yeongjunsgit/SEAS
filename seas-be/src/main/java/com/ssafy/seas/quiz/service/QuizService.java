@@ -2,11 +2,13 @@ package com.ssafy.seas.quiz.service;
 
 
 import com.ssafy.seas.member.util.MemberUtil;
+import com.ssafy.seas.quiz.dto.QuizAnswerDto;
 import com.ssafy.seas.quiz.dto.QuizDto;
 import com.ssafy.seas.quiz.dto.QuizHintDto;
 import com.ssafy.seas.quiz.dto.QuizListDto;
 import com.ssafy.seas.quiz.repository.QuizCustomRepository;
 import com.ssafy.seas.quiz.util.QuizUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,17 +16,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class QuizService {
 
     private final QuizCustomRepository quizCustomRepository;
     private final QuizUtil quizUtil;
     private final MemberUtil memberUtil;
-
-    public QuizService(QuizCustomRepository quizCustomRepository, QuizUtil quizUtil, MemberUtil memberUtil) {
-        this.quizCustomRepository = quizCustomRepository;
-        this.quizUtil = quizUtil;
-        this.memberUtil = memberUtil;
-    }
 
     public QuizListDto.Response getQuizzes(Integer categoryId){
 
@@ -63,6 +60,23 @@ public class QuizService {
         QuizDto.QuizFactorDto data = quizUtil.getQuizHint(quizId, memberId);
         return new QuizHintDto.Response(data.getQuizId(), data.getHint());
     }
+
+
+    public QuizAnswerDto.Response getSubmitResult(QuizAnswerDto.Request request, Integer quizId){
+
+        String submit = request.getSubmit().toLowerCase().replace(" ", "");
+
+        List<String> quizAnswers = quizCustomRepository.findAllQuizAnswerByQuizId(quizId);
+
+        for(String quizAnswer : quizAnswers){
+            if(quizAnswer.equals(submit)){
+                return new QuizAnswerDto.Response(true);
+            }
+        }
+
+        return new QuizAnswerDto.Response(false);
+    }
+
 
 
 }
