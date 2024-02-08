@@ -1,13 +1,23 @@
 <script setup>
+import { ref } from "vue";
 // Props와 Emits를 정의합니다.
 const props = defineProps(["startQuiz"]);
 const emit = defineEmits(["startQuiz"]);
 
 // Start Quiz 버튼 클릭 시 실행되는 함수
-const startQuiz = () => {
-    // @startQuiz 이벤트를 발생시킵니다.
-    emit("startQuiz", "quiz");
+const startQuiz = (categoryId) => {
+    // @startQuiz 이벤트를 발생시키면서 인자 두개를 넘긴다.
+    emit("startQuiz", "quiz", categoryId);
 };
+
+const categoryList = ref([
+    { category: "데이터베이스" },
+    { category: "네트워크" },
+    { category: "자료구조" },
+    { category: "알고리즘" },
+    { category: "컴퓨터구조" },
+    { category: "운영체제" },
+]);
 </script>
 
 <template>
@@ -33,7 +43,11 @@ const startQuiz = () => {
         </div>
     </div>
     <div class="quiz-button-container">
-        <button class="menu-button" @click="startQuiz">시 작</button>
+        <div v-for="(category, index) in categoryList" :key="category">
+            <button class="menu-button" @click="startQuiz(index + 1)">
+                {{ category.category }}
+            </button>
+        </div>
     </div>
 </template>
 
@@ -41,7 +55,25 @@ const startQuiz = () => {
 // url이 아닌 바로 이렇게 직접적으로 써야 변수를 끌어다 쓸 수 있다.
 @import "@/assets/style/main.scss";
 @import "@/assets/style/quiz.scss";
+
+h1 {
+    text-align: center;
+}
+
 li {
     margin-top: 4%;
+}
+
+.quiz-button-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    height: 45vh;
+    margin-top: 32vh;
+
+    button {
+        height: 90px;
+        font-size: 1.9vw;
+    }
 }
 </style>

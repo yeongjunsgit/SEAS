@@ -7,8 +7,13 @@ import ResultComponent from "@/components/quiz/ResultComponent.vue";
 
 // 컴포넌트 변수
 const currentComponent = ref("tutorial");
+// 카테고리 변수
+const categoryId = ref(0);
+
 // 컴포넌트 변경 메소드
-const changeComponent = (component) => {
+const changeComponent = (component, index) => {
+    console.log(index);
+    categoryId.value = index;
     currentComponent.value = component;
 };
 
@@ -34,13 +39,14 @@ function preloadResource(url, type) {
         <!-- TutorialComponent -->
         <TutorialComponent
             v-if="currentComponent === 'tutorial'"
-            @startQuiz="changeComponent('quiz')"
+            @startQuiz="changeComponent"
         />
 
         <!-- QuizComponent -->
         <QuizComponent
             v-else-if="currentComponent === 'quiz'"
             @showResult="changeComponent('result')"
+            :quizCategory="categoryId"
         />
 
         <!-- ResultComponent -->

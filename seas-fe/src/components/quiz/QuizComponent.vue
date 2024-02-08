@@ -1,43 +1,65 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { getQuizList, getHint, sendAnswer } from "@/api/quiz.js";
 
 // Props와 Emits를 정의합니다.
-const props = defineProps(["showResult"]);
+const props = defineProps(["showResult", "quizCategory"]);
 const emit = defineEmits(["showResult"]);
 
-// 퀴즈가 끝날 시 실행되는 함수
+// 퀴즈가 끝날 시 실행되는 함수 ==================================================
 const showResult = () => {
     // @showResult 이벤트를 발생시킨다.
     emit("showResult", "result");
 };
 
-// 문제 정보
-const content = ref([
-    {
-        question: "프로그램에서 명령어를 해석하고 실행하는 핵심 부품은?",
-        hint: "컴퓨터의 뇌",
-    },
-    {
-        question: "컴퓨터에서 데이터를 일시적으로 저장하는 기능을 하는 부품은?",
-        hint: "",
-    },
-    {
-        question:
-            "컴퓨터에서 데이터를 일시적으로 저장하는 기능을 하는 부품은? 그냥 길게 늘여봐아아아ㅏㅏㅏㅏㅏㅏㅏㅏㅏ",
-        hint: "",
-    },
-]);
+// 전체 퀴즈 리스트 받는 함수 ===================================================
+const getInitQuiz = () => {
+    // axios함수를 통해 데이터를 불러온다.
+    getQuizList(
+        props.quizCategory,
+        ({ data }) => {
+            content.value = data.data.quizList; // 퀴즈 문제를 저장
+            console.log(content.value);
+        },
+        (error) => {
+            console.log(error);
+        }
+    );
+};
 
-// 할 일
-// invisible 말고 아얘 f12로 안보이게 하기
-// 정답인지를 보여주고 1초 뒤에 다음 문제로 넘어가게 하기
+// 문제 가져오기
+getInitQuiz();
+
+// 문제 정보
+const content = ref();
+
+// 데이터를 받았는지 여부를 판단할 변수 선언
+const isQuizData = ref(false);
+
+// watch를 이용해서 데이터가 들어오면 위의 변수를 true 값으로 바꿈
+// 따라서 v-if에서 위의 변수를 토대로 판단하여 데이터가 들어와야만 변경됨
+const watchRankData = watch(content, () => {
+    if (content.value.length > 0) {
+        isQuizData.value = true;
+        currentQuestion.value = content.value[currentIndex.value];
+        console.log(isQuizData.value);
+    }
+});
 
 // 문제 인덱스 및 문제 표시 =======================================================
 // 현재 표시되는 문제의 인덱스를 추적
 const currentIndex = ref(0);
 
 // 현재 인덱스의 문제에 접근하는 computed 속성
-const currentQuestion = ref(content.value[currentIndex.value]);
+const currentQuestion = ref({
+    quizId: 0,
+    quiz: "",
+});
+
+// 정답 체크 ====================================================================
+// 정답 여부 변수
+const isCorrect = ref(false);
+const answerShown = ref(false);
 
 // 다음 문제를 표시하는 메소드
 const submitAnswer = () => {
@@ -47,7 +69,25 @@ const submitAnswer = () => {
     delayResult();
 };
 
-// 정답 여부 시간차 표시 및 넘기기
+const checkAnswer = () => {
+    sendAnswer(
+        currentQuestion.value.quizId,
+        answerInput.value,
+        ({ data }) => {
+            isCorrect.value = data.data.result; // 정답 여부를 저장
+            console.log(isCorrect.value);
+        },
+        (error) => {
+            console.log(error);
+        }
+    );
+
+    // isCorrect.value = answerInput.value != null ? true : false; // 임시 정답 처리 되는지 확인 코드
+    // 얻어낸 bool값으로 해당 문제 맞았는지 틀렸는지 알려주기
+    answerShown.value = true;
+};
+
+// 정답 여부 시간차 표시 및 넘기기 ==============================================
 const delayResult = () => {
     setTimeout(() => {
         // 제출 후 인풋 제거
@@ -68,27 +108,21 @@ const delayResult = () => {
     }, 1000); // Convert seconds to milliseconds
 };
 
-// 정답 체크 ====================================================================
-// 정답 여부 변수
-const isCorrect = ref(false);
-const answerShown = ref(false);
-
-const checkAnswer = () => {
-    // 백으로 input 값 보내주기 (힌트 사용 여부 포함)
-    // isCorrect.value = sendAnswer();
-    isCorrect.value = answerInput.value != null ? true : false; // 임시 정답 처리 되는지 확인 코드
-    // 얻어낸 bool값으로 해당 문제 맞았는지 틀렸는지 알려주기
-    answerShown.value = true;
-};
-
-// 백으로 사용자가 입력한 정답 전송
-const sendAnswer = () => {};
-
 // 힌트 표시 부분 ================================================================
 const hintShown = ref(false);
+const hint = ref("1");
 const showHint = () => {
     hintShown.value = true;
-    console.log(hintShown.value);
+    getHint(
+        currentQuestion.value.quizId,
+        ({ data }) => {
+            hint.value = data.data.hint; // 정답 여부를 저장
+            console.log(hint.value);
+        },
+        (error) => {
+            console.log(error);
+        }
+    );
 };
 
 // 정답 인풋 =====================================================================
@@ -101,18 +135,14 @@ const clearInput = () => {
 </script>
 
 <template>
-    <div class="quiz-content">
+    <div class="quiz-content" v-if="isQuizData">
         <div class="question-container">
-            <h2>Q. {{ currentQuestion.question }}</h2>
+            <h2>Q. {{ currentQuestion.quiz }}</h2>
         </div>
         <div class="hint-container">
             <!-- 힌트 및 정답 여부 출력 -->
             <h3 v-if="hintShown">
-                {{
-                    currentQuestion.hint
-                        ? `힌트: ${currentQuestion.hint}`
-                        : "존재하는 힌트가 없습니다."
-                }}
+                {{ hint ? `힌트: ${hint}` : "존재하는 힌트가 없습니다." }}
             </h3>
         </div>
         <div>
@@ -134,7 +164,7 @@ const clearInput = () => {
             </h3>
         </div>
     </div>
-    <div class="quiz-button-container">
+    <div class="quiz-button-container" v-if="isQuizData">
         <div class="quiz-number text-font">
             <p>{{ currentIndex + 1 }} / {{ content.length }}</p>
         </div>
@@ -209,6 +239,10 @@ input {
     min-width: 12vw;
     min-height: 12vh;
     text-align: center;
+    font-size: 4vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
     p {
         margin: 0;
