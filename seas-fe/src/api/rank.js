@@ -2,8 +2,8 @@ import { localAxios } from "@/util/axios";
 
 const local = localAxios();
 
-function getRankList(param, success, fail) {
-    local.get(`/ranking/list`, { params: param }).then(success).catch(fail);
+function getRankList(success, fail) {
+    local.get(`/ranking/list`).then(success).catch(fail);
 }
 
 function rankerSearch(input, success, fail) {
