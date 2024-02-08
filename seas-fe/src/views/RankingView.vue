@@ -1,5 +1,6 @@
 <script setup>
 import TagComponent from "@/components/ranking/TagComponent.vue";
+import UserInfoComponent from "@/components/mypage/UserInfoComponent.vue";
 import Modal from "@/components/ranking/Modal.vue";
 import { ref, onMounted, watch } from "vue";
 import { getRankList, rankerSearch } from "@/api/rank.js";
@@ -200,18 +201,13 @@ const closeModal = () => {
         <Modal v-if="isModalOpen" @close="closeModal">
             <!-- 모달 내용 -->
             <h2>{{ rankerInfo.nickname }}</h2>
-            <p>
-                <TagComponent
-                    :level="rankerInfo.tier"
-                    :tagList="rankerInfo.badgeList"
-                />
-            </p>
-            <button @click="closeModal">닫기</button>
+            <UserInfoComponent />
         </Modal>
     </div>
 </template>
 <style scoped lang="scss">
 @import "@/assets/style/main.scss";
+
 .ranking-container {
     background-image: url($url-path + "images/ranking_bg.jpg");
     background-size: cover;
