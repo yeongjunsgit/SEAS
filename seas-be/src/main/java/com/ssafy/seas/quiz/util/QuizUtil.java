@@ -5,7 +5,6 @@ import com.ssafy.seas.quiz.dto.QuizDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.math.BigDecimal;
@@ -22,10 +21,6 @@ import java.util.Map;
 public class QuizUtil {
 
     private final RedisTemplate<Integer, Map<Integer, QuizDto.QuizFactorDto>> redisTemplate;
-
-//    public QuizUtil(RedisTemplate<Integer, Map<Integer, QuizDto.QuizFactorDto>> redisTemplate) {
-//        this.redisTemplate = redisTemplate;
-//    }
 
     public double[][] getPrefixWeightArray(List<QuizDto.QuizWeightInfoDto> weightInfo){
 
@@ -87,9 +82,8 @@ public class QuizUtil {
         Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
         String nestedKey = toKey(quizId);
         //log.info("MAP 출력 : " + value.toString());
-        log.info("MAP 출력 : " + value.get(nestedKey).toString());
-
         value.get(nestedKey).setUsedHint(true);
+        redisTemplate.opsForValue().set(memberId, value);
 
         log.info("updateHintState : " + quizId + " || " + value.get(nestedKey).getHint());
     }
@@ -99,16 +93,16 @@ public class QuizUtil {
 
         String nestedKey = toKey(quizId);
         value.get(nestedKey).setIsCorrect(true);
+
+        redisTemplate.opsForValue().set(memberId, value);
+
         log.info("updateQuizState : " + quizId + " || " + value.get(nestedKey).getQuiz());
     }
 
-    public QuizAnswerDto.UpdatedFactors getNewFactor(Integer memberId, Integer quizId, Integer categoryId) { //갱신 목적인가
-        //List<QuizWeightFactorDto> newFactors = new ArrayList<>();
+    public QuizAnswerDto.UpdatedFactors getNewFactor(Integer memberId, Integer quizId, Integer categoryId) {
         Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
         String nestedKey = toKey(quizId);
         QuizDto.QuizFactorDto preFactors = value.get(nestedKey);
-
-        //QuizAnswerDto.UpdatedFactors newFactors = new QuizAnswerDto.UpdatedFactors();
 
         boolean isCorrect = preFactors.getIsCorrect();
         boolean usedHint = preFactors.getIsUsedHint();
@@ -133,14 +127,15 @@ public class QuizUtil {
             score += 10;
         }
 
-        log.info("현재 획득한 점수와 포인트, 퀄리티 : " + score + "|" + point + "|" + quality);
+        Double newEf = ef - 0.06 + 0.08 * quality + 0.02 * quality * quality;
 
-        Double calc = 0.06 + 0.08 * quality + 0.02 * quality * quality;
-
-        Double newEf = ef - calc < 1.3 ? 1.3 : (ef - calc > 2.5 ? 2.5 : ef - calc);
+        newEf = newEf < 1.3 ? 1.3 : (Math.min(newEf, 2.5));
         Double newInterval = interval * newEf;
 
-        return new QuizAnswerDto.UpdatedFactors(memberId, quizId, categoryId, newInterval, newEf, score, point);
+        QuizAnswerDto.UpdatedFactors var = new QuizAnswerDto.UpdatedFactors(memberId, quizId, categoryId, newInterval, newEf, score, point);
+        log.info(var.toString());
+
+        return var;
     }
 
     // 가중치 확인하는 함수
@@ -174,6 +169,7 @@ public class QuizUtil {
 
     public String getQuizHint(Integer memberId, Integer quizId){
         Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
+        log.info("VALUE :  " + value);
         String nestedKey = toKey(quizId);
         return value.get(nestedKey).getHint();
     }

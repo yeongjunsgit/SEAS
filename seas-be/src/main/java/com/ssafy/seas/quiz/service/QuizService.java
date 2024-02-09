@@ -57,14 +57,14 @@ public class QuizService {
         Integer memberId = MemberUtil.getLoginMemberId();
 
         quizUtil.updateHintState(memberId, quizId);
-        String hint = quizUtil.getQuizHint(quizId, memberId);
+        String hint = quizUtil.getQuizHint(memberId, quizId);
         return new QuizHintDto.Response(quizId, hint);
     }
 
 
     public QuizAnswerDto.Response getSubmitResult(QuizAnswerDto.Request request, Integer categoryId, Integer quizId){
 
-        String submit = request.getSubmit().toLowerCase().replace(" ", "");
+        String submit = request.getSubmit().replaceAll("\s+", "_").replaceAll("\t+", "_").replaceAll(" ", "").toLowerCase();
 
         List<String> quizAnswers = quizCustomRepository.findAllQuizAnswerByQuizId(quizId);
         Integer memberId = MemberUtil.getLoginMemberId();

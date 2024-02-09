@@ -66,26 +66,38 @@ public class QuizCustomRepository{
 
     // 잔디, 성적, 멤버 히스토리도 해야함
 
-        jpaQueryFactory
-                .update(factor)
-                .set(factor.ef, newFactors.getEf())
-                .set(factor.quizInterval, newFactors.getInterval())
-                .where(factor.cardQuiz.quiz.id.eq(newFactors.getQuizId()))
-                .execute();
+        log.info("UPDATE FAIL QUIZ STATE , 현재 획득한 점수와 포인트, 퀄리티, ef, interval: " + newFactors.toString());
 
-        jpaQueryFactory
-                .update(incorrectNote)
-                .set(incorrectNote.quiz.id, newFactors.getQuizId())
-                .set(incorrectNote.member.id, newFactors.getMemberId())
-                .execute();
+        try {
 
-        jpaQueryFactory
-                .update(solvedQuiz)
-                .set(solvedQuiz.failedCount, solvedQuiz.failedCount.add(1))
-                .where(solvedQuiz.member.id.eq(newFactors.getMemberId()).and(solvedQuiz.quiz.id.eq(newFactors.getQuizId())));
+            jpaQueryFactory
+                    .update(factor)
+                    .set(factor.ef, newFactors.getEf())
+                    .set(factor.quizInterval, newFactors.getInterval())
+                    .where(factor.cardQuiz.quiz.id.eq(newFactors.getQuizId()))
+                    .execute();
+
+            jpaQueryFactory
+                    .update(incorrectNote)
+                    .set(incorrectNote.quiz.id, newFactors.getQuizId())
+                    .set(incorrectNote.member.id, newFactors.getMemberId())
+                    .execute();
+
+            jpaQueryFactory
+                    .update(solvedQuiz)
+                    .set(solvedQuiz.failedCount, solvedQuiz.failedCount.add(1))
+                    .where(solvedQuiz.member.id.eq(newFactors.getMemberId()).and(solvedQuiz.quiz.id.eq(newFactors.getQuizId())));
+        }
+        catch (Exception e){
+            log.info(e.getMessage());
+        }
     }
 
     public void updateCorrectQuizState(QuizAnswerDto.UpdatedFactors newFactors){
+
+
+        log.info("UPDATE CORRECT QUIZ STATE : " + newFactors.toString());
+
 
         // 성적 히스토리(꺾은선)
         jpaQueryFactory
@@ -105,7 +117,7 @@ public class QuizCustomRepository{
                 .update(factor)
                 .set(factor.quizInterval, newFactors.getInterval())
                 .set(factor.ef, newFactors.getEf())
-                .where(factor.member.id.eq(newFactors.getMemberId()));
+                .where(solvedQuiz.member.id.eq(newFactors.getMemberId()).and(factor.cardQuiz.id.eq(newFactors.getQuizId())));
 
         // 퀴즈 정답 횟수 테이블 갱신
         jpaQueryFactory.

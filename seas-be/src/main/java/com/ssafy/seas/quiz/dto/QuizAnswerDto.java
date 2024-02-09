@@ -31,8 +31,8 @@ public class QuizAnswerDto {
 
     @Getter
     public static class UpdatedFactors{
-        private final Integer quizId;
         private final Integer memberId;
+        private final Integer quizId;
         private final Integer categoryId;
         private final Double interval;
         private final Double ef;
@@ -40,14 +40,19 @@ public class QuizAnswerDto {
         private Integer point;
 
 
-        public UpdatedFactors(Integer quizId, Integer memberId, Integer categoryId, Double interval, Double ef, Integer score, Integer point){
-            this.quizId = quizId;
+        public UpdatedFactors(Integer memberId, Integer quizId, Integer categoryId, Double interval, Double ef, Integer score, Integer point){
             this.memberId = memberId;
+            this.quizId = quizId;
             this.categoryId = categoryId;
             this.interval = interval;
             this.ef = ef;
             this.score = score;
             this.point = point;
+        }
+
+        @Override
+        public String toString(){
+            return "[ MEMBER ID " + this.memberId + "| QUIZID " + this.quizId + " | CATEGORY " + this.categoryId + "| INTERVAL " + this.interval + "| EF " + this.ef + "| SCORE " + this.score + "| POINT " +this.point + "]";
         }
     }
 
