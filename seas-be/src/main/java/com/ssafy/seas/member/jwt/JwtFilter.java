@@ -1,6 +1,8 @@
 package com.ssafy.seas.member.jwt;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +25,20 @@ public class JwtFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 		FilterChain filterChain) throws ServletException, IOException {
+
+		System.out.println("URI :::::::::: " + request.getRequestURI());
+
+		// 1. 토큰이 필요하지 않은 API URL에 대해서 배열로 구성한다.
+		List<String> list = Arrays.asList(
+			"/api/auth/signup",		// 회원가입 페이지
+			"/api/auth/signin"		// 로그인 페이지
+		);
+
+		// 2. 토큰이 필요하지 않은 API URL의 경우 -> 로직 처리없이 다음 필터로 이동한다.
+		if (list.contains(request.getRequestURI())) {
+			filterChain.doFilter(request, response);
+			return;
+		}
 
 		String token = resolveToken(request);
 

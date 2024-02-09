@@ -10,7 +10,9 @@ import org.springframework.security.config.annotation.web.configurers.CorsConfig
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.ssafy.seas.member.jwt.JwtFilter;
 import com.ssafy.seas.member.jwt.TokenProvider;
 
 import lombok.RequiredArgsConstructor;
@@ -41,11 +43,17 @@ public class SecurityConfig {
 			.authorizeHttpRequests(r ->
 				// r.requestMatchers("/auth/**").authenticated()
 					// .requestMatchers("/**").permitAll()
-					r.anyRequest().permitAll()
+					// r.anyRequest().permitAll()
+				r.requestMatchers("/auth/**").permitAll()
+					.requestMatchers("/**").authenticated()
 			)
+
+
 
 			// filter 등록을 이렇게 해줘야 JwtFilter를 통해 Token을 먼저 검사한다.
 			// .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+			// .addFilter(new JwtFilter(tokenProvider))
+			.addFilterAfter(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
 
 		// .addFilter(JWTfilter)
 		// JwtFilter
