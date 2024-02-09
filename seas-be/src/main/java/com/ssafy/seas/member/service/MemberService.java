@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.seas.member.dto.MemberDto;
 import com.ssafy.seas.member.entity.Member;
+import com.ssafy.seas.member.jwt.TokenProvider;
 import com.ssafy.seas.member.mapper.MemberMapper;
 import com.ssafy.seas.member.repository.MemberRepository;
 
@@ -21,6 +22,7 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final MemberMapper memberMapper;
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
+	private final TokenProvider tokenProvider;
 
 	@Transactional
 	public String signup(MemberDto.Post memberDto) {
@@ -34,6 +36,8 @@ public class MemberService {
 			.orElseThrow(() -> new UsernameNotFoundException("일치하는 사용자가 존재하지 않습니다."));
 		Authentication authentication = authenticationManagerBuilder.getObject()
 			.authenticate(memberDto.toAuthentication());
+
+		tokenProvider.generateTokenResponse(authentication);
 
 		log.info("Authentication : {}", authentication.toString());
 		return MemberDto.Response.builder()
