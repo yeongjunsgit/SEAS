@@ -10,6 +10,7 @@ import java.io.Serializable;
 public class QuizDto {
 
     @Getter
+    @Setter
     @RequiredArgsConstructor
     public static class QuizFactorDto implements Serializable{
         private Double quizInterval;
@@ -22,8 +23,8 @@ public class QuizDto {
         private String quiz;
         private String hint;
 
-        private Boolean isCorrect;
-        private Boolean isUsedHint;
+        private Boolean isCorrect = false;
+        private Boolean isUsedHint = false;
 
         @QueryProjection
         public QuizFactorDto(Integer memberId, Integer cardQuizId, Integer quizId, String quiz, String hint, Double quizInterval, Double ef){

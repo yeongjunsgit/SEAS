@@ -28,7 +28,7 @@ public class QuizController {
     }
 
 
-    @GetMapping("/{categoryId}/{quizId}/hint")
+    @GetMapping("/hint/{categoryId}/{quizId}")
     public ApiResponse<QuizHintDto.Response> getHint(
                             @PathVariable("categoryId") Integer categoryId,
                             @PathVariable("quizId") Integer quizId){
@@ -36,7 +36,7 @@ public class QuizController {
         return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getHint(quizId));
     }
 
-    @PostMapping("/{categoryId}/{quizId}/answer")
+    @PostMapping("/answer/{categoryId}/{quizId}")
     public ApiResponse<QuizAnswerDto.Response> getResult(@RequestBody QuizAnswerDto.Request request,
                                                          @PathVariable("categoryId") Integer categoryId,
                                                          @PathVariable("quizId") Integer quizId){
