@@ -37,7 +37,7 @@ public class MemberController {
 	}
 
 	@PostMapping("/signin")
-	public ApiResponse<MemberDto.Response> login(@RequestBody MemberDto.Post memberDto) {
+	public ApiResponse<MemberDto.AuthResponse> login(@RequestBody MemberDto.AuthRequest memberDto) {
 		// String secretKeyPlain = "아니spring너무어렵자나요이거맞니상속받는건너무많은데레퍼런스도바꼈고아주화가나";
 		// // 키를 Base64 인코딩
 		// String keyBase64Encoded = Base64.getEncoder().encodeToString(secretKeyPlain.getBytes());
@@ -50,7 +50,7 @@ public class MemberController {
 
 		try{
 			log.info("로그인 시도 : {}", memberDto.getMemberId());
-			MemberDto.Response member = memberService.signin(memberDto);
+			MemberDto.AuthResponse member = memberService.signin(memberDto);
 			log.info("로그인 결과 : {}", member.getMemberId());
 			if(member.getMemberId() != null) {
 				return ApiResponse.success(SuccessCode.POST_SUCCESS, member);

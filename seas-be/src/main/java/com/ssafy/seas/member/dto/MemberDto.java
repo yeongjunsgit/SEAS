@@ -12,6 +12,29 @@ import lombok.Setter;
 
 public class MemberDto {
 	@Getter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class AuthRequest {
+		private String memberId;
+		private String password;
+
+		public UsernamePasswordAuthenticationToken toAuthentication() {
+			return new UsernamePasswordAuthenticationToken(memberId, password);
+		}
+	}
+
+	@Getter
+	@Builder
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class AuthResponse {
+		private String memberId;		// 디버깅 용도
+		private String grantType;
+		private String accessToken;
+		private String refreshToken;
+	}
+
+	@Getter
 	@Setter
 	@Builder
 	@NoArgsConstructor
@@ -21,10 +44,6 @@ public class MemberDto {
 		private String password;
 		private String nickname;
 		private String email;
-
-		public UsernamePasswordAuthenticationToken toAuthentication() {
-			return new UsernamePasswordAuthenticationToken(memberId, password);
-		}
 	}
 
 	@Getter

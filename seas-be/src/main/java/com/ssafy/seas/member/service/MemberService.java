@@ -31,18 +31,16 @@ public class MemberService {
 	}
 
 	@Transactional
-	public MemberDto.Response signin(MemberDto.Post memberDto) {
+	public MemberDto.AuthResponse signin(MemberDto.AuthRequest memberDto) {
 		Member member = memberRepository.findByMemberId(memberDto.getMemberId())
 			.orElseThrow(() -> new UsernameNotFoundException("일치하는 사용자가 존재하지 않습니다."));
 		Authentication authentication = authenticationManagerBuilder.getObject()
 			.authenticate(memberDto.toAuthentication());
 
-		tokenProvider.generateTokenResponse(authentication);
-
+		MemberDto.AuthResponse authResponse = tokenProvider.generateTokenResponse(authentication);
 		log.info("Authentication : {}", authentication.toString());
-		return MemberDto.Response.builder()
-			.memberId(authentication.getName())
-			.build();
+		// Todo : Token 저장
+		return authResponse;
 	}
 
 	// @Transactional

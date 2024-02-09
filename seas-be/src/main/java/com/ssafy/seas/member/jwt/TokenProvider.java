@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.ssafy.seas.member.dto.MemberDto;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -40,7 +42,7 @@ public class TokenProvider {
 		// this.key = secretKey;
 	}
 
-	public void generateTokenResponse(Authentication auth) {
+	public MemberDto.AuthResponse generateTokenResponse(Authentication auth) {
 		long now = new Date().getTime();
 
 		String accessToken = Jwts.builder()
@@ -59,6 +61,13 @@ public class TokenProvider {
 		System.out.println("access : " + accessToken.toString());
 		System.out.println("refresh : " + refreshToken.toString());
 		System.out.println("generateTokenResponse end ===============");
+
+		return MemberDto.AuthResponse.builder()
+			.memberId(auth.getName())
+			.grantType(BEARER_TYPE)
+			.accessToken(accessToken)
+			.refreshToken(refreshToken)
+			.build();
 	}
 
 	public Authentication getAuthentication(String accessToken) {
