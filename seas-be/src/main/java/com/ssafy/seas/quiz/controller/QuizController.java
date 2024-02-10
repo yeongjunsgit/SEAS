@@ -28,16 +28,20 @@ public class QuizController {
     }
 
 
-    @GetMapping("/{quizId}/hint")
-    public ApiResponse<QuizHintDto.Response> getHint(@PathVariable("quizId") Integer quizId){
+    @GetMapping("/hint/{categoryId}/{quizId}")
+    public ApiResponse<QuizHintDto.Response> getHint(
+                            @PathVariable("categoryId") Integer categoryId,
+                            @PathVariable("quizId") Integer quizId){
 
         return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getHint(quizId));
     }
 
-    @PostMapping("/{quizId}/answer")
-    public ApiResponse<QuizAnswerDto.Response> getResult(@RequestBody QuizAnswerDto.Request request, Integer quizId){
+    @PostMapping("/answer/{categoryId}/{quizId}")
+    public ApiResponse<QuizAnswerDto.Response> getResult(@RequestBody QuizAnswerDto.Request request,
+                                                         @PathVariable("categoryId") Integer categoryId,
+                                                         @PathVariable("quizId") Integer quizId){
         try {
-            return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getSubmitResult(request, quizId));
+            return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getSubmitResult(request, categoryId, quizId));
         }
         catch (IllegalStateException e){
             return ApiResponse.error(ErrorCode.BAD_PARAMETER);
