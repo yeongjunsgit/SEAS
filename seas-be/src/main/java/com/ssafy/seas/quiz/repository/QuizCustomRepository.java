@@ -66,10 +66,9 @@ public class QuizCustomRepository{
 
     // 잔디, 성적, 멤버 히스토리도 해야함
 
-        log.info("UPDATE FAIL QUIZ STATE , 현재 획득한 점수와 포인트, 퀄리티, ef, interval: " + newFactors.toString());
+        log.info("UPDATE FAIL QUIZ STATE : " + newFactors.toString());
 
         try {
-
             jpaQueryFactory
                     .update(factor)
                     .set(factor.ef, newFactors.getEf())
@@ -86,7 +85,9 @@ public class QuizCustomRepository{
             jpaQueryFactory
                     .update(solvedQuiz)
                     .set(solvedQuiz.failedCount, solvedQuiz.failedCount.add(1))
-                    .where(solvedQuiz.member.id.eq(newFactors.getMemberId()).and(solvedQuiz.quiz.id.eq(newFactors.getQuizId())));
+                    .where(solvedQuiz.member.id.eq(newFactors.getMemberId()).and(solvedQuiz.quiz.id.eq(newFactors.getQuizId())))
+                    .execute();
+
         }
         catch (Exception e){
             log.info(e.getMessage());
@@ -95,35 +96,50 @@ public class QuizCustomRepository{
 
     public void updateCorrectQuizState(QuizAnswerDto.UpdatedFactors newFactors){
 
-
         log.info("UPDATE CORRECT QUIZ STATE : " + newFactors.toString());
 
+        try {
 
-        // 성적 히스토리(꺾은선)
-        jpaQueryFactory
-                .update(scoreHistory)
-                .set(scoreHistory.score, scoreHistory.score.add(newFactors.getScore()))
-                .where(scoreHistory.member.id.eq(newFactors.getMemberId()).and(scoreHistory.category.id.eq(newFactors.getCategoryId())));
+            // 성적 히스토리(꺾은선)
+            jpaQueryFactory
+                    .update(scoreHistory)
+                    .set(scoreHistory.score, scoreHistory.score.add(newFactors.getScore()))
+                    .where(scoreHistory.member.id.eq(newFactors.getMemberId()).and(scoreHistory.category.id.eq(newFactors.getCategoryId())))
+                    .execute();
 
-        // 스트릭 갱신
-        jpaQueryFactory
-                .update(streak)
-                .set(streak.quizCount, streak.quizCount.add(1))
-                .set(streak.updatedAt, LocalDateTime.now())
-                .where(streak.member.id.eq(newFactors.getMemberId()));
 
-        // 가중치 요소 갱신
-        jpaQueryFactory
-                .update(factor)
-                .set(factor.quizInterval, newFactors.getInterval())
-                .set(factor.ef, newFactors.getEf())
-                .where(solvedQuiz.member.id.eq(newFactors.getMemberId()).and(factor.cardQuiz.id.eq(newFactors.getQuizId())));
+            // 스트릭 갱신
+            jpaQueryFactory
+                    .update(streak)
+                    .set(streak.quizCount, streak.quizCount.add(1))
+                    .set(streak.updatedAt, LocalDateTime.now())
+                    .where(streak.member.id.eq(newFactors.getMemberId()))
+                    .execute();
 
-        // 퀴즈 정답 횟수 테이블 갱신
-        jpaQueryFactory.
-                update(solvedQuiz)
-                .set(solvedQuiz.failedCount, solvedQuiz.correctCount.add(1))
-                .where(solvedQuiz.member.id.eq(newFactors.getMemberId()).and(solvedQuiz.quiz.id.eq(newFactors.getQuizId())));
+            entityManager.refresh(streak);
+
+
+            // 가중치 요소 갱신
+            jpaQueryFactory
+                    .update(factor)
+                    .set(factor.quizInterval, newFactors.getInterval())
+                    .set(factor.ef, newFactors.getEf())
+                    .where(solvedQuiz.member.id.eq(newFactors.getMemberId()).and(factor.cardQuiz.quiz.id.eq(newFactors.getQuizId())))
+                    .execute();
+
+            entityManager.refresh(factor);
+
+            // 퀴즈 정답 횟수 테이블 갱신
+            jpaQueryFactory.
+                    update(solvedQuiz)
+                    .set(solvedQuiz.failedCount, solvedQuiz.correctCount.add(1))
+                    .where(solvedQuiz.member.id.eq(newFactors.getMemberId()).and(solvedQuiz.quiz.id.eq(newFactors.getQuizId())))
+                    .execute();
+
+        }
+        catch (Exception e){
+            log.info(e.getMessage());
+        }
     }
 
 //    public List<String> checkQuizState(Integer memberId){

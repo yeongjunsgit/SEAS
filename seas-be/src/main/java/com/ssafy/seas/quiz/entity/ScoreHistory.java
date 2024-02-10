@@ -10,8 +10,10 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
 
 @Entity
+@Getter
 @Table(name = "score_history")
 public class ScoreHistory extends BaseEntity {
 
@@ -25,4 +27,19 @@ public class ScoreHistory extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id")
 	private Category category;
+
+	public ScoreHistory(Member member, Category category, Integer score){
+		this.member = member;
+		this.category = category;
+		this.score = score;
+	}
+
+	public ScoreHistory() {
+
+	}
+
+	public void setScore(Integer score) {
+		this.score = score;
+	}
+
 }

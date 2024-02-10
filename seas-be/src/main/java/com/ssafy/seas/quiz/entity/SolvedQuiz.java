@@ -25,4 +25,15 @@ public class SolvedQuiz extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "quiz_id")
 	private Quiz quiz;
+
+	public SolvedQuiz(Member member, Quiz quiz){
+		this.member = member;
+		this.quiz = quiz;
+	}
+
+	public void updateCount(boolean isRight){
+		if(isRight) correctCount += 1;
+		else failedCount += 1;
+	}
+
 }

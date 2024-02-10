@@ -6,9 +6,14 @@ import com.ssafy.seas.quiz.dto.QuizAnswerDto;
 import com.ssafy.seas.quiz.dto.QuizDto;
 import com.ssafy.seas.quiz.dto.QuizHintDto;
 import com.ssafy.seas.quiz.dto.QuizListDto;
+import com.ssafy.seas.quiz.repository.CorrectAnswerRepository;
+import com.ssafy.seas.quiz.repository.FactorRepository;
 import com.ssafy.seas.quiz.repository.QuizCustomRepository;
+import com.ssafy.seas.quiz.repository.WrongAnswerRepostory;
 import com.ssafy.seas.quiz.util.QuizUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,10 +21,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class QuizService {
 
     private final QuizCustomRepository quizCustomRepository;
+    private final FactorRepository factorRepository;
+    private final WrongAnswerRepostory wrongAnswerRepostory;
+    private final CorrectAnswerRepository correctAnswerRepository;
     private final QuizUtil quizUtil;
     private final MemberUtil memberUtil;
 
@@ -62,6 +71,7 @@ public class QuizService {
     }
 
 
+    @Transactional
     public QuizAnswerDto.Response getSubmitResult(QuizAnswerDto.Request request, Integer categoryId, Integer quizId){
 
         String submit = request.getSubmit().replaceAll("\s+", "_").replaceAll("\t+", "_").replaceAll(" ", "").toLowerCase();
@@ -74,14 +84,20 @@ public class QuizService {
                 // 퀴즈 정답 횟수 + 1
                 // 카테고리 별 맞힌 횟수 + 1
                 quizUtil.updateQuizState(memberId, quizId);
-                QuizAnswerDto.UpdatedFactors factors = quizUtil.getNewFactor(memberId, quizId, categoryId);
-                quizCustomRepository.updateCorrectQuizState(factors);
+                QuizAnswerDto.UpdatedFactors factor = quizUtil.getNewFactor(memberId, quizId, categoryId);
+                // factor 갱신
+                factorRepository.updateFactor(factor.getEf(), factor.getInterval(), quizId, memberId);
+                //correctAnswerRepository.
+                correctAnswerRepository.saveOrUpdateStreakAndScoreHistory(factor);
+                correctAnswerRepository.saveOrUpdateFactorAndSolvedQuiz(factor);
                 return new QuizAnswerDto.Response(true);
             }
         }
 
         QuizAnswerDto.UpdatedFactors factor = quizUtil.getNewFactor(memberId, quizId, categoryId);
-        quizCustomRepository.updateFailQuizState(factor);
+        wrongAnswerRepostory.saveOrUpdateIncorrectNoteAndSolvedQuiz(memberId, quizId);
+        //factor 테이블 갱신
+        factorRepository.updateFactor(factor.getEf(), factor.getInterval(), quizId, memberId);
         return new QuizAnswerDto.Response(false);
     }
 
