@@ -1,6 +1,8 @@
 package com.ssafy.seas.quiz.util;
 
+import com.ssafy.seas.quiz.dto.QuizAnswerDto;
 import com.ssafy.seas.quiz.dto.QuizDto;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -15,15 +17,12 @@ import java.util.Map;
 
 @Configuration
 @Slf4j
+@RequiredArgsConstructor
 public class QuizUtil {
 
     private final RedisTemplate<Integer, Map<Integer, QuizDto.QuizFactorDto>> redisTemplate;
 
-    public QuizUtil(RedisTemplate<Integer, Map<Integer, QuizDto.QuizFactorDto>> redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
-
-    public double[][] getPrefixWeightArray(List<QuizDto.QuizWeightInfo> weightInfo){
+    public double[][] getPrefixWeightArray(List<QuizDto.QuizWeightInfoDto> weightInfo){
 
         int size = weightInfo.size();
         double[][] quizWeight = new double[size][2];
@@ -32,7 +31,7 @@ public class QuizUtil {
         quizWeight[0][1] = toFixed(1 / (weightInfo.get(0).getQuizInterval() * weightInfo.get(0).getEf()), 1);
 
         for(int factorIndex = 1; factorIndex < size; factorIndex++){
-            QuizDto.QuizWeightInfo quizWeightInfo = weightInfo.get(factorIndex);
+            QuizDto.QuizWeightInfoDto quizWeightInfo = weightInfo.get(factorIndex);
 
             int quizId = quizWeightInfo.getQuizId();
             double interval = quizWeightInfo.getQuizInterval();
@@ -59,6 +58,7 @@ public class QuizUtil {
         // 2차원 배열에서 weight 값만 뽑아낸다.
         double[] weightArray = Arrays.stream(quizWeightInfo).mapToDouble(row -> row[1]).toArray();
         checkWeightArray(weightArray);
+
         double max = weightArray[size - 1];
         double min = weightArray[0];
         
@@ -78,10 +78,65 @@ public class QuizUtil {
         return selectedQuizInfo;
     }
 
+    public void updateHintState(Integer memberId, Integer quizId){
+        Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
+        String nestedKey = toKey(quizId);
+        //log.info("MAP 출력 : " + value.toString());
+        value.get(nestedKey).setUsedHint(true);
+        redisTemplate.opsForValue().set(memberId, value);
 
+        log.info("updateHintState : " + quizId + " || " + value.get(nestedKey).getHint());
+    }
 
+    public void updateQuizState(Integer memberId, Integer quizId){
+        Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
 
+        String nestedKey = toKey(quizId);
+        value.get(nestedKey).setIsCorrect(true);
 
+        redisTemplate.opsForValue().set(memberId, value);
+
+        log.info("updateQuizState : " + quizId + " || " + value.get(nestedKey).getQuiz());
+    }
+
+    public QuizAnswerDto.UpdatedFactors getNewFactor(Integer memberId, Integer quizId, Integer categoryId) {
+        Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
+        String nestedKey = toKey(quizId);
+        QuizDto.QuizFactorDto preFactors = value.get(nestedKey);
+
+        boolean isCorrect = preFactors.getIsCorrect();
+        boolean usedHint = preFactors.getIsUsedHint();
+        Integer point = 0;
+        Integer score = 0;
+
+        Double ef = preFactors.getEf();
+        Double interval = preFactors.getQuizInterval();
+
+        int quality = 0;
+
+        if (isCorrect) {
+            if (!usedHint) {
+                quality = 3;
+                point += 10;
+            }
+            else {
+                quality = 2;
+                point += 3;
+            }
+
+            score += 10;
+        }
+
+        Double newEf = ef - 0.06 + 0.08 * quality + 0.02 * quality * quality;
+
+        newEf = newEf < 1.3 ? 1.3 : (Math.min(newEf, 2.5));
+        Double newInterval = interval * newEf;
+
+        QuizAnswerDto.UpdatedFactors var = new QuizAnswerDto.UpdatedFactors(memberId, quizId, categoryId, newInterval, newEf, score, point);
+        log.info(var.toString());
+
+        return var;
+    }
 
     // 가중치 확인하는 함수
     public void checkWeightArray(double[] weights){
@@ -94,21 +149,28 @@ public class QuizUtil {
         return BigDecimal.valueOf(value).setScale(digit, RoundingMode.HALF_UP).doubleValue();
     }
 
+    public String toKey(int quizId){
+        return String.valueOf(quizId);
+    }
+
+    // 저장 확인 완료
     public void storeQuizToRedis(List<QuizDto.QuizFactorDto> quizInfoList){
 
-        Integer key = quizInfoList.get(0).getMemberId();
-        Map<Integer, QuizDto.QuizFactorDto> value = new HashMap<>();
+        Integer memberId = quizInfoList.get(0).getMemberId();
+        Map<Integer, QuizDto.QuizFactorDto> map = new HashMap<>();
 
         for(QuizDto.QuizFactorDto quizInfo : quizInfoList) {
             Integer quizId = quizInfo.getQuizId();
-            value.put(quizId, quizInfo);
+            map.put(quizId, quizInfo);
         }
 
-        redisTemplate.opsForValue().set(key, value);
+        redisTemplate.opsForValue().set(memberId, map);
     }
 
-    public QuizDto.QuizFactorDto getQuizHint(Integer quizId, Integer memberId){
+    public String getQuizHint(Integer memberId, Integer quizId){
         Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
-        return value.get(quizId);
+        log.info("VALUE :  " + value);
+        String nestedKey = toKey(quizId);
+        return value.get(nestedKey).getHint();
     }
 }
