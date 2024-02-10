@@ -30,12 +30,18 @@ public class JwtFilter extends OncePerRequestFilter {
 
 		// 1. 토큰이 필요하지 않은 API URL에 대해서 배열로 구성한다.
 		List<String> list = Arrays.asList(
+			"/api/swagger-ui/swagger-initializer.js", // localhost swagger
+			"/v3/api-docs",
+			"/api/v3/api-docs",
+			"/api/v3/api-docs/swagger-config",
 			"/api/auth/signup",		// 회원가입 페이지
-			"/api/auth/signin"		// 로그인 페이지
+			"/api/auth/signin",		// 로그인 페이지
+			"/api/auth/refresh"		// 재발급 페이지 (후에 삭제)
 		);
 
 		// 2. 토큰이 필요하지 않은 API URL의 경우 -> 로직 처리없이 다음 필터로 이동한다.
-		if (list.contains(request.getRequestURI())) {
+		// if (list.contains(request.getRequestURI())) {
+		if(true){
 			filterChain.doFilter(request, response);
 			return;
 		}

@@ -40,13 +40,13 @@ public class SecurityConfig {
 			.sessionManagement((sessionManagement) ->
 				sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			)
-			.authorizeHttpRequests(r ->
-				// r.requestMatchers("/auth/**").authenticated()
-					// .requestMatchers("/**").permitAll()
-					// r.anyRequest().permitAll()
-				r.requestMatchers("/auth/**").permitAll()
-					.requestMatchers("/**").authenticated()
-			)
+			// .authorizeHttpRequests(r ->
+			// 	// r.requestMatchers("/auth/**").authenticated()
+			// 		// .requestMatchers("/**").permitAll()
+			// 		// r.anyRequest().permitAll()
+			// 	r.requestMatchers("/auth/**").permitAll()
+			// 		.requestMatchers("/**").authenticated()
+			// )
 
 
 
