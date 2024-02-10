@@ -53,6 +53,7 @@ public class SecurityConfig {
 			// filter 등록을 이렇게 해줘야 JwtFilter를 통해 Token을 먼저 검사한다.
 			// .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
 			// .addFilter(new JwtFilter(tokenProvider))
+
 			.addFilterAfter(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
 
 		// .addFilter(JWTfilter)

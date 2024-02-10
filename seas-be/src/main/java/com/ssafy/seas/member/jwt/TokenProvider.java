@@ -73,9 +73,9 @@ public class TokenProvider {
 	public Authentication getAuthentication(String accessToken) {
 		Claims claims = paresClaims(accessToken);
 
-		if (claims.get(AUTHORITIES_KEY) == null) {
-			throw new RuntimeException();
-		}
+		// if (claims.get(AUTHORITIES_KEY) == null) {
+		// 	throw new RuntimeException();
+		// }
 
 		UserDetails principal = new User(claims.getSubject(), "", new ArrayList<>());
 
@@ -84,6 +84,7 @@ public class TokenProvider {
 
 	public boolean validateToken(String token) {
 		try {
+			// Refresh Token 파싱되면 OK
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 			return true;
 		} catch (SecurityException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException |

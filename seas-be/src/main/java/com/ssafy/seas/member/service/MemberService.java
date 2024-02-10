@@ -39,23 +39,21 @@ public class MemberService {
 
 		MemberDto.AuthResponse authResponse = tokenProvider.generateTokenResponse(authentication);
 		log.info("Authentication : {}", authentication.toString());
-		// Todo : Token 저장
+		// Todo : Refresh Token Redis에 저장
+
 		return authResponse;
 	}
 
-	// @Transactional
-	// public MemberDto.Response signin(MemberDto.Post memberDto) {
-	// 	Member member = memberRepository.findByMemberIdAndPassword(memberDto.getMemberId(), memberDto.getPassword());
-	//
-	// 	// UserDetailsService ?
-	// 	if(member == null) {
-	// 		return new MemberDto.Response();
-	// 	}
-	//
-	//
-	//
-	// 	// Authentication authentication = authenticationManagerBuilder.getObject().authenticate(memberDto.toAuthentication());
-	//
-	// 	return memberMapper.MemberToMemberDtoResponse(member);
-	// }
+	public MemberDto.AuthResponse reIssue(MemberDto.AuthResponse tokenRequest) {
+		// Refresh Token 파싱되면 OK
+		tokenProvider.validateToken(tokenRequest.getRefreshToken());
+		// Access Token 파싱해서 새로운 인증객체 만들기
+		Authentication authentication = tokenProvider.getAuthentication(tokenRequest.getAccessToken());
+		// Todo : Redis에 저장되어있는 Refresh Token과 Request로 받은 Refresh Token 비교
+
+		// 인증 객체로 토큰 재발행
+		MemberDto.AuthResponse authResponse = tokenProvider.generateTokenResponse(authentication);
+
+		return authResponse;
+	}
 }

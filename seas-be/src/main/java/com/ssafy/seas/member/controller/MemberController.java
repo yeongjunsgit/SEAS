@@ -63,4 +63,16 @@ public class MemberController {
 		}
 	}
 
+	@PostMapping("/refresh")
+	public ApiResponse<MemberDto.AuthResponse> reIssue(@RequestBody MemberDto.AuthResponse tokenRequest) {
+		log.info("Refresh Token 재발행 시작 !!!!!!!!!!");
+		try{
+			MemberDto.AuthResponse authResponse = memberService.reIssue(tokenRequest);
+			return ApiResponse.success(SuccessCode.POST_SUCCESS, authResponse);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return ApiResponse.error(ErrorCode.SERVER_ERROR);
+		}
+	}
+
 }
