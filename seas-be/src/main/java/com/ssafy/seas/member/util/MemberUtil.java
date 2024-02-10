@@ -37,4 +37,10 @@ public class MemberUtil {
 			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND.getMessage()));
 		return member;
 	}
+
+	public Member getMemberByNickname(String nickname) {
+		Member member = memberRepository.findByNickname(nickname)
+			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND_WITH_NICKNAME.getMessage()));
+		return member;
+	}
 }

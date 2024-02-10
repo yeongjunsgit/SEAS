@@ -1,5 +1,6 @@
 package com.ssafy.seas.category.dto;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import com.querydsl.core.annotations.QueryProjection;
@@ -14,7 +15,7 @@ public class CategoryDto {
 	@Builder
 	@NoArgsConstructor
 	@AllArgsConstructor
-	public static class Response {
+	public static class Response implements Serializable {
 		private Integer id;
 		private String name;
 		private String backgroundColor;

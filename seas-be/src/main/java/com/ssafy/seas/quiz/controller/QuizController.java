@@ -1,7 +1,9 @@
 package com.ssafy.seas.quiz.controller;
 
+import com.ssafy.seas.common.constants.ErrorCode;
 import com.ssafy.seas.common.constants.SuccessCode;
 import com.ssafy.seas.common.dto.ApiResponse;
+import com.ssafy.seas.quiz.dto.QuizAnswerDto;
 import com.ssafy.seas.quiz.dto.QuizHintDto;
 import com.ssafy.seas.quiz.dto.QuizListDto;
 import com.ssafy.seas.quiz.service.QuizService;
@@ -26,12 +28,24 @@ public class QuizController {
     }
 
 
-    @GetMapping("/{quizId}/hint")
-    public ApiResponse<QuizHintDto.Response> getHint(@PathVariable("quizId") Integer quizId){
-
+    @GetMapping("/hint/{categoryId}/{quizId}")
+    public ApiResponse<QuizHintDto.Response> getHint(
+                            @PathVariable("categoryId") Integer categoryId,
+                            @PathVariable("quizId") Integer quizId){
 
         return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getHint(quizId));
     }
 
+    @PostMapping("/answer/{categoryId}/{quizId}")
+    public ApiResponse<QuizAnswerDto.Response> getResult(@RequestBody QuizAnswerDto.Request request,
+                                                         @PathVariable("categoryId") Integer categoryId,
+                                                         @PathVariable("quizId") Integer quizId){
+        try {
+            return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getSubmitResult(request, categoryId, quizId));
+        }
+        catch (IllegalStateException e){
+            return ApiResponse.error(ErrorCode.BAD_PARAMETER);
+        }
+    }
 
 }
