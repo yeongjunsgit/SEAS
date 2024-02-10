@@ -1,6 +1,7 @@
 package com.ssafy.seas.ranking.repository;
 
 // QClass는 static import를 한다.
+
 import static com.ssafy.seas.member.entity.QMember.*;
 import static com.ssafy.seas.ranking.entity.QBadge.*;
 import static com.ssafy.seas.ranking.entity.QMemberBadge.*;
@@ -16,7 +17,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.seas.ranking.dto.BadgeDto;
 import com.ssafy.seas.ranking.dto.QBadgeDto_BadgeResponse;
 import com.ssafy.seas.ranking.dto.QRankerDto_RankResponse;
-import com.ssafy.seas.ranking.dto.QRankerDto_RankResponseWithRanking;
 import com.ssafy.seas.ranking.dto.RankerDto;
 
 import jakarta.transaction.Transactional;
@@ -78,10 +78,10 @@ public class RankerRepositoryImpl implements RankerRepositoryCustom {
 	}
 
 
-	public List<RankerDto.RankResponseWithRanking> getRankByNickname(String nickname) {
-		List<RankerDto.RankResponseWithRanking> list = queryFactory
+	public List<RankerDto.RankResponse> getRankByNickname(String nickname) {
+		List<RankerDto.RankResponse> list = queryFactory
 			.select(
-				new QRankerDto_RankResponseWithRanking(
+				new QRankerDto_RankResponse(
 					member.nickname,
 					member.point,
 					tier.name,
@@ -92,9 +92,9 @@ public class RankerRepositoryImpl implements RankerRepositoryCustom {
 			.on(member.point.between(tier.minScore, tier.maxScore))
 			.fetch();
 
-		List<RankerDto.RankResponseWithRanking> result = new ArrayList<>();
+		List<RankerDto.RankResponse> result = new ArrayList<>();
 
-		for(RankerDto.RankResponseWithRanking dto : list){
+		for(RankerDto.RankResponse dto : list){
 			if(dto.getNickname().equals(nickname)){
 				result.add(dto);
 				break;

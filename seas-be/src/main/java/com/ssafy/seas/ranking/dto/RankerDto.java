@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.querydsl.core.annotations.QueryProjection;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,18 +33,21 @@ public class RankerDto {
 	@Getter
 	@Builder
 	@NoArgsConstructor
+	@AllArgsConstructor
 	public static class RankResponse {
 		private String nickname;
 		private Integer point;
 		private String tier;
 		@Setter
 		private List<BadgeDto.BadgeResponse> badgeList = new ArrayList<>();
+		private Integer ranking;
 
-		public RankResponse(String nickname, Integer point, String tier, List<BadgeDto.BadgeResponse> badgeList) {
+		@QueryProjection
+		public RankResponse(String nickname, Integer point, String tier, Integer ranking) {
 			this.nickname = nickname;
 			this.point = point;
 			this.tier = tier;
-			this.badgeList = badgeList;
+			this.ranking = ranking;
 		}
 
 		@QueryProjection
@@ -54,21 +58,21 @@ public class RankerDto {
 		}
 	}
 
-	@Getter
-	@Builder
-	@NoArgsConstructor
-	public static class RankResponseWithRanking {
-		private String nickname;
-		private Integer point;
-		private String tier;
-		private Integer ranking;
-
-		@QueryProjection
-		public RankResponseWithRanking(String nickname, Integer point, String tier, Integer ranking) {
-			this.nickname = nickname;
-			this.point = point;
-			this.tier = tier;
-			this.ranking = ranking;
-		}
-	}
+	// @Getter
+	// @Builder
+	// @NoArgsConstructor
+	// public static class RankResponseWithRanking {
+	// 	private String nickname;
+	// 	private Integer point;
+	// 	private String tier;
+	// 	private Integer ranking;
+	//
+	// 	@QueryProjection
+	// 	public RankResponseWithRanking(String nickname, Integer point, String tier, Integer ranking) {
+	// 		this.nickname = nickname;
+	// 		this.point = point;
+	// 		this.tier = tier;
+	// 		this.ranking = ranking;
+	// 	}
+	// }
 }
