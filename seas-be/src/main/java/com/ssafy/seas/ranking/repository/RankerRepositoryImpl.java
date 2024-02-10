@@ -37,7 +37,8 @@ public class RankerRepositoryImpl implements RankerRepositoryCustom {
 				new QRankerDto_RankResponse(
 						member.nickname,
 						member.point,
-						tier.name
+						tier.name,
+						Expressions.numberTemplate(Integer.class, "(RANK() OVER (ORDER BY {0} DESC))", member.point).as("ranking")
 						))
 			.from(member)
 			.innerJoin(tier)
