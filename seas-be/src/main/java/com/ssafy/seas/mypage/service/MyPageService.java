@@ -1,5 +1,6 @@
 package com.ssafy.seas.mypage.service;
 
+
 import com.ssafy.seas.category.dto.CategoryDto;
 import com.ssafy.seas.category.util.CategoryUtil;
 import com.ssafy.seas.member.dto.MemberDto;
@@ -15,8 +16,8 @@ import com.ssafy.seas.mypage.repository.StreakRepository;
 import com.ssafy.seas.quiz.dto.IncorrectNoteDto;
 import com.ssafy.seas.ranking.dto.BadgeDto;
 import com.ssafy.seas.ranking.repository.RankerRepositoryCustom;
+
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MyPageService {
@@ -37,14 +37,14 @@ public class MyPageService {
 	private final CategoryUtil categoryUtil;
 	private final StreakMapper streakMapper;
 
-	public MemberDto.MyInfoResponse getMyInfo() {
-		Integer memberId = memberUtil.getLoginMemberId();
+	public MemberDto.MyInfoResponse getMyInfo(String nickname) {
+		Integer memberId = nickname != null ? memberUtil.getMemberByNickname(nickname).getId() : memberUtil.getLoginMemberId();
 		MemberDto.MyInfoResponse response = memberRepository.getMyInfoResponse(memberId);
 		return response;
 	}
 
-	public List<MyPageDto.QuizRate> getQuizRate() {
-		Integer memberId = memberUtil.getLoginMemberId();
+	public List<MyPageDto.QuizRate> getQuizRate(String nickname) {
+		Integer memberId = nickname != null ? memberUtil.getMemberByNickname(nickname).getId() : memberUtil.getLoginMemberId();
 		List<CategoryDto.Response> categories = categoryUtil.getCategories();
 		List<MyPageDto.CorrectCount> correctCounts = myPageRepository.getQuizCorrectCountPerCategory(memberId);
 		List<MyPageDto.QuizRate> quizRate = new ArrayList<>();
@@ -90,9 +90,9 @@ public class MyPageService {
 				MyPageDto.ScoreHistoryDetail score = scoreHistoryDetails.get(scoreHistoryIndex++);
 				data.getHistory()
 					.add(MyPageDto.ScoreHistory.builder()
-						.createdAt(score.getCreatedAt())
-						.score(score.getScore())
-						.round(score.getRound())
+						.date(score.getDate())
+						.averageScore(score.getAverageScore())
+						.scoreCount(score.getScoreCount())
 						.build());
 			}
 			result.add(data);
@@ -100,9 +100,9 @@ public class MyPageService {
 		return result;
 	}
 
-	public List<BadgeDto.BadgeResponse> getBadges() {
-		Member member = memberUtil.getLoginMember();
-		return rankerRepository.getBadgeListByMemberId(member.getId());
+	public List<BadgeDto.BadgeResponse> getBadges(String nickname) {
+		Integer memberId = nickname != null ? memberUtil.getMemberByNickname(nickname).getId() : memberUtil.getLoginMemberId();
+		return rankerRepository.getBadgeListByMemberId(memberId);
 	}
 
 	public List<StreakDto.Response> getStreak() {

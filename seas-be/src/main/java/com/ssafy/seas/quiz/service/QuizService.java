@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ServerErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +40,8 @@ public class QuizService {
 
         List<QuizDto.QuizWeightInfoDto> quizWeightInfos =
                 quizFactors.stream().map(dto -> {
-                return new QuizDto.QuizWeightInfoDto(dto.getQuizId(), dto.getQuizInterval(), dto.getEf());
-        }).collect(Collectors.toList());
+                    return new QuizDto.QuizWeightInfoDto(dto.getQuizId(), dto.getQuizInterval(), dto.getEf());
+                }).collect(Collectors.toList());
 
         for(int i = 0; i < 10; i++) {
             double[][] prefixWeightList = quizUtil.getPrefixWeightArray(quizWeightInfos);
@@ -69,7 +70,7 @@ public class QuizService {
 
 
     @Transactional
-    public QuizAnswerDto.Response getSubmitResult(QuizAnswerDto.Request request, Integer categoryId, Integer quizId){
+    public QuizAnswerDto.Response getSubmitResult(QuizAnswerDto.Request request, Integer categoryId, Integer quizId) throws ServerErrorException {
 
         String submit = request.getSubmit().replaceAll("\s+", "_").replaceAll("\t+", "_").replaceAll(" ", "").toLowerCase().trim();
 
