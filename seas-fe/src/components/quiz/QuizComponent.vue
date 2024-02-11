@@ -157,6 +157,7 @@ const clearInput = () => {
         type="text"
         id="answer"
         autocomplete="off"
+        @keyup.enter="submitAnswer"
         placeholder="정답을 입력하시오."
       />
     </div>

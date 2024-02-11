@@ -14,4 +14,8 @@ function sendAnswer(categoryId, quizId, userInput, success, fail) {
   local.post(`/quiz/answer/${categoryId}/${quizId}`, userInput).then(success).catch(fail);
 }
 
-export { getQuizList, getHint, sendAnswer };
+function getResult(success, fail) {
+  local.get(`/quiz/result`).then(success).catch(fail);
+}
+
+export { getQuizList, getHint, sendAnswer, getResult };

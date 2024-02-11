@@ -68,9 +68,7 @@ li {
 
   button {
     height: 90px;
-    font-size: 1.9vw;
     margin: 30px 0 30px 0;
-    padding: 2vh;
   }
 }
 </style>
