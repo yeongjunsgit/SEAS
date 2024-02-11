@@ -1,7 +1,7 @@
 package com.ssafy.seas.mypage.dto;
 
 import java.sql.Date;
-import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,18 +58,18 @@ public class MyPageDto {
 	@Getter
 	public static class ScoreHistory {
 
-		private LocalDate date;
+		private String date;
 		private Double averageScore;
 		private Integer scoreCount;
 
 		public ScoreHistory(Date date, Double averageScore, Long scoreCount) {
-			this.date = date.toLocalDate();
+			this.date = date.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 			this.averageScore = QuizUtil.toFixed(averageScore, 1);
 			this.scoreCount = Math.toIntExact(scoreCount);
 		}
 
 		@Builder
-		public ScoreHistory(LocalDate date, Double averageScore, Integer scoreCount) {
+		public ScoreHistory(String date, Double averageScore, Integer scoreCount) {
 			this.date = date;
 			this.averageScore = averageScore;
 			this.scoreCount = scoreCount;
@@ -80,6 +80,7 @@ public class MyPageDto {
 	@Getter
 	public static class ScoreHistoryDetail extends ScoreHistory {
 		private Integer categoryId;
+
 		public ScoreHistoryDetail(Integer categoryId, Date date, Double averageScore, Long scoreCount) {
 			super(date, averageScore, scoreCount);
 			this.categoryId = categoryId;
