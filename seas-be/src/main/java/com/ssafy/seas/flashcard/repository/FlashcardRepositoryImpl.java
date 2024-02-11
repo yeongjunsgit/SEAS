@@ -80,8 +80,8 @@ public class FlashcardRepositoryImpl implements FlashcardRepositoryCustom {
 		List<FlashcardDto.Response> dtos = dtoMap
 			.entrySet().stream()
 			.sorted(Comparator.comparing((Map.Entry<FlashcardDto.SimpleResponse, List<String>> entry) ->
-					entry.getKey().getWeight(), Comparator.reverseOrder())
-				.thenComparing(entry -> entry.getKey().getId()))
+					entry.getKey().getWeight()) // 가중치가 작은게 먼저
+				.thenComparing(entry -> entry.getKey().getId())) // 가중치가 같다면 id 순
 			.map(entry -> new FlashcardDto.Response(
 				entry.getKey().getId(),
 				entry.getKey().getKeyword(),
