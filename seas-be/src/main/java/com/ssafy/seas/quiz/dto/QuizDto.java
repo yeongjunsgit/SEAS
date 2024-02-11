@@ -35,6 +35,8 @@ public class QuizDto {
             this.hint = hint;
             this.quizInterval = quizInterval;
             this.ef = ef;
+            this.isCorrect = false;
+            this.isUsedHint = false;
         }
 
         public void setIsCorrect(Boolean result){
@@ -46,8 +48,18 @@ public class QuizDto {
         }
 
         @Override
-        public String toString(){
-            return "[" + this.quiz + " | " + this.hint + "]";
+        public String toString() {
+            return "QuizFactorDto{" +
+                    "quizInterval=" + quizInterval +
+                    ", ef=" + ef +
+                    ", cardQuizId=" + cardQuizId +
+                    ", memberId=" + memberId +
+                    ", quizId=" + quizId +
+                    ", quiz='" + quiz + '\'' +
+                    ", hint='" + hint + '\'' +
+                    ", isCorrect=" + isCorrect +
+                    ", isUsedHint=" + isUsedHint +
+                    '}';
         }
     }
 
@@ -60,6 +72,8 @@ public class QuizDto {
         private final Double ef;
 
     }
+
+
 
 
 

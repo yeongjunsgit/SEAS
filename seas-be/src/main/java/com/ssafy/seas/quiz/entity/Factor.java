@@ -12,14 +12,31 @@ public class Factor extends BaseEntity {
 
     @Column(name="quiz_interval")
     private Double quizInterval;
+
     private Double ef;
 
     @ManyToOne(targetEntity = Member.class)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToOne
+    @OneToOne(targetEntity = CardQuiz.class)
     @JoinColumn(name = "card_quiz_id")
     private CardQuiz cardQuiz;
+
+    public Factor(Member member, CardQuiz cardQuiz, Double quizInterval, Double ef){
+        this.member = member;
+        this.cardQuiz = cardQuiz;
+        this.quizInterval = quizInterval;
+        this.ef = ef;
+    }
+
+    public Factor() {
+
+    }
+
+    public void updateFactor(Double quizInterval, Double ef) {
+        this.quizInterval = quizInterval;
+        this.ef = ef;
+    }
 
 }
