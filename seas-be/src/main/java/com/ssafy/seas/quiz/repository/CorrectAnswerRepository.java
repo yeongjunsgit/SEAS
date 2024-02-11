@@ -32,7 +32,7 @@ public class CorrectAnswerRepository {
 
         String jpql = "SELECT m, s, sh FROM Member m " +
                 "LEFT JOIN Streak s ON m.id = s.member.id AND s.updatedAt BETWEEN :startDateTime AND :endDateTime " +
-                "LEFT JOIN ScoreHistory sh ON m.id = sh.member.id AND sh.category.id = :categoryId AND sh.updatedAt BETWEEN :startDateTime AND :endDateTime " +
+                "LEFT JOIN ScoreHistory sh ON m.id = sh.member.id AND sh.category.id = :categoryId " +
                 "WHERE m.id = :memberId";
 
         Member member = entityManager.getReference(Member.class, factors.getMemberId());
@@ -60,18 +60,11 @@ public class CorrectAnswerRepository {
             existingStreak.setQuizCount(quizCount + 1);
         }
 
-        if (existingScoreHistory == null) {
-            // Member나 ScoreHistory가 없는 경우에는 새로운 엔티티 생성
-            ScoreHistory newScoreHistory = new ScoreHistory(member, category, factors.getScore());
-            entityManager.persist(newScoreHistory);
-        } else {
-            // Member와 ScoreHistory가 있는 경우, 값을 업데이트
-            Integer score = existingScoreHistory.getScore();
-            log.info(existingScoreHistory.toString());
-            existingScoreHistory.setScore(score + factors.getScore());
-        }
+        // scoreHistory insert
+        ScoreHistory newScoreHistory = new ScoreHistory(member, category, factors.getScore());
+        entityManager.persist(newScoreHistory);
 
-        // 이건 solveQuiz 검사하고 대입해야함..
+        // FIX : solveQuiz 검사 후 해당 날짜에 맞은 흔적이 없으면 갱신
         Integer point = existingMember.getPoint();
         existingMember.setPoint(point + factors.getPoint());
     }
