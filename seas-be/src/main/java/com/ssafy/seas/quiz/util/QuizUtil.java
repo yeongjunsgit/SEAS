@@ -139,7 +139,7 @@ public class QuizUtil {
 
         return var;
     }
-	public Double calculateNewEf(Double ef, int quality) {
+	public static Double calculateNewEf(Double ef, int quality) {
 		Double newEf = ef - 0.06 + 0.08 * quality + 0.02 * quality * quality;
 
 		newEf = newEf < EasinessFactor.MINIMUM.getValue() ? EasinessFactor.MINIMUM.getValue() :
