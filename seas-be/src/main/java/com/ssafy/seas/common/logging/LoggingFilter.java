@@ -10,8 +10,6 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -34,6 +32,8 @@ public class LoggingFilter extends OncePerRequestFilter {
 	protected static final Logger log = LoggerFactory.getLogger(LoggingFilter.class);
 	private final DiscordNotifier discordNotifier;
 	private StringBuilder stringBuilder = new StringBuilder();
+	private boolean isSwagger = false;
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 		FilterChain filterChain) throws ServletException, IOException {
@@ -50,7 +50,8 @@ public class LoggingFilter extends OncePerRequestFilter {
 		} catch (Exception ex) {
 			handleException(ex, response);
 		} finally {
-			discordNotifier.notify(stringBuilder.append("========================").toString());
+			stringBuilder.append("✨========================✨");
+			discordNotifier.notify(stringBuilder.toString());
 			MDC.clear();
 		}
 	}
@@ -80,13 +81,25 @@ public class LoggingFilter extends OncePerRequestFilter {
 		stringBuilder.append("Origin: ").append(request.getHeader("Origin")).append("\n");
 		stringBuilder.append(logMessage).append("\n");
 
+		isSwagger = false;
+		String[] swaggerUris = {"swagger", "api-docs"};
+		for (String swaggerUri : swaggerUris) {
+			if (request.getRequestURI().contains(swaggerUri)) {
+				isSwagger = true;
+				break;
+			}
+		}
+
 		logPayload("Request", request.getContentType(), request.getInputStream());
+
 	}
 
 	private void logResponse(ContentCachingResponseWrapper response) throws IOException {
 		String logMessage = String.format("Response : %s", response.getStatus());
 		stringBuilder.append(logMessage).append("\n");
-		logPayload("Response", response.getContentType(), response.getContentInputStream());
+		if (!isSwagger) {
+			logPayload("Response", response.getContentType(), response.getContentInputStream());
+		}
 	}
 
 	private void logPayload(String prefix, String contentType, InputStream inputStream) throws IOException {
@@ -116,7 +129,7 @@ public class LoggingFilter extends OncePerRequestFilter {
 	private void handleException(Exception ex, HttpServletResponse response) throws IOException {
 		log.error("Exception during request processing", ex);
 		ex.printStackTrace();
-		String logMessage = String.format("[ERROR] : %s", ex.getMessage()+"\n\n"+ex.getStackTrace());
+		String logMessage = String.format("[ERROR] : %s", ex.getMessage() + "\n\n" + ex.getStackTrace());
 		stringBuilder.append(logMessage).append("\n");
 		ApiResponse<?> errorResponse = ApiResponse.error(HttpStatus.BAD_REQUEST, ex.getMessage());
 		ObjectMapper objectMapper = new ObjectMapper();

@@ -90,9 +90,9 @@ public class MyPageService {
 				MyPageDto.ScoreHistoryDetail score = scoreHistoryDetails.get(scoreHistoryIndex++);
 				data.getHistory()
 					.add(MyPageDto.ScoreHistory.builder()
-						.createdAt(score.getCreatedAt())
-						.score(score.getScore())
-						.round(score.getRound())
+						.date(score.getDate())
+						.averageScore(score.getAverageScore())
+						.scoreCount(score.getScoreCount())
 						.build());
 			}
 			result.add(data);
