@@ -1,11 +1,5 @@
 package com.ssafy.seas.mypage.service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.seas.category.dto.CategoryDto;
 import com.ssafy.seas.category.util.CategoryUtil;
@@ -24,6 +18,12 @@ import com.ssafy.seas.ranking.dto.BadgeDto;
 import com.ssafy.seas.ranking.repository.RankerRepositoryCustom;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -115,5 +115,9 @@ public class MyPageService {
 	public List<IncorrectNoteDto.QuizIdPerCategory> getIncorrectNotes() {
 		Member member = memberUtil.getLoginMember();
 		return myPageRepository.findAllIncorrectQuizByMemberId(member.getId());
+	}
+
+	public MyPageDto.IncorrectNoteInfo getIncorrectNoteInfo(Integer quizId){
+		return myPageRepository.getAnswersWithQuizId(quizId);
 	}
 }
