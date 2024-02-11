@@ -19,9 +19,12 @@ public class WrongAnswerRepostory {
 
     public void saveOrUpdateIncorrectNoteAndSolvedQuiz(Integer memberId, Integer quizId) {
         // IncorrectNote와 SolvedQuiz 엔티티를 조인하여 값을 조회
+        //
         String jpql = "SELECT innote, sq FROM IncorrectNote innote " +
                 "LEFT JOIN SolvedQuiz sq ON innote.member.id = sq.member.id AND innote.quiz.id = sq.quiz.id " +
                 "WHERE innote.member.id = :memberId AND innote.quiz.id = :quizId";
+
+        // innote, solvedQuiz와
 
         Member member = entityManager.getReference(Member.class, memberId);
         Quiz quiz = entityManager.getReference(Quiz.class, quizId);
@@ -30,7 +33,7 @@ public class WrongAnswerRepostory {
         query.setParameter("memberId", memberId);
         query.setParameter("quizId", quizId);
 
-        if(query.getSingleResult() == null){
+        if(query.getResultList().isEmpty()){
 
             IncorrectNote incorrectNote = new IncorrectNote(member, quiz);
             entityManager.persist(incorrectNote);
@@ -54,6 +57,7 @@ public class WrongAnswerRepostory {
             if (solvedQuiz != null) {
                 // 업데이트 로직 추가
                 solvedQuiz.updateCount(false);
+
                 // 저장 또는 업데이트
                 entityManager.merge(solvedQuiz);
             }

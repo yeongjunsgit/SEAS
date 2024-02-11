@@ -12,6 +12,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 @Repository
 @Slf4j
 @Transactional
@@ -20,12 +24,15 @@ public class CorrectAnswerRepository {
 
     private final EntityManager entityManager;
 
-    // streak은 똑같은 문제도 맞다고 인정해주나?
+    // streak은 똑같은 문제도 맞다고
     public void saveOrUpdateStreakAndScoreHistory(QuizAnswerDto.UpdatedFactors factors) {
         // Member와 Streak, ScoreHistory를 조인하여 값을 조회, 날짜 기준 오늘
+        LocalDateTime startDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+        LocalDateTime endDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
+
         String jpql = "SELECT m, s, sh FROM Member m " +
-                "LEFT JOIN Streak s ON m.id = s.member.id AND s.createdAt = CURRENT_DATE " +
-                "LEFT JOIN ScoreHistory sh ON m.id = sh.member.id AND sh.category.id = :categoryId AND sh.createdAt = CURRENT_DATE " +
+                "LEFT JOIN Streak s ON m.id = s.member.id AND s.updatedAt BETWEEN :startDateTime AND :endDateTime " +
+                "LEFT JOIN ScoreHistory sh ON m.id = sh.member.id AND sh.category.id = :categoryId AND sh.updatedAt BETWEEN :startDateTime AND :endDateTime " +
                 "WHERE m.id = :memberId";
 
         Member member = entityManager.getReference(Member.class, factors.getMemberId());
@@ -34,6 +41,8 @@ public class CorrectAnswerRepository {
         Query query = entityManager.createQuery(jpql, Object[].class);
         query.setParameter("memberId", factors.getMemberId());
         query.setParameter("categoryId", factors.getCategoryId());
+        query.setParameter("startDateTime", startDateTime);
+        query.setParameter("endDateTime", endDateTime);
 
         Object[] result = (Object[]) query.getSingleResult();
         Member existingMember = (Member) result[0];
@@ -47,6 +56,7 @@ public class CorrectAnswerRepository {
         } else {
             // Member와 Streak가 있는 경우, 값을 업데이트
             Integer quizCount = existingStreak.getQuizCount();
+            log.info(existingStreak.toString());
             existingStreak.setQuizCount(quizCount + 1);
         }
 
@@ -57,9 +67,11 @@ public class CorrectAnswerRepository {
         } else {
             // Member와 ScoreHistory가 있는 경우, 값을 업데이트
             Integer score = existingScoreHistory.getScore();
+            log.info(existingScoreHistory.toString());
             existingScoreHistory.setScore(score + factors.getScore());
         }
 
+        // 이건 solveQuiz 검사하고 대입해야함..
         Integer point = existingMember.getPoint();
         existingMember.setPoint(point + factors.getPoint());
     }
@@ -71,45 +83,64 @@ public class CorrectAnswerRepository {
                     "JOIN f.cardQuiz cq " +
                     "WHERE f.member.id = :memberId AND cq.quiz.id = :quizId";
 
-            Query query = entityManager.createQuery(jpql, Object[].class);
-            query.setParameter("memberId", factors.getMemberId());
-            query.setParameter("quizId", factors.getQuizId());
+            LocalDateTime startDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+            LocalDateTime endDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
 
-            Object[] result = (Object[]) query.getSingleResult();
+            Query factorQuery = entityManager.createQuery(jpql, Object[].class);
+            factorQuery.setParameter("memberId", factors.getMemberId());
+            factorQuery.setParameter("quizId", factors.getQuizId());
+
+            Object[] result = (Object[]) factorQuery.getSingleResult();
             Factor factor = (Factor) result[0];
             CardQuiz cardQuiz = (CardQuiz) result[1];
 
-            if (factor == null || cardQuiz == null) {
-                // Factor나 CardQuiz가 없는 경우에는 새로운 엔티티 생성
-                Member member = entityManager.getReference(Member.class, factors.getMemberId());
-                Quiz quiz = entityManager.getReference(Quiz.class, factors.getQuizId());
 
-                CardQuiz newCardQuiz = new CardQuiz();
-                newCardQuiz.setQuiz(quiz);
+        if (factor == null || cardQuiz == null) {
+            // Factor나 CardQuiz가 없는 경우에는 새로운 엔티티 생성
+            Member member = entityManager.getReference(Member.class, factors.getMemberId());
+            Quiz quiz = entityManager.getReference(Quiz.class, factors.getQuizId());
 
-                Factor newFactor = new Factor(member, newCardQuiz, factors.getInterval(), factors.getEf());
+            CardQuiz newCardQuiz = new CardQuiz();
+            newCardQuiz.setQuiz(quiz);
 
-                // SolvedQuiz 엔티티 생성 및 저장
-                SolvedQuiz solvedQuiz = new SolvedQuiz(member, quiz);
-                solvedQuiz.updateCount(true);
+            Factor newFactor = new Factor(member, newCardQuiz, factors.getInterval(), factors.getEf());
 
-                entityManager.persist(newFactor);
-                entityManager.persist(solvedQuiz);
-            } else {
-                // Factor와 CardQuiz가 있는 경우, 값을 업데이트
-                factor.updateFactor(factors.getInterval(), factors.getEf());
-
-                // 똑같은 퀴즈는 안 올라감
-//                // SolvedQuiz 엔티티 가져오기
-//                Quiz quiz = cardQuiz.getQuiz();
-//                SolvedQuiz solvedQuiz = entityManager.createQuery("SELECT sq FROM SolvedQuiz sq WHERE sq.member = :member AND sq.quiz = :quiz", SolvedQuiz.class)
-//                        .setParameter("member", factor.getMember())
-//                        .setParameter("quiz", quiz)
-//                        .getSingleResult();
-//
+            entityManager.persist(newFactor);
+//                entityManager.persist(solvedQuiz);
+        } else {
+            // Factor와 CardQuiz가 있는 경우, 값을 업데이트
+            factor.updateFactor(factors.getInterval(), factors.getEf());
 //                // SolvedQuiz 엔티티 업데이트
 //                solvedQuiz.updateCount(true);
+        }
+
+        jpql = "SELECT sq FROM SolvedQuiz sq " +
+                "WHERE sq.quiz.id = :quizId " +
+                "AND sq.updatedAt BETWEEN :startDateTime AND :endDateTime";
+
+        Query solveQuizQuery = entityManager.createQuery(jpql, Object[].class);
+        solveQuizQuery.setParameter("quizId", factors.getQuizId());
+        solveQuizQuery.setParameter("startDateTime", startDateTime);
+        solveQuizQuery.setParameter("endDateTime", endDateTime);
+
+        if(solveQuizQuery.getResultList().isEmpty()){
+            Member member = entityManager.getReference(Member.class, factors.getMemberId());
+            Quiz quiz = entityManager.getReference(Quiz.class, factors.getQuizId());
+
+            SolvedQuiz solvedQuiz = new SolvedQuiz(member, quiz);
+            solvedQuiz.updateCount(true);
+            entityManager.persist(solvedQuiz);
+        }
+        else{
+            Object[] solveQuizResult = (Object[]) solveQuizQuery.getSingleResult();
+            SolvedQuiz solvedQuiz = (SolvedQuiz) solveQuizResult[0];
+
+            // 오늘 풀지 않았거나, 틀림
+            if(solvedQuiz.getCorrectCount() < 1) {
+                solvedQuiz.updateCount(true);
+                entityManager.merge(solvedQuiz);
             }
         }
     }
+}
 
