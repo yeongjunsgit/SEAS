@@ -25,6 +25,7 @@ import com.ssafy.seas.flashcard.dto.FlashcardDto;
 import com.ssafy.seas.flashcard.dto.QFlashcardDto_Response;
 import com.ssafy.seas.flashcard.dto.QFlashcardDto_SimpleResponse;
 import com.ssafy.seas.quiz.constant.EasinessFactor;
+import com.ssafy.seas.quiz.constant.Interval;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +45,7 @@ public class FlashcardRepositoryImpl implements FlashcardRepositoryCustom {
 
 		NumberTemplate<Double> weightExpression = Expressions.numberTemplate(
 			Double.class, "IFNULL({0}, {1}) * IFNULL({2}, {3})",
-			factor.quizInterval, 1, factor.ef, EasinessFactor.DEFAULT.getValue());
+			factor.quizInterval, Interval.DEFAULT.getValue(), factor.ef, EasinessFactor.DEFAULT.getValue());
 
 
 
@@ -66,7 +67,7 @@ public class FlashcardRepositoryImpl implements FlashcardRepositoryCustom {
 			.on(favorite.flashcard.id.eq(flashcard.id).and(favorite.member.id.eq(memberId)))
 			.leftJoin(cardQuiz).on(flashcard.id.eq(cardQuiz.flashcard.id))
 			.leftJoin(factor).on(cardQuiz.id.eq(factor.cardQuiz.id))
-			.where(flashcard.category.id.eq(categoryId))
+			.where(flashcard.category.id.eq(categoryId), factor.member.id.eq(memberId))
 			.orderBy(weightExpression.desc())
 			.fetch();
 
