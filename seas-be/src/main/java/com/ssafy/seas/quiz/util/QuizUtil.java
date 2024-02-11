@@ -1,5 +1,7 @@
 package com.ssafy.seas.quiz.util;
 
+import com.ssafy.seas.quiz.constant.EasinessFactor;
+import com.ssafy.seas.quiz.constant.Quality;
 import com.ssafy.seas.quiz.dto.QuizAnswerDto;
 import com.ssafy.seas.quiz.dto.QuizDto;
 import com.ssafy.seas.quiz.dto.QuizResultDto;
