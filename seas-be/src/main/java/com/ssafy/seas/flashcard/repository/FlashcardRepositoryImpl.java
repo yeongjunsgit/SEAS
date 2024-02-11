@@ -66,8 +66,8 @@ public class FlashcardRepositoryImpl implements FlashcardRepositoryCustom {
 			.leftJoin(favorite)
 			.on(favorite.flashcard.id.eq(flashcard.id).and(favorite.member.id.eq(memberId)))
 			.leftJoin(cardQuiz).on(flashcard.id.eq(cardQuiz.flashcard.id))
-			.leftJoin(factor).on(cardQuiz.id.eq(factor.cardQuiz.id))
-			.where(flashcard.category.id.eq(categoryId), factor.member.id.eq(memberId))
+			.leftJoin(factor).on(cardQuiz.id.eq(factor.cardQuiz.id), factor.member.id.eq(memberId))
+			.where(flashcard.category.id.eq(categoryId))
 			.orderBy(weightExpression.desc())
 			.fetch();
 
