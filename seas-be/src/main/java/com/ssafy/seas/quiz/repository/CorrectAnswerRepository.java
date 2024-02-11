@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ServerErrorException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -70,7 +71,7 @@ public class CorrectAnswerRepository {
     }
 
 
-    public void saveOrUpdateFactorAndSolvedQuiz(QuizAnswerDto.UpdatedFactors factors) {
+    public void saveOrUpdateFactorAndSolvedQuiz(QuizAnswerDto.UpdatedFactors factors) throws ServerErrorException{
             // Factor와 CardQuiz를 조인하여 값을 조회
             String jpql = "SELECT f, cq FROM Factor f " +
                     "JOIN f.cardQuiz cq " +
@@ -87,8 +88,11 @@ public class CorrectAnswerRepository {
             Factor factor = (Factor) result[0];
             CardQuiz cardQuiz = (CardQuiz) result[1];
 
+            if(cardQuiz == null){
+                throw new ServerErrorException("CARD QUIZ NULL", null);
+            }
 
-        if (factor == null || cardQuiz == null) {
+        if (factor == null) {
             // Factor나 CardQuiz가 없는 경우에는 새로운 엔티티 생성
             Member member = entityManager.getReference(Member.class, factors.getMemberId());
             Quiz quiz = entityManager.getReference(Quiz.class, factors.getQuizId());

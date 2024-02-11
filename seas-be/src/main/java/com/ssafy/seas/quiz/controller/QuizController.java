@@ -9,6 +9,7 @@ import com.ssafy.seas.quiz.dto.QuizListDto;
 import com.ssafy.seas.quiz.dto.QuizResultDto;
 import com.ssafy.seas.quiz.service.QuizService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ServerErrorException;
 
 @RestController
 @RequestMapping("/quiz")
@@ -31,21 +32,24 @@ public class QuizController {
 
     @GetMapping("/hint/{categoryId}/{quizId}")
     public ApiResponse<QuizHintDto.Response> getHint(
-                            @PathVariable("categoryId") Integer categoryId,
-                            @PathVariable("quizId") Integer quizId){
+            @PathVariable("categoryId") Integer categoryId,
+            @PathVariable("quizId") Integer quizId){
 
         return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getHint(quizId));
     }
 
     @PostMapping("/answer/{categoryId}/{quizId}")
     public ApiResponse<QuizAnswerDto.Response> getSingleAnswerPerQuiz(@RequestBody QuizAnswerDto.Request request,
-                                                         @PathVariable("categoryId") Integer categoryId,
-                                                         @PathVariable("quizId") Integer quizId){
+                                                                      @PathVariable("categoryId") Integer categoryId,
+                                                                      @PathVariable("quizId") Integer quizId) {
         try {
             return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getSubmitResult(request, categoryId, quizId));
         }
         catch (IllegalStateException e){
             return ApiResponse.error(ErrorCode.BAD_PARAMETER);
+        }
+        catch (ServerErrorException e){
+            return ApiResponse.error(ErrorCode.SERVER_ERROR);
         }
     }
 
