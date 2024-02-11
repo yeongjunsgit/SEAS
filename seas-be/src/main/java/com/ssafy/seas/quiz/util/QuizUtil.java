@@ -2,6 +2,7 @@ package com.ssafy.seas.quiz.util;
 
 import com.ssafy.seas.quiz.dto.QuizAnswerDto;
 import com.ssafy.seas.quiz.dto.QuizDto;
+import com.ssafy.seas.quiz.dto.QuizResultDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -149,8 +150,9 @@ public class QuizUtil {
         return BigDecimal.valueOf(value).setScale(digit, RoundingMode.HALF_UP).doubleValue();
     }
 
-    public String toKey(int quizId){
-        return String.valueOf(quizId);
+    public String toKey(Integer quizId){
+        // Integer를 바로 String으로 변환하면 에러
+        return String.valueOf(quizId.intValue());
     }
 
     // 저장 확인 완료
@@ -165,6 +167,39 @@ public class QuizUtil {
         }
 
         redisTemplate.opsForValue().set(memberId, map);
+    }
+
+    public QuizResultDto.Response getResult(Integer memberId){
+
+        Map<Integer, QuizDto.QuizFactorDto> result = redisTemplate.opsForValue().get(memberId);
+
+        QuizResultDto.Response response = new QuizResultDto.Response();
+
+        for(Map.Entry<Integer, QuizDto.QuizFactorDto> res : result.entrySet()){
+            //log.info(quizzes.getKey() + " || type : " + quizzes.getKey().intValue());
+            QuizDto.QuizFactorDto quizResult = res.getValue();
+            log.info(quizResult.toString());
+            if(quizResult.getIsCorrect()) {
+                response.setCorrectState();
+                if(quizResult.getIsUsedHint()) {
+                    response.setHintState();
+                }
+            }
+            else {
+                response.setWrongState();
+
+                if(quizResult.getIsUsedHint())
+                    response.setHintState();
+            }
+
+            log.info(response.toString());
+        }
+
+        return response;
+    }
+
+    public void resetRedis(Integer memberId){
+        redisTemplate.delete(memberId);
     }
 
     public String getQuizHint(Integer memberId, Integer quizId){

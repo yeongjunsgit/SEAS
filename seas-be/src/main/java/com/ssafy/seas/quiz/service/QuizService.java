@@ -2,10 +2,7 @@ package com.ssafy.seas.quiz.service;
 
 
 import com.ssafy.seas.member.util.MemberUtil;
-import com.ssafy.seas.quiz.dto.QuizAnswerDto;
-import com.ssafy.seas.quiz.dto.QuizDto;
-import com.ssafy.seas.quiz.dto.QuizHintDto;
-import com.ssafy.seas.quiz.dto.QuizListDto;
+import com.ssafy.seas.quiz.dto.*;
 import com.ssafy.seas.quiz.repository.CorrectAnswerRepository;
 import com.ssafy.seas.quiz.repository.FactorRepository;
 import com.ssafy.seas.quiz.repository.QuizCustomRepository;
@@ -74,7 +71,7 @@ public class QuizService {
     @Transactional
     public QuizAnswerDto.Response getSubmitResult(QuizAnswerDto.Request request, Integer categoryId, Integer quizId){
 
-        String submit = request.getSubmit().replaceAll("\s+", "_").replaceAll("\t+", "_").replaceAll(" ", "").toLowerCase();
+        String submit = request.getSubmit().replaceAll("\s+", "_").replaceAll("\t+", "_").replaceAll(" ", "").toLowerCase().trim();
 
         List<String> quizAnswers = quizCustomRepository.findAllQuizAnswerByQuizId(quizId);
         Integer memberId = MemberUtil.getLoginMemberId();
@@ -101,16 +98,20 @@ public class QuizService {
         return new QuizAnswerDto.Response(false);
     }
 
-    public void getTotalResult(){
+
+    public QuizResultDto.Response getTotalResult(){
 
         Integer memberId = MemberUtil.getLoginMemberId();
-        //
-        // List<QuizWeightFactorDto> newWeight = quizUtil.getNewFactor(memberId);
 
+        QuizResultDto.Response response = quizUtil.getResult(memberId);
+        quizUtil.resetRedis(memberId);
+        return response;
+    }
 
+    public QuizTierDto.Response getTier(){
 
-        // 만약 데이터가 있으면 업데이트
-        // 없으면 인서트
-        // 점수 + 1
+        QuizTierDto.Response response = new QuizTierDto.Response();
+
+        return response;
     }
 }

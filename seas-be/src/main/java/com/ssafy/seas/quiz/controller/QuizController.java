@@ -6,6 +6,7 @@ import com.ssafy.seas.common.dto.ApiResponse;
 import com.ssafy.seas.quiz.dto.QuizAnswerDto;
 import com.ssafy.seas.quiz.dto.QuizHintDto;
 import com.ssafy.seas.quiz.dto.QuizListDto;
+import com.ssafy.seas.quiz.dto.QuizResultDto;
 import com.ssafy.seas.quiz.service.QuizService;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,7 @@ public class QuizController {
     }
 
     @PostMapping("/answer/{categoryId}/{quizId}")
-    public ApiResponse<QuizAnswerDto.Response> getResult(@RequestBody QuizAnswerDto.Request request,
+    public ApiResponse<QuizAnswerDto.Response> getSingleAnswerPerQuiz(@RequestBody QuizAnswerDto.Request request,
                                                          @PathVariable("categoryId") Integer categoryId,
                                                          @PathVariable("quizId") Integer quizId){
         try {
@@ -48,4 +49,19 @@ public class QuizController {
         }
     }
 
+    @GetMapping("/result")
+    public ApiResponse<QuizResultDto.Response> getTotalResult(){
+        return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getTotalResult());
+    }
+
+    @GetMapping("/tier")
+    public ApiResponse<?> getTier(){
+        return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getTier());
+    }
+
+//    @GetMapping("/tier")
+//    public ApiResponse<> getTier(){
+//
+//
+//    }
 }
