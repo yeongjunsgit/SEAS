@@ -7,10 +7,10 @@ import lombok.Getter;
 @Getter
 public enum Interval {
 
-	FIRST(1),
-	SECOND(2),
-	MAXIMUM(365),
+	FIRST(1.0),
+	SECOND(6.0),
+	MAXIMUM(365.0),
 	DEFAULT(Interval.FIRST.getValue());
 
-	private final int value;
+	private final double value;
 }
