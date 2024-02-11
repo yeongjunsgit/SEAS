@@ -55,10 +55,11 @@ public class RankingController {
 	}
 
 	@GetMapping("/search")
-	public ApiResponse<List<RankerDto.RankResponseWithRanking>> getMemberRanking(@RequestParam("search") String searchNickname) {
+	public ApiResponse<List<RankerDto.RankResponse>> getMemberRanking(@RequestParam("search") String searchNickname) {
 		try {
 			// list로 넘겨달라는 요청이 있었음.
-			List<RankerDto.RankResponseWithRanking> result = rankingService.getRankByNickname(searchNickname);
+			List<RankerDto.RankResponse> result = rankingService.getRankByNickname(searchNickname);
+			result.get(0).setBadgeList(rankingService.getBadgeList(searchNickname));
 			return ApiResponse.success(SuccessCode.GET_SUCCESS, result);
 		} catch (Exception e) {
 			e.printStackTrace();
