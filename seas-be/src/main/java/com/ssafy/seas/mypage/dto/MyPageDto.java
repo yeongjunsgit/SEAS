@@ -1,15 +1,16 @@
 package com.ssafy.seas.mypage.dto;
 
-import java.sql.Date;
-import java.time.format.DateTimeFormatter;
+import com.querydsl.core.annotations.QueryProjection;
+import lombok.Builder;
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.querydsl.core.annotations.QueryProjection;
-import com.ssafy.seas.quiz.util.QuizUtil;
+import java.sql.Date;
+import java.time.format.DateTimeFormatter;
 
-import lombok.Builder;
-import lombok.Getter;
+import com.ssafy.seas.quiz.util.QuizUtil;
 
 public class MyPageDto {
 
@@ -86,5 +87,18 @@ public class MyPageDto {
 			this.categoryId = categoryId;
 		}
 	}
+
+	@Getter
+	public static class IncorrectNoteInfo{
+		String quiz;
+		String answer;
+
+		@QueryProjection
+		public IncorrectNoteInfo(String quiz, String answer){
+			this.quiz = quiz;
+			this.answer = answer;
+		}
+	}
+
 
 }
