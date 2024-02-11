@@ -30,7 +30,7 @@ public class RankingService {
 		// return rankerRepositoryImpl.getMyRank(uuid);
 	}
 
-	public List<RankerDto.RankResponseWithRanking> getRankByNickname(String nickname){
+	public List<RankerDto.RankResponse> getRankByNickname(String nickname){
 		return rankerRepositoryCustom.getRankByNickname(nickname);
 	}
 
