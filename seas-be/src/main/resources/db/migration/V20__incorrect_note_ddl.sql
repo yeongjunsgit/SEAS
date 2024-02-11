@@ -9,6 +9,6 @@ create table seas.incorrect_note
     constraint FK56qhsn0o6o9bg0fnbo3ksxyol
         foreign key (member_id) references seas.member (id),
     constraint FKgyjffmewlxblhp4py8t71ypyk
-        foreign key (quiz_id) references seas.member (id)
+        foreign key (quiz_id) references seas.quiz (id)
 );
 
