@@ -9,6 +9,7 @@ import club.minnced.discord.webhook.WebhookClientBuilder;
 @Component
 public class DiscordNotifier {
 
+	public final int MAX_LENGTH = 2000;
 	private final WebhookClient webhookClient;
 
 	public DiscordNotifier(@Value("${logging.discord.webhook-url}") String webhookUrl) {
