@@ -27,4 +27,12 @@ public class Streak extends BaseEntity {
 	public void setQuizCount(Integer quizCount){
 		this.quizCount = quizCount;
 	}
+
+	@Override
+	public String toString() {
+		return "Streak{" +
+				"quizCount=" + quizCount +
+				", member=" + member +
+				'}';
+	}
 }
