@@ -1,14 +1,13 @@
 package com.ssafy.seas.mypage.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
+import lombok.Builder;
+import lombok.Getter;
+
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.querydsl.core.annotations.QueryProjection;
-
-import lombok.Builder;
-import lombok.Getter;
 
 public class MyPageDto {
 
@@ -91,5 +90,18 @@ public class MyPageDto {
 			this.memberId = memberId;
 		}
 	}
+
+	@Getter
+	public static class IncorrectNoteInfo{
+		String quiz;
+		String answer;
+
+		@QueryProjection
+		public IncorrectNoteInfo(String quiz, String answer){
+			this.quiz = quiz;
+			this.answer = answer;
+		}
+	}
+
 
 }

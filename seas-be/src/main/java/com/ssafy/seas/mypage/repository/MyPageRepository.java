@@ -1,31 +1,26 @@
 package com.ssafy.seas.mypage.repository;
 
-import static com.ssafy.seas.category.entity.QCategory.*;
-import static com.ssafy.seas.flashcard.entity.QFavorite.*;
-import static com.ssafy.seas.flashcard.entity.QFlashcard.*;
-import static com.ssafy.seas.flashcard.entity.QFlashcardContent.*;
-import static com.ssafy.seas.quiz.entity.QIncorrectNote.*;
-import static com.ssafy.seas.quiz.entity.QQuiz.*;
-import static com.ssafy.seas.quiz.entity.QSolvedQuiz.*;
-
-import java.util.AbstractMap;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Repository;
-
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.seas.category.dto.QCategoryDto_Simple;
-import com.ssafy.seas.flashcard.dto.FavoriteDto;
 import com.ssafy.seas.mypage.dto.MyPageDto;
 import com.ssafy.seas.mypage.dto.QMyPageDto_CorrectCount;
+import com.ssafy.seas.mypage.dto.QMyPageDto_IncorrectNoteInfo;
 import com.ssafy.seas.quiz.dto.IncorrectNoteDto;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.ssafy.seas.category.entity.QCategory.category;
+import static com.ssafy.seas.quiz.entity.QIncorrectNote.incorrectNote;
+import static com.ssafy.seas.quiz.entity.QQuiz.quiz;
+import static com.ssafy.seas.quiz.entity.QQuizAnswer.quizAnswer;
+import static com.ssafy.seas.quiz.entity.QSolvedQuiz.solvedQuiz;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -122,6 +117,16 @@ public class MyPageRepository {
 
 		return resultDto;
 
+	}
+
+	public MyPageDto.IncorrectNoteInfo getAnswersWithQuizId(Integer quizId){
+
+		return queryFactory.
+				select(new QMyPageDto_IncorrectNoteInfo(quiz.problem, quizAnswer.answer))
+				.from(quizAnswer)
+				.join(quiz).on(quiz.id.eq(quizAnswer.quiz.id))
+				.where(quiz.id.eq(quizId))
+				.fetchFirst();
 	}
 
 }

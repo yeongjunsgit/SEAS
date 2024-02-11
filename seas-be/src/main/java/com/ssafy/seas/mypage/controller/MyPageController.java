@@ -1,15 +1,8 @@
 package com.ssafy.seas.mypage.controller;
 
-import java.util.List;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.ssafy.seas.common.constants.SuccessCode;
 import com.ssafy.seas.common.dto.ApiResponse;
 import com.ssafy.seas.flashcard.dto.FavoriteDto;
-import com.ssafy.seas.flashcard.dto.FlashcardDto;
 import com.ssafy.seas.flashcard.service.FlashcardService;
 import com.ssafy.seas.member.dto.MemberDto;
 import com.ssafy.seas.mypage.dto.MyPageDto;
@@ -17,8 +10,13 @@ import com.ssafy.seas.mypage.dto.StreakDto;
 import com.ssafy.seas.mypage.service.MyPageService;
 import com.ssafy.seas.quiz.dto.IncorrectNoteDto;
 import com.ssafy.seas.ranking.dto.BadgeDto;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -68,7 +66,12 @@ public class MyPageController {
 	// 스트릭
 	@GetMapping("/history")
 	public ApiResponse<List<StreakDto.Response>> getStreak() {
-
 		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getStreak());
 	}
+
+	@GetMapping("/incorrect-note/info/{quizId}")
+	public ApiResponse<MyPageDto.IncorrectNoteInfo> getIncorrectNoteInfo(@PathVariable("quizId") Integer quizId){
+		return ApiResponse.success(SuccessCode.GET_SUCCESS, myPageService.getIncorrectNoteInfo(quizId));
+	}
+
 }
