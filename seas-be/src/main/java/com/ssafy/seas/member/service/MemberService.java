@@ -30,4 +30,12 @@ public class MemberService {
 		}
 		return memberMapper.MemberToMemberDtoResponse(member);
 	}
+
+	@Transactional
+	public String findMemberNicknameByMemberid(String memberId){
+		Member member = memberRepository.findByMemberId(memberId)
+			.orElseThrow(() -> new RuntimeException());
+		return memberMapper.MemberToMemberDtoResponse(member)
+			.getNickname();
+	}
 }
