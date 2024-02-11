@@ -42,4 +42,13 @@ public class ScoreHistory extends BaseEntity {
 		this.score = score;
 	}
 
+
+	@Override
+	public String toString() {
+		return "ScoreHistory{" +
+				"score=" + score +
+				", member=" + member +
+				", category=" + category +
+				'}';
+	}
 }
