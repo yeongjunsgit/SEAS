@@ -55,29 +55,23 @@ public class MyPageRepository {
 	// 성적 추이 그래프
 	public List<MyPageDto.ScoreHistoryDetail> getScoreHistory(Integer memberId) {
 		String nativeQuery = "SELECT " +
-			"id, " +
-			"created_at AS CreatedAt, " +
-			"score, " +
-			"category_id AS categoryId, " +
-			"member_id AS memberId, " +
-			"round " +
+			"   category_id, " +
+			"   DATE(created_at) as date, " +
+			"   CAST(AVG(score) AS DOUBLE) as average_score, " +
+			"   COUNT(score) as score_count " +
 			"FROM ( " +
 			"   SELECT " +
-			"       id, " +
 			"       created_at, " +
-			"       score, " +
 			"       category_id, " +
+			"       score, " +
 			"       member_id, " +
-			"       RANK() OVER (PARTITION BY category_id ORDER BY created_at DESC) as row_num, " +
-			"       RANK() OVER (PARTITION BY category_id ORDER BY created_at ASC) as round " +
-			"   FROM " +
-			"       score_history " +
-			"   WHERE " +
-			"       member_id = :memberId" +
+			"       DENSE_RANK() OVER (PARTITION BY category_id ORDER BY DATE(created_at) DESC) as row_num " +
+			"   FROM score_history " +
+			"   WHERE member_id = :memberId " +
 			") ranked " +
-			"WHERE " +
-			"    row_num <= 5 " +
-			"ORDER BY category_id, round DESC";
+			"WHERE row_num <= 5 " +
+			"GROUP BY DATE(created_at), category_id, member_id, row_num " +
+			"ORDER BY category_id, DATE(created_at) DESC";
 
 		Query query = entityManager.createNativeQuery(nativeQuery, MyPageDto.ScoreHistoryDetail.class);
 		query.setParameter("memberId", memberId);

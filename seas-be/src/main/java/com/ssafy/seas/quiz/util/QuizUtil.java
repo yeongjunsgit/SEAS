@@ -145,7 +145,7 @@ public class QuizUtil {
     }
 
     // 소숫점 digit 자리까지 반올림하는 함수
-    public double toFixed(double value, int digit){
+    public static double toFixed(double value, int digit){
         return BigDecimal.valueOf(value).setScale(digit, RoundingMode.HALF_UP).doubleValue();
     }
 
