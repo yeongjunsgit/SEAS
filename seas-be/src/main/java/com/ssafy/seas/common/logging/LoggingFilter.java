@@ -51,13 +51,7 @@ public class LoggingFilter extends OncePerRequestFilter {
 			handleException(ex, response);
 		} finally {
 			stringBuilder.append("✨========================✨");
-			int start = 0;
-			int end = stringBuilder.length();
-			while (end > discordNotifier.MAX_LENGTH && (start + discordNotifier.MAX_LENGTH) < end) {
-				discordNotifier.notify(stringBuilder.substring(start, start + discordNotifier.MAX_LENGTH));
-				start += discordNotifier.MAX_LENGTH;
-			}
-			discordNotifier.notify(stringBuilder.substring(start, end));
+			discordNotifier.notify(stringBuilder.toString());
 			MDC.clear();
 		}
 	}
