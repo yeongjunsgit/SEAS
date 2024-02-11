@@ -34,7 +34,6 @@ public class FlashcardService {
 	public List<FlashcardDto.Response> getFlashcardsByCategoryId(Integer categoryId) {
 		Integer MemberId = memberUtil.getLoginMember().getId();
 		List<FlashcardDto.Response> flashcards = flashcardRepository.findAllFlashcardsByMemberIdAndCategoryId(MemberId, categoryId);
-		// TODO: 가중치 순 정렬
 		return flashcards;
 	}
 
