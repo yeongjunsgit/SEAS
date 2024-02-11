@@ -132,7 +132,7 @@ public class QuizUtil {
 
 		Double newEf = calculateNewEf(ef, quality);
 
-        Double newInterval = interval * newEf;
+        Double newInterval = calculateNewInterval(interval , ef);
 
         QuizAnswerDto.UpdatedFactors var = new QuizAnswerDto.UpdatedFactors(memberId, quizId, categoryId, newInterval, newEf, score, point);
         log.info(var.toString());
