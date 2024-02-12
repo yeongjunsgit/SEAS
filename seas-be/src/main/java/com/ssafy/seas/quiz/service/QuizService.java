@@ -109,10 +109,14 @@ public class QuizService {
         return response;
     }
 
-    public QuizTierDto.Response getTier(){
+    public QuizTierDto.Response getCurrentTier(){
+        return new QuizTierDto.Response("선원", false);
+    }
 
-        QuizTierDto.Response response = new QuizTierDto.Response();
+    public QuizTierDto.Response getTier(String prevTier){
 
-        return response;
+        QuizTierDto.Response response = new QuizTierDto.Response("선장",true);
+
+        return new QuizTierDto.Response("선장",true);
     }
 }

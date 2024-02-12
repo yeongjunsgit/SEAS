@@ -4,6 +4,10 @@ import lombok.Getter;
 
 public class QuizTierDto {
 
+    @Getter
+    public static class Request{
+        private String prevTier;
+    }
 
     @Getter
     public static class Response{
@@ -11,12 +15,9 @@ public class QuizTierDto {
         private String tier;
 
         public Response(){}
-        public Response(boolean isUpgraded, String tier){
-            this.isUpgraded = isUpgraded;
+        public Response(String tier, boolean isUpgraded){
             this.tier = tier;
+            this.isUpgraded = isUpgraded;
         }
-
     }
-
-
 }
