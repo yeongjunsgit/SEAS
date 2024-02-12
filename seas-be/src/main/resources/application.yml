@@ -20,7 +20,8 @@ spring:
 
   redis:
     data:
-      host: seas-redis
+#      host: seas-redis
+      host: localhost
       port: 6379
 
 springdoc:

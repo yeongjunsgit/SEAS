@@ -21,8 +21,10 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class TokenProvider {
 	private static final String AUTHORITIES_KEY = "Authentication";
 	private static final String BEARER_TYPE = "Bearer ";
@@ -31,9 +33,7 @@ public class TokenProvider {
 	private final Key key;
 
 	public TokenProvider(@Value("${secretKeyPlain}") String secretKey) {
-	// public TokenProvider() {
-		System.out.println("TokenProvider 생성자 짜잔 !!");
-		// System.out.println("secretKey : " + secretKey);
+		log.info("TokenProvider 생성자 짜잔 !!");
 
 		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 		this.key = Keys.hmacShaKeyFor(keyBytes);
@@ -57,10 +57,10 @@ public class TokenProvider {
 			.signWith(key, SignatureAlgorithm.HS512)
 			.compact();
 
-		System.out.println("generateTokenResponse start =============");
-		System.out.println("access : " + accessToken.toString());
-		System.out.println("refresh : " + refreshToken.toString());
-		System.out.println("generateTokenResponse end ===============");
+		log.info("generateTokenResponse start =============");
+		log.info("access : {}", accessToken.toString());
+		log.info("refresh : {}", refreshToken.toString());
+		log.info("generateTokenResponse end ===============");
 
 		return MemberDto.AuthResponse.builder()
 			.memberId(auth.getName())
@@ -71,6 +71,7 @@ public class TokenProvider {
 	}
 
 	public Authentication getAuthentication(String accessToken) {
+		// Access Token 유효성 확인 및 파싱
 		Claims claims = paresClaims(accessToken);
 
 		// if (claims.get(AUTHORITIES_KEY) == null) {
@@ -84,13 +85,22 @@ public class TokenProvider {
 
 	public boolean validateToken(String token) {
 		try {
-			// Refresh Token 파싱되면 OK
+			// Refresh Token의 경우 파싱되기만 하면 OK
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 			return true;
-		} catch (SecurityException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException |
-				 IllegalArgumentException e) {
-			throw new RuntimeException(e);
+		} catch (SecurityException e) {
+			handleSecurityException(e);
+		} catch (MalformedJwtException e) {
+			handleMalformedJwtException(e);
+		} catch (ExpiredJwtException e) {
+			handleExpiredJwtException(e);
+		} catch (UnsupportedJwtException e) {
+			handleUnsupportedJwtException(e);
+		} catch (IllegalArgumentException e) {
+			handleIllegalArgumentException(e);
 		}
+
+		return false;
 	}
 
 	private Claims paresClaims(String accessToken) {
@@ -99,5 +109,26 @@ public class TokenProvider {
 		} catch (ExpiredJwtException e) {
 			return e.getClaims();
 		}
+	}
+
+
+	private void handleSecurityException(SecurityException e) {
+		throw new RuntimeException("서명이 유효하지 않습니다. SecurityException: " + e.getMessage());
+	}
+
+	private void handleMalformedJwtException(MalformedJwtException e) {
+		throw new RuntimeException("토큰의 형식이 올바르지 않습니다. MalformedJwtException: " + e.getMessage());
+	}
+
+	private void handleExpiredJwtException(ExpiredJwtException e) {
+		throw new RuntimeException("토큰의 유효 기간이 만료되었습니다. ExpiredJwtException: " + e.getMessage());
+	}
+
+	private void handleUnsupportedJwtException(UnsupportedJwtException e) {
+		throw new RuntimeException("지원하지 않는 JWT 기능이 사용되었습니다. UnsupportedJwtException: " + e.getMessage());
+	}
+
+	private void handleIllegalArgumentException(IllegalArgumentException e) {
+		throw new RuntimeException("잘못된 인수가 전달되었습니다. IllegalArgumentException: " + e.getMessage());
 	}
 }

@@ -35,30 +35,33 @@ public class JwtFilter extends OncePerRequestFilter {
 			"/api/v3/api-docs",
 			"/api/v3/api-docs/swagger-config",
 			"/api/auth/signup",		// 회원가입 페이지
-			"/api/auth/signin",		// 로그인 페이지
-			"/api/auth/refresh"		// 재발급 페이지 (후에 삭제)
+			"/api/auth/signin"		// 로그인 페이지
+			// "/api/auth/refresh"		// 재발급 페이지 (후에 삭제)
 		);
 
 		// 2. 토큰이 필요하지 않은 API URL의 경우 -> 로직 처리없이 다음 필터로 이동한다.
-		// if (list.contains(request.getRequestURI())) {
-		if(true){
+		if (list.contains(request.getRequestURI())) {
+		// if(true){
 			filterChain.doFilter(request, response);
 			return;
 		}
 
 		String token = resolveToken(request);
+		log.info("JwtFilter ::::::::: resolvedToken = {}", token.toString());
 
 		if(StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
+			log.info("JwtFilter ::::::::: 유효한 토큰입니다.");
 			//토큰 값에서 Authentication 값으로 가공해서 반환 후 저장
 			Authentication authentication = tokenProvider.getAuthentication(token);
 			SecurityContextHolder.getContext().setAuthentication(authentication);
-			log.info("Security Context에 '{}' 인증 정보를 저장했습니다", authentication.getName());
+			log.info("JwtFilter ::::::::: Security Context에 '{}' 인증 정보를 저장했습니다", authentication.getName());
+			log.info("JwtFilter ::::::::: Security Context에 저장되어 있는 인증 정보 입니다. '{}'", SecurityContextHolder.getContext().getAuthentication().getName());
 		} else {
-			log.info("유효한 JWT 토큰이 없습니다.");
+			log.info("JwtFilter ::::::::: 유효한 JWT 토큰이 없습니다.");
 		}
 
 		//다음 필터로 넘기기
-		// filterChain.doFilter(request, response);
+		filterChain.doFilter(request, response);
 	}
 
 	/**

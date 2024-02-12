@@ -12,6 +12,8 @@ public interface MemberMapper {
 
 	MemberDto.Response MemberToMemberDtoResponse(Member member);
 
+	MemberDto.AuthRequest MemberToMemberDtoAuthRequest(Member member);
+
 	MemberDto.MyInfoResponse MemberDtoResponseToMemberDtoMyInfoResponse(MemberDto.Response memberDtoResponse);
 
 }

@@ -1,6 +1,5 @@
 package com.ssafy.seas.member.controller;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,14 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/auth")
 public class MemberController {
 	private final MemberService memberService;
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@PostMapping("/signup")
 	public ApiResponse<String> regist(@RequestBody MemberDto.Post memberDto) {
 		try {
-			String encodePassword = bCryptPasswordEncoder.encode(memberDto.getPassword());
-			log.info("encodePassword : {}", encodePassword);
-			memberDto.setPassword(encodePassword);
 			return ApiResponse.success(SuccessCode.POST_SUCCESS, memberService.signup(memberDto));
 		} catch (Exception e) {
 			e.printStackTrace();

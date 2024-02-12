@@ -1,5 +1,6 @@
 package com.ssafy.seas.member.util;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.ssafy.seas.common.constants.ErrorCode;
@@ -10,16 +11,27 @@ import com.ssafy.seas.member.repository.MemberRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class MemberUtil {
 	private final MemberRepository memberRepository;
 	private final MemberMapper memberMapper;
 
-	public static Integer getLoginMemberId() {
+
+
+	public Integer getLoginMemberId() {
 		// TODO: 현재 로그인한 유저의 id(pk)를 반환하는 로직 구현
-		return 1;
+		// Integer id = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
+		// log.info("MemberUtil getLoginMemberId ::::::::: id '{}'", id);
+		// return id;
+
+		Member member = memberRepository.findByMemberId(SecurityContextHolder.getContext().getAuthentication().getName())
+			.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다."));
+		log.info("MemberUtil getLoginMemberId ::::::::: id '{}'", member.getId());
+		return member.getId();
 	}
 
 	// TODO: getLoginMemberId 구현 이후 로직 최적화

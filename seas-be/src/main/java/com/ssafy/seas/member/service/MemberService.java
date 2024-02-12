@@ -2,7 +2,9 @@ package com.ssafy.seas.member.service;
 
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.seas.member.dto.MemberDto;
@@ -10,6 +12,7 @@ import com.ssafy.seas.member.entity.Member;
 import com.ssafy.seas.member.jwt.TokenProvider;
 import com.ssafy.seas.member.mapper.MemberMapper;
 import com.ssafy.seas.member.repository.MemberRepository;
+import com.ssafy.seas.member.util.MemberUtil;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +26,15 @@ public class MemberService {
 	private final MemberMapper memberMapper;
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
 	private final TokenProvider tokenProvider;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	private final MemberUtil memberUtil;
 
 	@Transactional
 	public String signup(MemberDto.Post memberDto) {
+		String encodePassword = bCryptPasswordEncoder.encode(memberDto.getPassword());
+		log.info("encodePassword : {}", encodePassword);
+		memberDto.setPassword(encodePassword);
 		memberRepository.save(memberMapper.MemberDtoToMember(memberDto));
 		return "";
 	}
@@ -34,11 +43,16 @@ public class MemberService {
 	public MemberDto.AuthResponse signin(MemberDto.AuthRequest memberDto) {
 		Member member = memberRepository.findByMemberId(memberDto.getMemberId())
 			.orElseThrow(() -> new UsernameNotFoundException("일치하는 사용자가 존재하지 않습니다."));
+		log.info("로그인 시도한 멤버 :::::::::: {}, {}", member.getId(), member.getPassword());
 		Authentication authentication = authenticationManagerBuilder.getObject()
 			.authenticate(memberDto.toAuthentication());
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		MemberDto.AuthResponse authResponse = tokenProvider.generateTokenResponse(authentication);
 		log.info("Authentication : {}", authentication.toString());
+
+		// memberUtil.getLoginMemberId();
+
 		// Todo : Refresh Token Redis에 저장
 
 		return authResponse;

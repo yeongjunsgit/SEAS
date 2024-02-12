@@ -1,5 +1,10 @@
 package com.ssafy.seas.quiz.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
 
 import com.ssafy.seas.member.util.MemberUtil;
 import com.ssafy.seas.quiz.dto.QuizAnswerDto;
@@ -8,12 +13,8 @@ import com.ssafy.seas.quiz.dto.QuizHintDto;
 import com.ssafy.seas.quiz.dto.QuizListDto;
 import com.ssafy.seas.quiz.repository.QuizCustomRepository;
 import com.ssafy.seas.quiz.util.QuizUtil;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class QuizService {
 
     public QuizListDto.Response getQuizzes(Integer categoryId){
 
-        Integer memberId = MemberUtil.getLoginMemberId();
+        Integer memberId = memberUtil.getLoginMemberId();
 
         List<QuizListDto.QuizInfo> quizInfoList = new ArrayList<>();
 
@@ -54,7 +55,7 @@ public class QuizService {
 
     public QuizHintDto.Response getHint(Integer quizId){
 
-        Integer memberId = MemberUtil.getLoginMemberId();
+        Integer memberId = memberUtil.getLoginMemberId();
 
         quizUtil.updateHintState(memberId, quizId);
         String hint = quizUtil.getQuizHint(memberId, quizId);
@@ -67,7 +68,7 @@ public class QuizService {
         String submit = request.getSubmit().replaceAll("\s+", "_").replaceAll("\t+", "_").replaceAll(" ", "").toLowerCase();
 
         List<String> quizAnswers = quizCustomRepository.findAllQuizAnswerByQuizId(quizId);
-        Integer memberId = MemberUtil.getLoginMemberId();
+        Integer memberId = memberUtil.getLoginMemberId();
 
         for(String quizAnswer : quizAnswers){
             if(quizAnswer.equals(submit)){
@@ -87,7 +88,7 @@ public class QuizService {
 
     public void getTotalResult(){
 
-        Integer memberId = MemberUtil.getLoginMemberId();
+        Integer memberId = memberUtil.getLoginMemberId();
         //
         // List<QuizWeightFactorDto> newWeight = quizUtil.getNewFactor(memberId);
 

@@ -15,6 +15,7 @@ public class MemberDto {
 	@NoArgsConstructor
 	@AllArgsConstructor
 	public static class AuthRequest {
+		@Setter
 		private String memberId;
 		private String password;
 
@@ -28,7 +29,7 @@ public class MemberDto {
 	@NoArgsConstructor
 	@AllArgsConstructor
 	public static class AuthResponse {
-		private String memberId;		// 디버깅 용도
+		private String memberId;
 		private String grantType;
 		private String accessToken;
 		private String refreshToken;
