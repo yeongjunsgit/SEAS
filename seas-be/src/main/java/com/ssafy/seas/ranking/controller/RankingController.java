@@ -23,14 +23,18 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/ranking")
 public class RankingController {
 	private final RankingService rankingService;
+	// private final Rank
 
 	@GetMapping("/list")
 	public ApiResponse<RankDto.Response> getRankingList() {
 		try {
-			// Todo : 현재 로그인한 유저의 id 가져오기
+			// Todo : (1) 현재 로그인한 유저의 id 가져오기
 			String uuid = "toast";
+
 			List<RankerDto.RankResponse> rankerDtoList = rankingService.getRankers();
 			List<RankerDto.RankResponse> rankerDtoTop3List = new ArrayList<>();
+			// Todo : (2) 쿼리 겹치는 부분 최적화 하기
+			// (2) 여기랑
 			List<RankerDto.RankResponse> myRankDto = rankingService.getMyRank(uuid);
 
 			for(RankerDto.RankResponse currentRanker : rankerDtoList){
@@ -45,6 +49,8 @@ public class RankingController {
 			if(myRankDto.size() == 1){
 				RankerDto.RankResponse myDto = myRankDto.get(0);
 				myDto.setBadgeList(rankingService.getBadgeList(myDto.getNickname()));
+				// (2) 여기랑 쿼리가 많이 겹친다.
+				myDto.setRanking(rankingService.getRankByNickname(myDto.getNickname()).get(0).getRanking());
 			}
 
 			return ApiResponse.success(SuccessCode.GET_SUCCESS, new RankDto.Response(rankerDtoTop3List, rankerDtoList, myRankDto.get(0)));
