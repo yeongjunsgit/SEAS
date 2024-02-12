@@ -31,10 +31,9 @@ public class MemberService {
 		return memberMapper.MemberToMemberDtoResponse(member);
 	}
 
-	@Transactional
 	public String findMemberNicknameByMemberid(String memberId){
 		Member member = memberRepository.findByMemberId(memberId)
-			.orElseThrow(() -> new RuntimeException());
+			.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다 !!!"));
 		return memberMapper.MemberToMemberDtoResponse(member)
 			.getNickname();
 	}
