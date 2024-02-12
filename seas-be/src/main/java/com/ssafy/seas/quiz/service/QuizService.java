@@ -5,20 +5,24 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ServerErrorException;
 
 import com.ssafy.seas.member.util.MemberUtil;
-import com.ssafy.seas.quiz.dto.*;
+import com.ssafy.seas.quiz.dto.QuizAnswerDto;
+import com.ssafy.seas.quiz.dto.QuizDto;
+import com.ssafy.seas.quiz.dto.QuizHintDto;
+import com.ssafy.seas.quiz.dto.QuizListDto;
+import com.ssafy.seas.quiz.dto.QuizResultDto;
+import com.ssafy.seas.quiz.dto.QuizTierDto;
 import com.ssafy.seas.quiz.repository.CorrectAnswerRepository;
 import com.ssafy.seas.quiz.repository.FactorRepository;
 import com.ssafy.seas.quiz.repository.QuizCustomRepository;
 import com.ssafy.seas.quiz.repository.WrongAnswerRepostory;
 import com.ssafy.seas.quiz.util.QuizUtil;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ServerErrorException;
-import lombok.RequiredArgsConstructor;
 
 @Service
 @Slf4j
@@ -103,14 +107,9 @@ public class QuizService {
 
 
     public QuizResultDto.Response getTotalResult(){
-
-<<<<<<< HEAD
         Integer memberId = memberUtil.getLoginMemberId();
         //
         // List<QuizWeightFactorDto> newWeight = quizUtil.getNewFactor(memberId);
-=======
-        Integer memberId = MemberUtil.getLoginMemberId();
->>>>>>> 8547595c7601db6314a54bbbec218ddf167b7380
 
         QuizResultDto.Response response = quizUtil.getResult(memberId);
         quizUtil.resetRedis(memberId);
