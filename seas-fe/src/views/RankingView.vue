@@ -1,7 +1,7 @@
 <script setup>
 import TagComponent from "@/components/ranking/TagComponent.vue";
 import UserInfoComponent from "@/components/mypage/UserInfoComponent.vue";
-import Modal from "@/components/ranking/Modal.vue";
+import Modal from "@/components/commons/Modal.vue";
 import { ref, onMounted, watch } from "vue";
 import { getRankList, rankerSearch } from "@/api/rank.js";
 
