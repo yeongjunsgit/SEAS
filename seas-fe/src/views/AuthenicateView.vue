@@ -1,7 +1,9 @@
 <script setup>
 import { ref, onMounted, watch, computed } from "vue";
 import { useRouter } from "vue-router";
-// import { storeToRefs } from "pinia";
+import { loginRequest, signupRequest, checkIdRequest, refreshRequest } from "@/api/login.js";
+import { useauthControllerStore } from "@/stores/authController"; 
+import { storeToRefs } from "pinia";
 
 // false가 로그인 창, true가 회원가입 창
 const active = ref(false);
@@ -13,15 +15,18 @@ const transitionContainer = function () {
 // 해당 페이지가 실행되었을 때, 즉시 실행
 
 const router = useRouter();
-// const userStore = useUserStore();
+const userStore = useauthControllerStore();
+
+// 변수들 모여라
+const isDuplicated = ref(false)
 
 const loginInfo = ref({
-    id: "",
+    memberId: "",
     password: "",
 });
 
 const signupInfo = ref({
-    id: "",
+    memberId: "",
     password: "",
     passwordCheck: "",
     name: "",
@@ -32,12 +37,27 @@ const password = ref(null);
 
 const login = async () => {
     // await userStore.login(loginInfo.value);
+    console.log(loginInfo.value)
+    await loginRequest(loginInfo.value, 
+        function (data) {
+            console.log(data)
+            // console.log(data.accessToken)
+            // console.log(data.refreshToken)
+            userStore.myName = data.memberId;
+            userStore.myAccessToken = data.accessToken;
+            userStore.myRefreshToken = data.refreshToken;
+            console.log("complete")
+        },
+        function (error) {
+            console.log(error)
+        }
+    )
     router.push("/");
 };
 
 const checkSignup = () => {
     if (
-        signupInfo.value.id.length < 4 ||
+        signupInfo.value.memberId.length < 4 ||
         signupInfo.value.password == "" ||
         signupInfo.value.passwordCheck == "" ||
         signupInfo.value.name == "" ||
@@ -55,7 +75,14 @@ const checkSignup = () => {
 };
 
 const doSignup = async () => {
-    // await userStore.signup(signupInfo.value);
+    await signupRequest(signupInfo.value,
+        function(success) {
+            console.log("complete")
+        },
+        function(error) {
+            console.log("error")
+        }
+    )
     loginInfo.value.id = signupInfo.value.id;
     active.value = false;
     password.value.focus();
@@ -72,7 +99,18 @@ const checkId = () => {
 };
 
 const checkDuplicate = async () => {
-    await userStore.idCheck({ userId: signupInfo.value.id });
+    await checkIdRequest({ "id": userStore.myName },
+        function (response) {
+            console.log(response)
+            isDuplicated.value = response.data.isDuplicated
+            console.log("isOk")
+        },
+
+        function (error) {
+            console.log(error)
+        }
+    
+    );
     if (isDuplicated.value) {
         // alert("이미 사용 중인 아이디입니다. 다른 아이디를 입력해주세요.");
         duplicateMessage.value = "이미 사용 중인 아이디입니다";
@@ -93,7 +131,7 @@ const checkDuplicate = async () => {
                         <input
                             type="text"
                             placeholder="ID"
-                            v-model="signupInfo.id"
+                            v-model="signupInfo.memberId"
                             @keyup="checkId"
                         />
                         <p class="duplicate-text">{{ duplicateMessage }}</p>
@@ -126,7 +164,7 @@ const checkDuplicate = async () => {
                         <input
                             type="text"
                             placeholder="ID"
-                            v-model="loginInfo.id"
+                            v-model="loginInfo.memberId"
                         />
                         <input
                             type="password"

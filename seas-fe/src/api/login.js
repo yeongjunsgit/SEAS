@@ -2,12 +2,22 @@ import { localAxios } from "@/util/axios";
 
 const local = localAxios();
 
-function getCardData(category, success, fail) {
-  local.get(`/flashcard?category=${category}`).then(success).catch(fail);
+function loginRequest(payload, success, fail) {
+  local.post(`/auth/signin`, payload)
+    .then(response => success(response.data))
+    .catch(fail);
 }
 
-function deleteLike(cardId, success, fail) {
-  local.delete(`/flashcard/${cardId}/favorite`).then(success).catch(fail);
+function signupRequest(payload, success, fail) {
+  local.post(`/auth/signup`, payload).then(success).catch(fail);
 }
 
-export { getCardData, deleteLike, postLike, sendCardID };
+function checkIdRequest(payload, success, fail) {
+  local.post(`/auth/check-id`, payload).then(success).catch(fail);
+}
+
+function refreshRequest(payload, success, fail) {
+  local.post(`/auth/refresh`, payload).then(success).catch(fail);
+}
+
+export { loginRequest, signupRequest, checkIdRequest, refreshRequest};

@@ -317,7 +317,8 @@ const goToQuiz = function () {
       <!-- text 박스의 크기를 늘려서 길이가 늘어나도 문제없게 수정하자!! -->
       <div class="memo_card_text card_box">
         <!-- 따옴표 지우게 value 처리하기 v-if로 -->
-        <p>{{ category || "암기하기" }}</p>
+        <p v-if="isHaveFlashcardData">{{ category.value }}</p>
+        <p v-else>암기하기</p>
       </div>
     </v-img>
     <v-img :src="flashcardImage" class="flashcard" @click="reverseCard">
