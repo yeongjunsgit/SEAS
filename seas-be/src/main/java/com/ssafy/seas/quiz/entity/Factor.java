@@ -4,6 +4,7 @@ package com.ssafy.seas.quiz.entity;
 import com.ssafy.seas.common.entity.BaseEntity;
 import com.ssafy.seas.member.entity.Member;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 
 @Entity
@@ -23,6 +24,7 @@ public class Factor extends BaseEntity {
     @JoinColumn(name = "card_quiz_id")
     private CardQuiz cardQuiz;
 
+    @Builder
     public Factor(Member member, CardQuiz cardQuiz, Double quizInterval, Double ef){
         this.member = member;
         this.cardQuiz = cardQuiz;

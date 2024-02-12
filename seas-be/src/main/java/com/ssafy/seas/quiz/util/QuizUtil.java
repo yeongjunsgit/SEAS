@@ -1,5 +1,8 @@
 package com.ssafy.seas.quiz.util;
 
+import com.ssafy.seas.quiz.constant.EasinessFactor;
+import com.ssafy.seas.quiz.constant.Interval;
+import com.ssafy.seas.quiz.constant.Quality;
 import com.ssafy.seas.quiz.dto.QuizAnswerDto;
 import com.ssafy.seas.quiz.dto.QuizDto;
 import com.ssafy.seas.quiz.dto.QuizResultDto;
@@ -14,7 +17,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Objects;
 
 @Configuration
 @Slf4j
@@ -113,30 +116,57 @@ public class QuizUtil {
         Double ef = preFactors.getEf();
         Double interval = preFactors.getQuizInterval();
 
-        int quality = 0;
+		int quality = Quality.QUIZ_WRONG.getValue();
 
-        if (isCorrect) {
-            if (!usedHint) {
-                quality = 3;
-                point += 10;
-            }
-            else {
-                quality = 2;
-                point += 3;
-            }
+		if (isCorrect) {
+			if (!usedHint) {
+				quality = Quality.QUIZ_CORRECT.getValue();
+				point += 10;
+			} else {
+				quality = Quality.QUIZ_CORRECT_WITH_HINT.getValue();
+				point += 3;
+			}
 
             score += 10;
         }
 
-        Double newEf = ef - 0.06 + 0.08 * quality + 0.02 * quality * quality;
+		Double newEf = calculateNewEf(ef, quality);
 
-        newEf = newEf < 1.3 ? 1.3 : (Math.min(newEf, 2.5));
-        Double newInterval = interval * newEf;
+        Double newInterval = calculateNewInterval(interval , ef);
 
         QuizAnswerDto.UpdatedFactors var = new QuizAnswerDto.UpdatedFactors(memberId, quizId, categoryId, newInterval, newEf, score, point);
         log.info(var.toString());
 
         return var;
+    }
+	public static Double calculateNewEf(Double ef, int quality) {
+		Double newEf = ef - 0.06 + 0.08 * quality + 0.02 * quality * quality;
+
+		newEf = newEf < EasinessFactor.MINIMUM.getValue() ? EasinessFactor.MINIMUM.getValue() :
+			(Math.min(newEf, EasinessFactor.MAXIMUM.getValue()));
+		return newEf;
+	}
+
+    /**
+     * I(1):=1 <br/>
+     * I(2):=6 <br/>
+     * for n>2 I(n):=I(n-1)*EF
+     *
+     * @param interval 이전 interval 값
+     * @param ef 이전 ef 값
+     * @return 새로 계산된 interval (max: 365)
+     */
+
+    public static Double calculateNewInterval(Double interval, Double ef) {
+        Double newInterval = interval * ef;
+
+        if (Objects.equals(interval, Interval.FIRST.getValue())) {
+            newInterval = Interval.SECOND.getValue();
+        }
+
+        newInterval = newInterval > Interval.MAXIMUM.getValue() ? Interval.MAXIMUM.getValue() : newInterval;
+
+        return newInterval;
     }
 
     // 가중치 확인하는 함수
