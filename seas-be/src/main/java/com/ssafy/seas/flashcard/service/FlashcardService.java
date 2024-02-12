@@ -16,6 +16,14 @@ import com.ssafy.seas.flashcard.repository.FavoriteRepository;
 import com.ssafy.seas.flashcard.repository.FlashcardRepository;
 import com.ssafy.seas.member.entity.Member;
 import com.ssafy.seas.member.util.MemberUtil;
+import com.ssafy.seas.quiz.constant.EasinessFactor;
+import com.ssafy.seas.quiz.constant.Interval;
+import com.ssafy.seas.quiz.constant.Quality;
+import com.ssafy.seas.quiz.entity.CardQuiz;
+import com.ssafy.seas.quiz.entity.Factor;
+import com.ssafy.seas.quiz.repository.FactorRepository;
+import com.ssafy.seas.quiz.util.CardQuizUtil;
+import com.ssafy.seas.quiz.util.QuizUtil;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +36,11 @@ import lombok.extern.slf4j.Slf4j;
 public class FlashcardService {
 	private final FlashcardRepository flashcardRepository;
 	private final FavoriteRepository favoriteRepository;
+	private final FactorRepository factorRepository;
+
 	private final FlashcardMapper flashcardMapper;
 	private final MemberUtil memberUtil;
+	private final CardQuizUtil cardQuizUtil;
 
 	public List<FlashcardDto.Response> getFlashcardsByCategoryId(Integer categoryId) {
 		Integer MemberId = memberUtil.getLoginMember().getId();
@@ -78,13 +89,35 @@ public class FlashcardService {
 		return  favorites;
 	}
 
+	@Transactional
 	public FlashcardDto.Response patchWeight(FlashcardDto.Patch patchDto) {
 		Flashcard flashcard = getFlashcardById(patchDto.getFlashcardId());
 		Member member = memberUtil.getLoginMember();
 		Optional<Favorite> existFavorite = favoriteRepository.findByMemberIdAndFlashcardId(member.getId(),
 			flashcard.getId());
 
-		// TODO: 가중치 업데이트
+		Optional<Factor> existFactor = factorRepository.findByMemberIdAndCardQuiz_Flashcard_Id(member.getId(),
+			flashcard.getId());
+
+		Factor factor = null;
+		if (existFactor.isPresent()) {
+			factor = existFactor.get();
+		} else {
+			CardQuiz cardQuiz = cardQuizUtil.findByFlashcardId(flashcard.getId());
+			factor = Factor.builder()
+				.member(member)
+				.cardQuiz(cardQuiz)
+				.quizInterval(Interval.DEFAULT.getValue())
+				.ef(EasinessFactor.DEFAULT.getValue())
+				.build();
+		}
+
+		Double newInterval = QuizUtil.calculateNewInterval(factor.getQuizInterval(), factor.getEf());
+		Double newEf = QuizUtil.calculateNewEf(factor.getEf(), Quality.FLASHCARD_VIEW.getValue());
+		factor.updateFactor(newInterval, newEf);
+
+		factorRepository.save(factor);
+
 
 		return flashcardMapper.FlashcardToResponseDto(flashcard, flashcard.getFlashcardContents(),
 			existFavorite.isPresent());
