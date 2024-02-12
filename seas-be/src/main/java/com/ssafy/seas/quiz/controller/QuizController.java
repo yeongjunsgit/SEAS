@@ -3,10 +3,7 @@ package com.ssafy.seas.quiz.controller;
 import com.ssafy.seas.common.constants.ErrorCode;
 import com.ssafy.seas.common.constants.SuccessCode;
 import com.ssafy.seas.common.dto.ApiResponse;
-import com.ssafy.seas.quiz.dto.QuizAnswerDto;
-import com.ssafy.seas.quiz.dto.QuizHintDto;
-import com.ssafy.seas.quiz.dto.QuizListDto;
-import com.ssafy.seas.quiz.dto.QuizResultDto;
+import com.ssafy.seas.quiz.dto.*;
 import com.ssafy.seas.quiz.service.QuizService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerErrorException;
@@ -58,14 +55,14 @@ public class QuizController {
         return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getTotalResult());
     }
 
-    @GetMapping("/tier")
-    public ApiResponse<?> getTier(){
-        return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getTier());
+    @GetMapping("/current-tier")
+    public ApiResponse<QuizTierDto.Response> getCurrentTier(){
+        return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getCurrentTier());
     }
 
-//    @GetMapping("/tier")
-//    public ApiResponse<> getTier(){
-//
-//
-//    }
+    @PostMapping("/tier")
+    public ApiResponse<?> getTier(@RequestBody QuizTierDto.Request request){
+        return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getTier(request.getPrevTier()));
+    }
+
 }
