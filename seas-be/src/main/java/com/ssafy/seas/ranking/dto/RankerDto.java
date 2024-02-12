@@ -40,6 +40,7 @@ public class RankerDto {
 		private String tier;
 		@Setter
 		private List<BadgeDto.BadgeResponse> badgeList = new ArrayList<>();
+		@Setter
 		private Integer ranking;
 
 		@QueryProjection
