@@ -117,8 +117,8 @@ function makesvg() {
   var svg = d3
     .select(svgRef.value)
     .attr("width", width)
-    .attr("height", height * userYears.length)
-    .attr("viewBox", [0, 0, width, height * userYears.length - 100])
+    .attr("height", height * 2)
+    .attr("viewBox", [0, 0, width, height * 2 - 100])
     .attr("style", "max-width: 100%; height: auto; font: 25px sans-serif;")
     .attr("preserveAspectRatio", "xMaxYMax");
   return svg;
@@ -146,10 +146,7 @@ function drawGrass(data, svg, year) {
     .selectAll("g")
     .data(years)
     .join("g")
-    .attr(
-      "transform",
-      (d, i) => `translate(100.5 ,${height * i + cellSize * 1.5})`
-    );
+    .attr("transform", (d, i) => `translate(100.5 ,${height * i - 32})`);
 
   yearGrass
     .append("text")
@@ -379,7 +376,7 @@ const selectYear = (year) => {
 
 <template>
   <div class="grass">
-    <p class="text-center">일일 학습 경과</p>
+    <h2 class="text-center">일일 학습 경과</h2>
     <div class="grass-component">
       <div class="dropdown">
         <button @click="toggleDropdown" class="toggle-button">
@@ -404,8 +401,7 @@ const selectYear = (year) => {
   width: 80vh;
 }
 .dropdown {
-  position: relative;
-  display: inline-block;
+  margin-left: 12px;
 }
 
 .toggle-button {

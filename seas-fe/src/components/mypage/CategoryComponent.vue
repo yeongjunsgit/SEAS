@@ -2,35 +2,45 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 
-const props = defineProps(["type"]);
+const props = defineProps(["type", "apiUrl"]);
+const datas = ref([]);
 
-const favoriteDatas = ref();
-const incorrectDatas = ref();
+const cardKwd = ref({});
 
 onMounted(async () => {
   try {
-    if (props.type == "즐겨찾기") {
-      await axios
-        .get("https://i10a609.p.ssafy.io/api/mypage/flashcard/favorite")
-        .then((response) => (favoriteDatas.value = response.data.data))
-        .catch((error) => console.log(error));
-    }
-    // if (props.type == "오답노트") {
-    else {
-      await axios
-        .get("https://i10a609.p.ssafy.io/api/mypage/incorrect")
-        .then((response) => (incorrectDatas.value = response.data.data))
-        .catch((error) => console.log(error));
-    }
+    await axios
+      .get(props.apiUrl)
+      .then((response) => (datas.value = response.data.data))
+      .catch((error) => console.log(error));
   } catch (error) {
     console.error(error);
   }
 
-  console.log(favoriteDatas.value);
-  console.log(incorrectDatas.value);
+  try {
+    if (props.type == "즐겨찾기") {
+      await datas.value.forEach((data) => {
+        data.flashcardIds.forEach((cardNum) => {
+          axios
+            .get(`https://i10a609.p.ssafy.io/api/flashcard/${cardNum}`)
+            .then(
+              (response) =>
+                (cardKwd.value = {
+                  ...cardKwd.value,
+                  [cardNum]: response.data.data.keyword,
+                })
+            )
+            .catch((error) => console.log(error));
+        });
+      });
+      console.log(cardKwd);
+    }
+  } catch (error) {
+    console.error(error);
+  }
 });
 
-const categories = [
+const categoryArr = [
   "데이터베이스",
   "네트워크",
   "자료구조",
@@ -54,8 +64,16 @@ function showToolTips(bool) {
   wrongAnswer.value = false;
 }
 
-function popup(categoryName, flashcardIds) {
-  var url = `mypage/popup?category=${categoryName}&cardNum=${flashcardIds}`;
+function popupCard(categoryName, flashcardIds) {
+  var url = `mypage/popupcard?category=${categoryName}&cardNum=${flashcardIds}`;
+  var name = "";
+  var option =
+    "width = 500, height = 500, top = 100, left = 200, location = no, scrollbars = no, resizeable = no";
+  window.open(url, name, option);
+}
+
+function popupQuiz(categoryId, quizId) {
+  var url = `mypage/popupquiz?categoryId=${categoryId}&quizId=${quizId}`;
   var name = "";
   var option =
     "width = 500, height = 500, top = 100, left = 200, location = no, scrollbars = no, resizeable = no";
@@ -81,27 +99,24 @@ function popup(categoryName, flashcardIds) {
         퀴즈 페이지에서 최근에 틀린 문제들을 다시 보여드립니다.
       </div>
     </div>
+
     <table>
-      <h1>{{ incorrectDatas }}</h1>
-      <tr class="categories" v-for="Data in favoriteDatas">
-        <th>{{ Data.categoryName }}</th>
-        <td>
+      <tr class="categories" v-for="(categoryEach, i) in categoryArr" :key="i">
+        <th>{{ categoryEach }}</th>
+        <td v-for="data in datas">
           <p
-            v-for="flashcardId in Data.flashcardIds"
-            @click="popup(Data.categoryName, flashcardId)"
+            v-if="data.categoryName == categoryEach"
+            v-for="flashcardId in data.flashcardIds"
+            @click="popupCard(data.categoryName, flashcardId)"
           >
-            {{ flashcardId }}
+            {{ cardKwd[flashcardId] }},
           </p>
-        </td>
-      </tr>
-      <tr class="categories" v-for="Data in incorrectDatas">
-        <th>{{ Data.categoryName }}</th>
-        <td>
           <p
-            v-for="flashcardId in Data.flashcardIds"
-            @click="popup(Data.categoryName, flashcardId)"
+            v-if="data.categoryName == categoryEach"
+            v-for="quizId in data.quizIds"
+            @click="popupQuiz(data.categoryId, quizId)"
           >
-            {{ flashcardId }}
+            {{ quizId }}
           </p>
         </td>
       </tr>
@@ -169,5 +184,8 @@ td {
 }
 p {
   margin-right: 5px;
+  color: rgb(57, 57, 176);
+  cursor: pointer;
+  line-height: 0.7;
 }
 </style>

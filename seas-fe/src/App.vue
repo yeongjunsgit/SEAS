@@ -6,7 +6,10 @@ import HeaderComponent from "./components/commons/HeaderComponent.vue";
 var isChecked = false;
 
 onBeforeMount(() => {
-  if (document.location.pathname === "/mypage/popup") {
+  if (
+    (document.location.pathname === "/mypage/popupcard") |
+    (document.location.pathname === "/mypage/popupquiz")
+  ) {
     isChecked = true;
   }
 });
@@ -29,12 +32,12 @@ onBeforeMount(() => {
 
 /* 수평 스크롤 바 감추기 */
 body::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 /* 수직 스크롤 바 감추기 */
 body::-webkit-scrollbar-thumb {
-    display: none;
+  display: none;
 }
 
 a {
