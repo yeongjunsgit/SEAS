@@ -4,7 +4,10 @@ import static com.querydsl.core.group.GroupBy.*;
 import static com.ssafy.seas.flashcard.entity.QFavorite.*;
 import static com.ssafy.seas.flashcard.entity.QFlashcard.*;
 import static com.ssafy.seas.flashcard.entity.QFlashcardContent.*;
+import static com.ssafy.seas.quiz.entity.QCardQuiz.*;
+import static com.ssafy.seas.quiz.entity.QFactor.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -15,11 +18,14 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.ComparableExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.seas.flashcard.dto.FlashcardDto;
 import com.ssafy.seas.flashcard.dto.QFlashcardDto_Response;
 import com.ssafy.seas.flashcard.dto.QFlashcardDto_SimpleResponse;
+import com.ssafy.seas.quiz.constant.EasinessFactor;
+import com.ssafy.seas.quiz.constant.Interval;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,10 +43,17 @@ public class FlashcardRepositoryImpl implements FlashcardRepositoryCustom {
 			.when(favorite.isNotNull()).then(Boolean.TRUE)
 			.otherwise(Boolean.FALSE).as("isFavorite");
 
+		NumberTemplate<Double> weightExpression = Expressions.numberTemplate(
+			Double.class, "IFNULL({0}, {1}) * IFNULL({2}, {3})",
+			factor.quizInterval, Interval.DEFAULT.getValue(), factor.ef, EasinessFactor.DEFAULT.getValue());
+
+
+
 		QFlashcardDto_SimpleResponse flashcardDtoSimpleResponse = new QFlashcardDto_SimpleResponse(
 			flashcard.id,
 			flashcard.keyword,
-			isFavorite
+			isFavorite,
+			weightExpression
 		);
 
 		List<Tuple> result = queryFactory.select(
@@ -52,7 +65,10 @@ public class FlashcardRepositoryImpl implements FlashcardRepositoryCustom {
 			.fetchJoin()
 			.leftJoin(favorite)
 			.on(favorite.flashcard.id.eq(flashcard.id).and(favorite.member.id.eq(memberId)))
+			.leftJoin(cardQuiz).on(flashcard.id.eq(cardQuiz.flashcard.id))
+			.leftJoin(factor).on(cardQuiz.id.eq(factor.cardQuiz.id), factor.member.id.eq(memberId))
 			.where(flashcard.category.id.eq(categoryId))
+			.orderBy(weightExpression.desc())
 			.fetch();
 
 		Map<FlashcardDto.SimpleResponse, List<String>> dtoMap = result.stream()
@@ -63,6 +79,9 @@ public class FlashcardRepositoryImpl implements FlashcardRepositoryCustom {
 
 		List<FlashcardDto.Response> dtos = dtoMap
 			.entrySet().stream()
+			.sorted(Comparator.comparing((Map.Entry<FlashcardDto.SimpleResponse, List<String>> entry) ->
+					entry.getKey().getWeight()) // 가중치가 작은게 먼저
+				.thenComparing(entry -> entry.getKey().getId())) // 가중치가 같다면 id 순
 			.map(entry -> new FlashcardDto.Response(
 				entry.getKey().getId(),
 				entry.getKey().getKeyword(),

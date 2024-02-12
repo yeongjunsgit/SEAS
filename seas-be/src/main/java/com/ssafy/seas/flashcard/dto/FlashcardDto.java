@@ -41,6 +41,7 @@ public class FlashcardDto {
 		private Integer id;
 		private String keyword;
 		private Boolean isFavorite = false;
+		private double weight;
 
 		@Override
 		public boolean equals(Object o) {
@@ -50,19 +51,20 @@ public class FlashcardDto {
 				return false;
 			SimpleResponse that = (SimpleResponse)o;
 			return Objects.equals(id, that.id) && Objects.equals(keyword, that.keyword)
-				&& Objects.equals(isFavorite, that.isFavorite);
+				&& Objects.equals(isFavorite, that.isFavorite) && Objects.equals(weight, that.weight);
 		}
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(id, keyword, isFavorite);
+			return Objects.hash(id, keyword, isFavorite, weight);
 		}
 
 		@QueryProjection
-		public SimpleResponse(Integer id, String keyword, Boolean isFavorite) {
+		public SimpleResponse(Integer id, String keyword, Boolean isFavorite, double weight) {
 			this.id = id;
 			this.keyword = keyword;
 			this.isFavorite = isFavorite;
+			this.weight = weight;
 		}
 	}
 

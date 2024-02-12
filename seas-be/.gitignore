@@ -189,3 +189,6 @@ seas-config.yml
 
 # generated files
 **/generated/**
+
+docker/**
+.idea/*

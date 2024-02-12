@@ -1,14 +1,16 @@
 package com.ssafy.seas.mypage.dto;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import com.querydsl.core.annotations.QueryProjection;
+import lombok.Builder;
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.querydsl.core.annotations.QueryProjection;
+import java.sql.Date;
+import java.time.format.DateTimeFormatter;
 
-import lombok.Builder;
-import lombok.Getter;
+import com.ssafy.seas.quiz.util.QuizUtil;
 
 public class MyPageDto {
 
@@ -57,39 +59,46 @@ public class MyPageDto {
 	@Getter
 	public static class ScoreHistory {
 
-		private LocalDateTime createdAt;
-		private Integer score;
-		private Integer round;
+		private String date;
+		private Double averageScore;
+		private Integer scoreCount;
 
-		public ScoreHistory(Timestamp createdAt, Integer score, Long round) {
-			this.createdAt = createdAt.toLocalDateTime();
-			this.score = score;
-			this.round = Math.toIntExact(round);
+		public ScoreHistory(Date date, Double averageScore, Long scoreCount) {
+			this.date = date.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+			this.averageScore = QuizUtil.toFixed(averageScore, 1);
+			this.scoreCount = Math.toIntExact(scoreCount);
 		}
 
 		@Builder
-		public ScoreHistory(LocalDateTime createdAt, Integer score, Integer round) {
-			this.createdAt = createdAt;
-			this.score = score;
-			this.round = round;
+		public ScoreHistory(String date, Double averageScore, Integer scoreCount) {
+			this.date = date;
+			this.averageScore = averageScore;
+			this.scoreCount = scoreCount;
 		}
 
 	}
 
 	@Getter
 	public static class ScoreHistoryDetail extends ScoreHistory {
-
-		private Integer id;
 		private Integer categoryId;
-		private Integer memberId;
 
-		public ScoreHistoryDetail(Integer id, Timestamp createdAt, Integer score, Integer categoryId, Integer memberId,
-			Long round) {
-			super(createdAt, score, round);
-			this.id = id;
+		public ScoreHistoryDetail(Integer categoryId, Date date, Double averageScore, Long scoreCount) {
+			super(date, averageScore, scoreCount);
 			this.categoryId = categoryId;
-			this.memberId = memberId;
 		}
 	}
+
+	@Getter
+	public static class IncorrectNoteInfo{
+		String quiz;
+		String answer;
+
+		@QueryProjection
+		public IncorrectNoteInfo(String quiz, String answer){
+			this.quiz = quiz;
+			this.answer = answer;
+		}
+	}
+
 
 }

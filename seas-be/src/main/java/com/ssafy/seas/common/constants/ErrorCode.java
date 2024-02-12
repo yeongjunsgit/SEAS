@@ -25,6 +25,9 @@ public enum ErrorCode {
 	// 플래시카드
 	FLASHCARD_NOT_FOUND(BAD_REQUEST, "id에 해당하는 플래시카드가 없습니다."),
 
+	// 카드퀴즈 매핑
+	CARDQUIZ_NOT_FOUND_BY_FLASHCARD(BAD_REQUEST, "플래시카드에 해당하는 카드퀴즈 매핑이 없습니다."),
+
 	/* 500 INTERNAL_SERVER_ERROR : 서버 오류 */
 	SERVER_ERROR(INTERNAL_SERVER_ERROR, "서버 내부 오류로 인해 응답을 제공할 수 없습니다.");
 
