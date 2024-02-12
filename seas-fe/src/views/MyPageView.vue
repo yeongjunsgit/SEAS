@@ -17,6 +17,9 @@ const categories = [
 const loaded = ref(false);
 const categoryObj = ref();
 
+const favoriteApi = "https://i10a609.p.ssafy.io/api/mypage/flashcard/favorite";
+const incorrectApi = "https://i10a609.p.ssafy.io/api/mypage/incorrect";
+
 onMounted(async () => {
   loaded.value = false;
   try {
@@ -50,10 +53,10 @@ onMounted(async () => {
       </div>
       <div class="mypage-component-background mycard">
         <div>
-          <CategoryComponent type="즐겨찾기" />
+          <CategoryComponent type="즐겨찾기" :apiUrl="favoriteApi" />
         </div>
         <div>
-          <CategoryComponent type="오답노트" />
+          <CategoryComponent type="오답노트" :apiUrl="incorrectApi" />
         </div>
       </div>
     </div>

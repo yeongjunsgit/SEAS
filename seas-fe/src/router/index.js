@@ -6,7 +6,8 @@ import MyPageView from "@/views/MyPageView.vue";
 import FlashcardView from "@/views/FlashcardView.vue";
 import RankingView from "@/views/RankingView.vue";
 import QuizView from "@/views/QuizView.vue";
-import PopupView from "@/views/PopupView.vue";
+import PopupCardView from "@/views/PopupCardView.vue";
+import PopupQuizView from "@/views/PopupQuizView.vue";
 import PreMyPageView from "@//views/PreMyPageView.vue";
 
 const router = createRouter({
@@ -38,9 +39,14 @@ const router = createRouter({
           component: MyPageView,
         },
         {
-          path: "popup",
-          name: "popup-page",
-          component: PopupView,
+          path: "popupcard",
+          name: "popupcard",
+          component: PopupCardView,
+        },
+        {
+          path: "popupquiz",
+          name: "popupquiz",
+          component: PopupQuizView,
         },
       ],
     },
