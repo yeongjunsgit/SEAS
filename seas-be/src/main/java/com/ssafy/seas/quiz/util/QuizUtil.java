@@ -1,5 +1,7 @@
 package com.ssafy.seas.quiz.util;
 
+import com.ssafy.seas.quiz.constant.EasinessFactor;
+import com.ssafy.seas.quiz.constant.Quality;
 import com.ssafy.seas.quiz.dto.QuizAnswerDto;
 import com.ssafy.seas.quiz.dto.QuizDto;
 import com.ssafy.seas.quiz.dto.QuizResultDto;
@@ -113,24 +115,22 @@ public class QuizUtil {
         Double ef = preFactors.getEf();
         Double interval = preFactors.getQuizInterval();
 
-        int quality = 0;
+		int quality = Quality.QUIZ_WRONG.getValue();
 
-        if (isCorrect) {
-            if (!usedHint) {
-                quality = 3;
-                point += 10;
-            }
-            else {
-                quality = 2;
-                point += 3;
-            }
+		if (isCorrect) {
+			if (!usedHint) {
+				quality = Quality.QUIZ_CORRECT.getValue();
+				point += 10;
+			} else {
+				quality = Quality.QUIZ_CORRECT_WITH_HINT.getValue();
+				point += 3;
+			}
 
             score += 10;
         }
 
-        Double newEf = ef - 0.06 + 0.08 * quality + 0.02 * quality * quality;
+		Double newEf = calculateNewEf(ef, quality);
 
-        newEf = newEf < 1.3 ? 1.3 : (Math.min(newEf, 2.5));
         Double newInterval = interval * newEf;
 
         QuizAnswerDto.UpdatedFactors var = new QuizAnswerDto.UpdatedFactors(memberId, quizId, categoryId, newInterval, newEf, score, point);
@@ -138,6 +138,13 @@ public class QuizUtil {
 
         return var;
     }
+	public Double calculateNewEf(Double ef, int quality) {
+		Double newEf = ef - 0.06 + 0.08 * quality + 0.02 * quality * quality;
+
+		newEf = newEf < EasinessFactor.MINIMUM.getValue() ? EasinessFactor.MINIMUM.getValue() :
+			(Math.min(newEf, EasinessFactor.MAXIMUM.getValue()));
+		return newEf;
+	}
 
     // 가중치 확인하는 함수
     public void checkWeightArray(double[] weights){
