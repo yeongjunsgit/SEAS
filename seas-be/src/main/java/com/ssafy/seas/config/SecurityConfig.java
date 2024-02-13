@@ -8,6 +8,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -43,6 +44,7 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
 			.cors(CorsConfigurer::disable) // WebMvcConfig에 있는 cors 설정 사용
+			.cors(Customizer.withDefaults())
 			// .csrf(CsrfConfigurer::disable)
 			.csrf(AbstractHttpConfigurer::disable) //csrf 비활성
 			.httpBasic(AbstractHttpConfigurer::disable) //HTTP 기본인증 비활성
