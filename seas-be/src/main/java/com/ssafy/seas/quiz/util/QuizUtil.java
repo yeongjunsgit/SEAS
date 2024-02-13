@@ -13,11 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Configuration
 @Slf4j
@@ -30,10 +26,12 @@ public class QuizUtil {
 
         int size = weightInfo.size();
         double[][] quizWeight = new double[size][2];
+        Set<Integer> unDuplicatedQuizId = new HashSet<>();
 
         quizWeight[0][0] = weightInfo.get(0).getQuizId();
         quizWeight[0][1] = toFixed(1 / (weightInfo.get(0).getQuizInterval() * weightInfo.get(0).getEf()), 1);
 
+        // 10개를 충족시켜야하는데, 여기서가 문제구나 문제 9가 중복될 수도 있으니까...
         for(int factorIndex = 1; factorIndex < size; factorIndex++){
             QuizDto.QuizWeightInfoDto quizWeightInfo = weightInfo.get(factorIndex);
 
@@ -41,10 +39,15 @@ public class QuizUtil {
             double interval = quizWeightInfo.getQuizInterval();
             double ef = quizWeightInfo.getEf();
 
+            unDuplicatedQuizId.add(quizId);
             Double weight = interval * ef;
             quizWeight[factorIndex][0] = toFixed(quizId, 1);
             // weight가 작을 수록 많이 뽑혀야 하므로, weight를 역수로 치환
             quizWeight[factorIndex][1] = toFixed((quizWeight[factorIndex - 1][1]) + 1 / weight, 1);
+
+            // Factor 테이블에 데이터가 저장되는 문제 때문에 달아놓은 조건
+            if(unDuplicatedQuizId.size() == 10)
+                break;
         }
 
         return quizWeight;
@@ -68,7 +71,7 @@ public class QuizUtil {
         
         // 1.3 ~ max 구간의 랜덤값이 나옴
         double random = toFixed(Math.random() * (max - min) + min, 1);
-        log.info("RAMDON : {} ", random);
+        //log.info("RAMDON : {} ", random);
         int selectedQuizIndex = Arrays.binarySearch(weightArray, random);
 
         // binarySearch에서는 정확한 값이 아니면, 음수로 (- (이 값이 배열에 있을 시 위치할 인덱스 + 1))를 돌려주므로 절댓값 - 1으로 해준다.
@@ -82,6 +85,7 @@ public class QuizUtil {
         return selectedQuizInfo;
     }
 
+    // 힌트 사용 여부를 체크
     public void updateHintState(Integer memberId, Integer quizId){
         Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
         String nestedKey = toKey(quizId);
@@ -92,10 +96,12 @@ public class QuizUtil {
         log.info("updateHintState : " + quizId + " || " + value.get(nestedKey).getHint());
     }
 
+    // 퀴즈가 맞았는지를 판별
     public void updateQuizState(Integer memberId, Integer quizId){
         Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
 
         String nestedKey = toKey(quizId);
+        log.info("MAP 출력 : " + value.toString());
         value.get(nestedKey).setIsCorrect(true);
 
         redisTemplate.opsForValue().set(memberId, value);
@@ -186,14 +192,14 @@ public class QuizUtil {
     }
 
     // 저장 확인 완료
-    public void storeQuizToRedis(List<QuizDto.QuizFactorDto> quizInfoList){
+    public void storeQuizToRedis(Integer memberId, List<QuizDto.QuizFactorDto> quizInfoList){
 
-        Integer memberId = quizInfoList.get(0).getMemberId();
         Map<Integer, QuizDto.QuizFactorDto> map = new HashMap<>();
 
         for(QuizDto.QuizFactorDto quizInfo : quizInfoList) {
             Integer quizId = quizInfo.getQuizId();
             map.put(quizId, quizInfo);
+            log.info("저장되는 quizID : {}\n", quizId);
         }
 
         redisTemplate.opsForValue().set(memberId, map);
