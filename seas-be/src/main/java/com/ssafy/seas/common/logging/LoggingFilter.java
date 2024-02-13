@@ -132,8 +132,8 @@ public class LoggingFilter extends OncePerRequestFilter {
 
 	private void handleException(Exception ex, HttpServletResponse response) throws IOException {
 		log.error("Exception during request processing", ex);
-		ex.printStackTrace();
-		String logMessage = String.format("[ERROR] : %s", ex.getMessage() + "\n\n" + ex.getStackTrace());
+
+		String logMessage = String.format("[ERROR] : %s", ex.getMessage() + "\n\n");
 		stringBuilder.append(logMessage).append("\n");
 		ApiResponse<?> errorResponse = ApiResponse.error(HttpStatus.BAD_REQUEST, ex.getMessage());
 		ObjectMapper objectMapper = new ObjectMapper();
