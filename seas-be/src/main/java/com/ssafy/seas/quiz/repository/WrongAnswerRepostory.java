@@ -1,5 +1,6 @@
 package com.ssafy.seas.quiz.repository;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.seas.member.entity.Member;
 import com.ssafy.seas.quiz.dto.QuizAnswerDto;
 import com.ssafy.seas.quiz.entity.*;
@@ -9,11 +10,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import static com.ssafy.seas.quiz.entity.QFactor.factor;
+
 @Repository
 @Slf4j
 @RequiredArgsConstructor
 public class WrongAnswerRepostory {
 
+    private final JPAQueryFactory jpaQueryFactory;
     private final EntityManager entityManager;
 
     // 틀릴 때 factor가 안 들어감
@@ -100,22 +104,14 @@ public class WrongAnswerRepostory {
         }
         else { // Factor update
 
-
-
-            String updateFactor =
-                    "UPDATE Factor f " +
-                    "SET f.ef = :ef, f.quizInterval = :interval " +
-                    "WHERE  = :quizId AND f.member.id = :memberId";
-
-            Integer rows = entityManager.createNativeQuery(updateFactor)
-                    .setParameter("ef", factors.getEf())
-                    .setParameter("interval", factors.getInterval())
-                    .setParameter("quizId", factors.getQuizId())
-                    .setParameter("memberId", factors.getMemberId())
-                    .executeUpdate();
-
-            log.info(">>>>> SAVE FACTOR, 영향받은 행 수 : " , rows);
-
+            log.info("현재 퀴즈 아이디, ef, interval : {}, {}, {} ", factors.getQuizId(), factors.getEf(), factors.getInterval());
+            jpaQueryFactory
+                    .update(factor)
+                    .set(factor.ef, factors.getEf())
+                    .set(factor.quizInterval, factors.getInterval())
+                    .where(factor.cardQuiz.quiz.id.eq(factors.getQuizId())
+                                    .and(factor.member.id.eq(factors.getMemberId())))
+                    .execute();
         }
 
 

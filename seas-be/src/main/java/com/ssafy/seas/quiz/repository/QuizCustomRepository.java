@@ -4,7 +4,6 @@ import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.seas.quiz.dto.QQuizDto_QuizInfoDto;
 import com.ssafy.seas.quiz.dto.QuizDto;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -23,8 +22,6 @@ import static com.ssafy.seas.quiz.entity.QQuizAnswer.quizAnswer;
 public class QuizCustomRepository{
 
     private final JPAQueryFactory jpaQueryFactory;
-    private final EntityManager entityManager;
-
     // 멤버별 factor 테이블의 퀴즈 정보를 가져옴
     public List<QuizDto.QuizFactorDto> findAllQuizInnerJoin(Integer memberId, Integer categoryId) {
 
