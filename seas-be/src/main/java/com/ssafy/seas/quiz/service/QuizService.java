@@ -1,22 +1,28 @@
 package com.ssafy.seas.quiz.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ServerErrorException;
 
 import com.ssafy.seas.member.util.MemberUtil;
-import com.ssafy.seas.quiz.dto.*;
+import com.ssafy.seas.quiz.dto.QuizAnswerDto;
+import com.ssafy.seas.quiz.dto.QuizDto;
+import com.ssafy.seas.quiz.dto.QuizHintDto;
+import com.ssafy.seas.quiz.dto.QuizListDto;
+import com.ssafy.seas.quiz.dto.QuizResultDto;
+import com.ssafy.seas.quiz.dto.QuizTierDto;
 import com.ssafy.seas.quiz.repository.CorrectAnswerRepository;
 import com.ssafy.seas.quiz.repository.FactorRepository;
 import com.ssafy.seas.quiz.repository.QuizCustomRepository;
 import com.ssafy.seas.quiz.repository.WrongAnswerRepostory;
 import com.ssafy.seas.quiz.util.QuizUtil;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ServerErrorException;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -32,7 +38,7 @@ public class QuizService {
 
     public QuizListDto.Response getQuizzes(Integer categoryId){
 
-        Integer memberId = MemberUtil.getLoginMemberId();
+        Integer memberId = memberUtil.getLoginMemberId();
 
         List<QuizListDto.QuizInfo> quizInfoList = new ArrayList<>();
 
@@ -61,7 +67,7 @@ public class QuizService {
 
     public QuizHintDto.Response getHint(Integer quizId){
 
-        Integer memberId = MemberUtil.getLoginMemberId();
+        Integer memberId = memberUtil.getLoginMemberId();
 
         quizUtil.updateHintState(memberId, quizId);
         String hint = quizUtil.getQuizHint(memberId, quizId);
@@ -75,7 +81,7 @@ public class QuizService {
         String submit = request.getSubmit().replaceAll("\s+", "_").replaceAll("\t+", "_").replaceAll(" ", "").toLowerCase().trim();
 
         List<String> quizAnswers = quizCustomRepository.findAllQuizAnswerByQuizId(quizId);
-        Integer memberId = MemberUtil.getLoginMemberId();
+        Integer memberId = memberUtil.getLoginMemberId();
 
         for(String quizAnswer : quizAnswers){
             if(quizAnswer.equals(submit)){
@@ -101,8 +107,9 @@ public class QuizService {
 
 
     public QuizResultDto.Response getTotalResult(){
-
-        Integer memberId = MemberUtil.getLoginMemberId();
+        Integer memberId = memberUtil.getLoginMemberId();
+        //
+        // List<QuizWeightFactorDto> newWeight = quizUtil.getNewFactor(memberId);
 
         QuizResultDto.Response response = quizUtil.getResult(memberId);
         quizUtil.resetRedis(memberId);
