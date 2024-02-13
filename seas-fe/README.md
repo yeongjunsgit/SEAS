@@ -1,5 +1,5 @@
 <div align="center">
-<h1>seas-fe [2024]</h1>
+<h1>SEAS [2024]</h1>
 </div>
 
 <div align="center">포트폴리오, 코딩 테스트 공부 등 바쁜 신입 개발자들을 위한 간편한 CS 용어 공부 웹사이트 입니다!
