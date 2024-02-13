@@ -32,20 +32,9 @@ public class QuizService {
 
     /*
         현재 문제 :
-            틀렸을 때 factor 테이블 갱신 X
             swagger에서  가 들어갈 때 JSON 에러 남
      */
 
-    /**
-     * 로직 설명:
-     *
-     * factor 테이블은 사용자가 퀴즈를 풀다가 나가도 저장이 된다.
-     * 그러므로, 2문제를 푼 경우 2문제에 대한 ef, factor가 있을 것이므로 해당 정보가 필요하고, 나머지 문제들은 모두 불러와야 한다.
-     * 일단 factor에서 모두 가져오고, 만일 10개가 충족이 안되면 모든 문제를 들고와서 quizWeightInfos에 넣는다.
-     * 이후 factor에 있는 모든 정보를 quizWeightInfos에 저장한다.
-     *
-     * 레디스는 Map으로 저장되고 있으므로, 만일 같은 키가 들어왔으면 이후의 값으로 대체되므로, 결국 factor의 테이블에 있는 정보가 레디스에 저장된다.
-     */
 
     public QuizListDto.Response getQuizzes(Integer categoryId){
 
@@ -142,6 +131,13 @@ public class QuizService {
         QuizResultDto.Response response = quizUtil.getResult(memberId);
         quizUtil.resetRedis(memberId);
         return response;
+    }
+
+    public QuizDto.BaseResponse redisReset(){
+        Integer memberId = MemberUtil.getLoginMemberId();
+        quizUtil.resetRedis(memberId);
+
+        return QuizDto.BaseResponse("레디스 값 삭제 성공");
     }
 
     public QuizTierDto.Response getCurrentTier(){

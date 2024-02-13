@@ -9,9 +9,13 @@ import java.io.Serializable;
 
 public class QuizDto {
 
+    @RequiredArgsConstructor
+    public static class BaseResponse{
+        private final String result;
+    }
+
     @Getter
     @Setter
-    @RequiredArgsConstructor
     public static class QuizFactorDto implements Serializable{
         private Double quizInterval;
         private Double ef;
@@ -24,6 +28,8 @@ public class QuizDto {
 
         private Boolean isCorrect = false;
         private Boolean isUsedHint = false;
+
+        public QuizFactorDto(){}
 
         @QueryProjection
         public QuizFactorDto(Integer memberId, Integer quizId, String quiz, String hint, Double quizInterval, Double ef){
@@ -48,7 +54,8 @@ public class QuizDto {
         @Override
         public String toString() {
             return "QuizFactorDto{" +
-                    "quizInterval=" + quizInterval +
+                    "memberId=" + memberId +
+                    ", quizInterval=" + quizInterval +
                     ", ef=" + ef +
                     ", quizId=" + quizId +
                     ", quiz='" + quiz + '\'' +
