@@ -123,16 +123,14 @@ public class QuizService {
                 // factor 갱신
                 //factorRepository.updateFactor(factor.getEf(), factor.getInterval(), quizId, memberId);
                 correctAnswerRepository.saveOrUpdateStreakAndScoreHistory(factor);
-                correctAnswerRepository.saveOrUpdateFactorAndSolvedQuiz(factor, memberId);
+                correctAnswerRepository.saveOrUpdateFactor(factor, memberId);
                 return new QuizAnswerDto.Response(true);
             }
         }
 
         QuizAnswerDto.UpdatedFactors factor = quizUtil.getNewFactor(memberId, quizId, categoryId);
         wrongAnswerRepostory.saveOrUpdateIncorrectNoteAndSolvedQuiz(memberId, quizId);
-        //wrongAnswerRepostory.saveOrUpdateFactor(memberId, factor);
-        //factor 테이블 갱신
-        factorRepository.updateFactor(factor.getEf(), factor.getInterval(), quizId, memberId);
+        wrongAnswerRepostory.saveOrUpdateFactor(memberId, factor);
         return new QuizAnswerDto.Response(false);
     }
 
