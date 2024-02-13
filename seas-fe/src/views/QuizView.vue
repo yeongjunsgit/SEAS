@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import { getInitRank } from "@/api/quiz.js";
 
 import TutorialComponent from "@/components/quiz/TutorialComponent.vue";
 import QuizComponent from "@/components/quiz/QuizComponent.vue";
@@ -32,6 +33,17 @@ function preloadResource(url, type) {
     link.href = url;
     document.head.appendChild(link);
 }
+
+const userRank = ref();
+getInitRank(
+    ({ data }) => {
+        userRank.value = data.data.tier;
+        console.log(userRank.value);
+    },
+    (error) => {
+        console.log(error);
+    }
+);
 </script>
 
 <template>
@@ -53,6 +65,7 @@ function preloadResource(url, type) {
         <ResultComponent
             v-else-if="currentComponent === 'result'"
             @showTutorial="changeComponent('tutorial')"
+            :currentUserRank="userRank"
         />
     </div>
 </template>
