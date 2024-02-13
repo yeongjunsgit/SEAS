@@ -10,6 +10,8 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -28,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class LoggingFilter extends OncePerRequestFilter {
 	protected static final Logger log = LoggerFactory.getLogger(LoggingFilter.class);
 	private final DiscordNotifier discordNotifier;
@@ -72,13 +75,15 @@ public class LoggingFilter extends OncePerRequestFilter {
 
 	private void logRequest(RequestWrapper request) throws IOException {
 		String queryString = request.getQueryString();
-		log.info("Request : {} uri=[{}] content-type=[{}]", request.getMethod(),
+		String AccessControlRequestHeaders = request.getHeader("access-control-request-headers");
+		String logMessage = String.format(
+			"Request : %s uri=[%s] content-type=[%s] AccessControlRequestHeaders = [%s] Authorization=[%s] Origin=[%s]\n",
+			request.getMethod(),
 			queryString == null ? request.getRequestURI() : request.getRequestURI() + queryString,
-			request.getContentType());
-		String logMessage = String.format("Request : %s uri=[%s] content-type=[%s]", request.getMethod(),
-			queryString == null ? request.getRequestURI() : request.getRequestURI() + queryString,
-			request.getContentType());
-		stringBuilder.append("Origin: ").append(request.getHeader("Origin")).append("\n");
+			request.getContentType(), AccessControlRequestHeaders, request.getHeader("Authorization"),
+			request.getHeader("Origin"));
+
+		log.info(logMessage);
 		stringBuilder.append(logMessage).append("\n");
 
 		isSwagger = false;
