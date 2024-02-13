@@ -49,6 +49,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 				HttpMethod.PUT.name(),
 				HttpMethod.PATCH.name(),
 				HttpMethod.DELETE.name())
+			.allowedHeaders("*")
+			.exposedHeaders("*")
 			.maxAge(3000); // pre-flight 리퀘스트를 캐싱
 	}
 }

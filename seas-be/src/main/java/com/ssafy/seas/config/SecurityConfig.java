@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 	private final AuthenticationConfiguration authenticationConfiguration;
 	private final TokenProvider tokenProvider;
+	private final CorsConfig config;
 
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
@@ -48,13 +49,9 @@ public class SecurityConfig {
 			// 		.requestMatchers("/**").authenticated()
 			// )
 
-
-
-			// filter 등록을 이렇게 해줘야 JwtFilter를 통해 Token을 먼저 검사한다.
-			// .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
-			// .addFilter(new JwtFilter(tokenProvider))
-
+			.addFilter(config.corsFilter())
 			.addFilterAfter(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+
 
 		// .addFilter(JWTfilter)
 		// JwtFilter
