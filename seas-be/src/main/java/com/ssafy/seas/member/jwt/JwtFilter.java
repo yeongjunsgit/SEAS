@@ -30,7 +30,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
 		// 1. 토큰이 필요하지 않은 API URL에 대해서 배열로 구성한다.
 		List<String> list = Arrays.asList(
-			"/api/swagger-ui/swagger-initializer.js", // localhost swagger
+			"/api/swagger-ui/swagger-initializer.js",
+			"/api/swagger-ui/index.html",			  // localhost swagger
 			"/v3/api-docs",
 			"/api/v3/api-docs",
 			"/api/v3/api-docs/swagger-config",
