@@ -4,6 +4,7 @@ import { ref, onMounted } from "vue";
 
 const categoryId = ref(0);
 const quizId = ref(0);
+const quizAns = ref("");
 const quizDes = ref("");
 
 // URL 파싱 함수
@@ -17,13 +18,12 @@ onMounted(async () => {
   quizId.value = getQueryParam("quizId");
   try {
     await axios
-      .get(`https://i10a609.p.ssafy.io/api/quiz/${categoryId.value}`)
+      .get(
+        `https://i10a609.p.ssafy.io/api/mypage/incorrect-note/info/${quizId.value}`
+      )
       .then(function (response) {
-        response.data.data.quizList.forEach((element) => {
-          if (element.quizId == quizId.value) {
-            quizDes.value = element.quiz;
-          }
-        });
+        quizAns.value = response.data.data.answer;
+        quizDes.value = response.data.data.quiz;
       });
   } catch (error) {
     console.error(error);
@@ -32,10 +32,17 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
-    <h1>퀴즈~~~~</h1>
+  <div class="incorrect-popup">
+    <h1>오답노트</h1>
+    <br />
     <h2>{{ quizDes }}</h2>
+    <br />
+    <h2>{{ quizAns }}</h2>
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.incorrect-popup {
+  text-align: center;
+}
+</style>
