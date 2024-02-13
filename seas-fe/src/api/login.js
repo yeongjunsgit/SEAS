@@ -3,9 +3,7 @@ import { localAxios } from "@/util/axios";
 const local = localAxios();
 
 function loginRequest(payload, success, fail) {
-  local.post(`/auth/signin`, payload)
-    .then(response => success(response.data))
-    .catch(fail);
+  local.post(`/auth/signin`, payload).then(success).catch(fail);
 }
 
 function signupRequest(payload, success, fail) {
@@ -20,4 +18,4 @@ function refreshRequest(payload, success, fail) {
   local.post(`/auth/refresh`, payload).then(success).catch(fail);
 }
 
-export { loginRequest, signupRequest, checkIdRequest, refreshRequest};
+export { loginRequest, signupRequest, checkIdRequest, refreshRequest };
