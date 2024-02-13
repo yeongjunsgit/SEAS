@@ -9,6 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.ssafy.seas.common.constants.ErrorCode;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,6 +50,9 @@ public class JwtFilter extends OncePerRequestFilter {
 		}
 
 		String token = resolveToken(request);
+		if (token == null) {
+			throw new IllegalArgumentException(ErrorCode.NO_TOKEN.getMessage());
+		}
 		log.info("JwtFilter ::::::::: resolvedToken = {}", token.toString());
 
 		if(StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
