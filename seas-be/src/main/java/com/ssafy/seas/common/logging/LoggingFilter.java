@@ -141,6 +141,8 @@ public class LoggingFilter extends OncePerRequestFilter {
 		String jsonResponse = objectMapper.writeValueAsString(errorResponse);
 		// Customize the response based on the exception
 		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
 		response.getWriter().write(jsonResponse);
 	}
 }
