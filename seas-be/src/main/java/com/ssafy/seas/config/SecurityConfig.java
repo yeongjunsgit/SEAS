@@ -1,7 +1,13 @@
 package com.ssafy.seas.config;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -11,6 +17,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.ssafy.seas.member.jwt.JwtFilter;
 import com.ssafy.seas.member.jwt.TokenProvider;
@@ -49,9 +58,8 @@ public class SecurityConfig {
 			// 		.requestMatchers("/**").authenticated()
 			// )
 
-			.addFilter(config.corsFilter())
+			// .addFilter(config.corsFilter())
 			.addFilterAfter(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
-
 
 		// .addFilter(JWTfilter)
 		// JwtFilter
@@ -60,6 +68,33 @@ public class SecurityConfig {
 		// doFilter
 		;
 		return http.build();
+	}
+
+	@Order(Ordered.HIGHEST_PRECEDENCE)
+	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration corsConfiguration = new CorsConfiguration();
+
+		corsConfiguration.setAllowCredentials(false);
+		corsConfiguration.setAllowedOrigins(List.of("https://i10a609.p.ssafy.io", "*"));
+		corsConfiguration.setAllowedMethods(List.of(
+			HttpMethod.GET.name(),
+			HttpMethod.POST.name(),
+			HttpMethod.PUT.name(),
+			HttpMethod.PATCH.name(),
+			HttpMethod.DELETE.name(),
+			HttpMethod.OPTIONS.name()
+		));
+		corsConfiguration.setAllowedHeaders(List.of(
+			HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS,
+			HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN,
+			HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS,
+			HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS
+		));
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", corsConfiguration);
+		return source;
 	}
 
 	// ----------------------
