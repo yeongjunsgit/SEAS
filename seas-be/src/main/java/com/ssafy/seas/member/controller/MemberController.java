@@ -41,13 +41,11 @@ public class MemberController {
 		// SecretKey secretKey = Keys.hmacShaKeyFor(keyBase64Encoded.getBytes());
 		// System.out.println("비밀키 객체 : " + secretKey.toString());
 
-
-
-		try{
+		try {
 			log.info("로그인 시도 : {}", memberDto.getMemberId());
 			MemberDto.AuthResponse member = memberService.signin(memberDto);
 			log.info("로그인 결과 : {}", member.getMemberId());
-			if(member.getMemberId() != null) {
+			if (member.getMemberId() != null) {
 				return ApiResponse.success(SuccessCode.POST_SUCCESS, member);
 			} else {
 				return ApiResponse.error(ErrorCode.MEMBER_NOT_FOUND);
@@ -58,16 +56,26 @@ public class MemberController {
 		}
 	}
 
-	@PostMapping("/refresh")
-	public ApiResponse<MemberDto.AuthResponse> reIssue(@RequestBody MemberDto.AuthResponse tokenRequest) {
-		log.info("Refresh Token 재발행 시작 !!!!!!!!!!");
-		try{
-			MemberDto.AuthResponse authResponse = memberService.reIssue(tokenRequest);
-			return ApiResponse.success(SuccessCode.POST_SUCCESS, authResponse);
-		} catch(Exception e) {
+	@PostMapping("/check-id")
+	public ApiResponse<MemberDto.checkIdResult> login(@RequestBody MemberDto.checkId memberId) {
+		try {
+			return ApiResponse.success(SuccessCode.POST_SUCCESS, memberService.isDuplicatedId(memberId.getId()));
+		} catch (Exception e) {
 			e.printStackTrace();
 			return ApiResponse.error(ErrorCode.SERVER_ERROR);
 		}
 	}
 
+	@PostMapping("/refresh")
+	public ApiResponse<MemberDto.AuthResponse> reIssue(@RequestBody MemberDto.AuthResponse tokenRequest) {
+		log.info("Refresh Token 재발행 시작 !!!!!!!!!!");
+		try {
+			MemberDto.AuthResponse authResponse = memberService.reIssue(tokenRequest);
+			return ApiResponse.success(SuccessCode.POST_SUCCESS, authResponse);
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			return ApiResponse.error(ErrorCode.SERVER_ERROR);
+		}
+	}
 }
