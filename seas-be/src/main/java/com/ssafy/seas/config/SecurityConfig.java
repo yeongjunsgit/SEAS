@@ -75,8 +75,8 @@ public class SecurityConfig {
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration corsConfiguration = new CorsConfiguration();
 
-		corsConfiguration.setAllowCredentials(false);
-		corsConfiguration.setAllowedOrigins(List.of("https://i10a609.p.ssafy.io", "*"));
+		corsConfiguration.setAllowCredentials(true);
+		corsConfiguration.setAllowedOrigins(List.of("https://i10a609.p.ssafy.io"));
 		corsConfiguration.setAllowedMethods(List.of(
 			HttpMethod.GET.name(),
 			HttpMethod.POST.name(),
