@@ -1,29 +1,59 @@
-# seas-fe
+# seas-fe [2024]
 
-This template should help get you started developing with Vue 3 in Vite.
+포트폴리오, 코딩 테스트 공부 등 바쁜 신입 개발자들을 위한 간편한 CS 용어 공부 웹사이트 입니다!
+플래시카드를 통한 간단한 공부와 더불어 퀴즈를 통해 실력을 점검하고 레벨의 상승과 랭킹을 통해 스스로의 실력을 남들과 비교해볼 수 있습니다.
 
-## Recommended IDE Setup
+---
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+### 목차
 
-## Customize configuration
+-   개요
+-   사이트 설명
+-   팀원별 역할 분담
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+---
 
-## Project Setup
+### 개요
 
-```sh
-npm install
-```
+-   프로젝트 이름: SEAS
+-   프로젝트 기간: 2024.01 - 2024.02 (6주)
+-   개발 언어 및 라이브러리
+    -   백엔드:
+    -   프론트: vue.js, javascript, scss, pinia, axios
+-   멤버: 팀 아이9허리야 (이정은, 엄세현, 송정훈, 권기용, 배진현, 김영준)
 
-### Compile and Hot-Reload for Development
+---
 
-```sh
-npm run dev
-```
+### 사이트 설명
 
-### Compile and Minify for Production
+---
 
-```sh
-npm run build
-```
+### 팀원별 역할 분담
+
+#### 백엔드
+
+##### 이정은
+
+입력
+
+##### 송정훈
+
+입력
+
+##### 배진현
+
+입력
+
+#### 프론트엔드
+
+##### 엄세현
+
+입력
+
+##### 권기용
+
+입력
+
+##### 김영준
+
+입력

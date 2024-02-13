@@ -66,6 +66,7 @@ const submitAnswer = () => {
     checkAnswer();
     // 정답인지 보여준 후 1초 후 다음 문제 넘어감
     delayResult();
+    isCorrect.value = null;
 };
 
 const checkAnswer = () => {
@@ -90,6 +91,41 @@ const checkAnswer = () => {
     // 얻어낸 bool값으로 해당 문제 맞았는지 틀렸는지 알려주기
     answerShown.value = true;
 };
+// const checkAnswer = async () => {
+//     try {
+//         console.log(props.quizCategory);
+//         console.log(currentQuestion.value.quizId);
+//         console.log(answerInput.value);
+
+//         const { data } = await sendAnswerAsync(
+//             props.quizCategory,
+//             currentQuestion.value.quizId,
+//             answerInput.value
+//         );
+
+//         isCorrect.value = data.data.result; // 정답 여부를 저장
+//         console.log(data.data.result);
+//         console.log(isCorrect.value);
+
+//         // 얻어낸 bool값으로 해당 문제 맞았는지 틀렸는지 알려주기
+//         answerShown.value = true;
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
+
+// // Define a new asynchronous version of the sendAnswer function
+// const sendAnswerAsync = (category, quizId, answer) => {
+//     return new Promise((resolve, reject) => {
+//         sendAnswer(
+//             category,
+//             quizId,
+//             answer,
+//             (response) => resolve(response),
+//             (error) => reject(error)
+//         );
+//     });
+// };
 
 // 정답 여부 시간차 표시 및 넘기기 ==============================================
 const delayResult = () => {
@@ -223,6 +259,10 @@ const clearInput = () => {
     }
     .wrong {
         color: red;
+    }
+
+    .init {
+        color: none;
     }
 }
 
