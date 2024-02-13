@@ -65,7 +65,6 @@ public class LoggingFilter extends OncePerRequestFilter {
 			logRequest(request);
 			filterChain.doFilter(request, response);
 		} catch (Exception ex) {
-			handleException(ex, response);
 			throw ex; // Re-throw the exception to propagate it to the outer catch block
 		} finally {
 			logResponse(response);
