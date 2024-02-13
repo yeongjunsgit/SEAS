@@ -24,10 +24,8 @@ public class GlobalExceptionHandler {
 	protected final ResponseEntity<ApiResponse<String>> handleAllExceptions(Exception ex) {
 		log.error("Exception 발생!", ex);
 		sb.setLength(0);
-		StringWriter sw = new StringWriter();
-		ex.printStackTrace(new PrintWriter(sw));
 		sb.append("🚨 Exception 발생! 🚨\n");
-		sb.append(sw).append("\n");
+		sb.append(ExceptionUtil.exceptionToString(ex)).append("\n");
 		discordNotifier.notify(sb.toString());
 		ApiResponse<String> response = ApiResponse.error(HttpStatus.BAD_REQUEST, ex.getMessage());
 		return ResponseEntity.badRequest().body(response);
