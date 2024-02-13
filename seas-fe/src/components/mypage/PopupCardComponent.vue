@@ -30,11 +30,20 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
-    <h1>플래시카드!!!!!!!!!</h1>
+  <div class="favorite-popup">
+    <h1>나의 CS 카드</h1>
+    <br />
     <h2>{{ cardKwd }}</h2>
+    <br />
     <h3 v-for="cardDes in cardDesArr">{{ cardDes }}</h3>
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.favorite-popup {
+  text-align: center;
+  background-image: url("@/assets/images/CardPage_BG_HighQuality.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+</style>

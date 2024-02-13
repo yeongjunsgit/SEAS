@@ -90,16 +90,15 @@ const options = {
 
 const props = defineProps(["category"]);
 
-// data.value.datasets[0].label = await props.category.categoryName;
 const loaded = ref(false);
 const formatDate = d3.timeFormat("%x");
 onMounted(async () => {
   loaded.value = false;
   try {
     data.value.datasets[0].label = await props.category.categoryName;
-    const graphValues = await props.category.history.map((e) => e.score);
+    const graphValues = await props.category.history.map((e) => e.averageScore);
     const graphDates = await props.category.history.map(function (e) {
-      var studiedDate = new Date(e.createdAt);
+      var studiedDate = new Date(e.date);
       var shortDate = formatDate(studiedDate);
       return shortDate;
     });

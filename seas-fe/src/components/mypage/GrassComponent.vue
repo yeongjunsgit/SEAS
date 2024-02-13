@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import * as d3 from "d3";
+import axios from "axios";
 
 // 차트 사이즈
 const width = 1100;
@@ -19,53 +20,43 @@ const timeWeek = d3.timeSunday;
 const countDay = (i) => i % 7;
 
 // data를 받아서 가공
-const getData = [
-  { date: "2022-1-17", value: 3 },
-  { date: "2022-3-18", value: 5 },
-  { date: "2022-5-19", value: 4 },
-  { date: "2022-6-20", value: 2 },
-  { date: "2022-7-21", value: 0 },
-  { date: "2022-9-22", value: 5 },
-  { date: "2022-12-31", value: 1 },
-  { date: "2023-1-17", value: 3 },
-  { date: "2023-3-18", value: 5 },
-  { date: "2023-5-19", value: 4 },
-  { date: "2023-6-20", value: 2 },
-  { date: "2023-7-21", value: 0 },
-  { date: "2023-9-22", value: 5 },
-  { date: "2023-12-31", value: 1 },
-  { date: "2024-1-1", value: 5 },
-  { date: "2024-1-17", value: 3 },
-  { date: "2024-1-31", value: 5 },
-  { date: "2024-2-18", value: 5 },
-  { date: "2024-2-19", value: 4 },
-  { date: "2024-2-20", value: 2 },
-  { date: "2024-3-21", value: 0 },
-  { date: "2024-5-22", value: 5 },
-  { date: "2024-5-29", value: 5 },
-  { date: "2024-5-31", value: 5 },
-  { date: "2024-6-23", value: 3 },
-  { date: "2024-7-24", value: 5 },
-  { date: "2024-8-25", value: 1 },
-  { date: "2024-9-30", value: 3 },
-  { date: "2024-10-31", value: 5 },
-  { date: "2024-11-1", value: 4 },
-  { date: "2024-11-2", value: 2 },
-  { date: "2024-12-3", value: 5 },
-  { date: "2024-12-30", value: 5 },
-];
+// const getData = [
+//   { date: "2022-1-17", value: 3 },
+//   { date: "2022-3-18", value: 5 },
+//   { date: "2022-5-19", value: 4 },
+//   { date: "2022-6-20", value: 2 },
+//   { date: "2022-7-21", value: 0 },
+//   { date: "2022-9-22", value: 5 },
+//   { date: "2022-12-31", value: 1 },
+//   { date: "2023-1-17", value: 3 },
+//   { date: "2023-3-18", value: 5 },
+//   { date: "2023-5-19", value: 4 },
+//   { date: "2023-6-20", value: 2 },
+//   { date: "2023-7-21", value: 0 },
+//   { date: "2023-9-22", value: 5 },
+//   { date: "2023-12-31", value: 1 },
+//   { date: "2024-1-1", value: 5 },
+//   { date: "2024-1-17", value: 3 },
+//   { date: "2024-1-31", value: 5 },
+//   { date: "2024-2-18", value: 5 },
+//   { date: "2024-2-19", value: 4 },
+//   { date: "2024-2-20", value: 2 },
+//   { date: "2024-3-21", value: 0 },
+//   { date: "2024-5-22", value: 5 },
+//   { date: "2024-5-29", value: 5 },
+//   { date: "2024-5-31", value: 5 },
+//   { date: "2024-6-23", value: 3 },
+//   { date: "2024-7-24", value: 5 },
+//   { date: "2024-8-25", value: 1 },
+//   { date: "2024-9-30", value: 3 },
+//   { date: "2024-10-31", value: 5 },
+//   { date: "2024-11-1", value: 4 },
+//   { date: "2024-11-2", value: 2 },
+//   { date: "2024-12-3", value: 5 },
+//   { date: "2024-12-30", value: 5 },
+// ];
 
-// 각 data의 date를 Date 형식으로 변환
-getData.forEach((d) => {
-  d.date = new Date(d.date);
-});
-
-// 받은 data를 연도별 최신순으로 구분
-const getYears = d3.groups(getData, (d) => d.date.getFullYear()).reverse();
-// 데이터가 있는 연도들만 담은 userYears 배열 생성
-const userYears = getYears.map(([year]) => year);
-// 초기 설정을 2024로 반응형 변수 생성
-const getYear = ref(2024);
+const getData = ref([]);
 
 const data = ref(null);
 
@@ -73,8 +64,8 @@ const data = ref(null);
 function coloring(d) {
   var c = d3.color("rgba(81, 60, 58, 1)");
   c = d3.hsl(c);
-  if (d.value) {
-    c.opacity = 0.5 + 0.1 * d.value;
+  if (d.grade) {
+    c.opacity = 0.5 + 0.1 * d.grade;
     c + "";
 
     return d3.color(c);
@@ -84,31 +75,66 @@ function coloring(d) {
 }
 
 // getYear의 value인 year가 변할 때마다 그에 맞춰 데이터 업데이트
-function updateData(year) {
+function updateData(year, getYears) {
   // 각 연도 별 모든 날짜가 담긴 datesArray 생성
   const startDate = new Date(`${year}-1-1`);
   const endDate = new Date(`${year}-12-31`);
   const datesArray = d3.timeDays(startDate, endDate);
 
   // 상반기 하반기를 구분할 7월 1일 데이터
-  var july = new Date(`July 1, ${year}`);
+  // var july = new Date(`July 1, ${year}`);
 
   // data에 365일간의 날짜와 임의로 0으로 설정한 value가 포함된 object를 push
   data.value = new Array();
   datesArray.forEach((date) => {
     var obj = new Object();
-    obj.date = date;
-    obj.value = 0;
+    obj.createdAt = date;
+    obj.grade = 0;
+    data.value.push(obj);
+  });
+
+  // 현재 선택한 년도에 맞는 userdata 기록 가져오기
+  const targetYearArray = getYears.value.find(
+    ([year]) => year === getYear.value
+  );
+
+  const targetYearData = targetYearArray[1];
+
+  // data에 유저의 기록이 있는 날짜에 grade 추가
+  targetYearData.forEach((d) => {
+    const n = d3.timeDay.count(d3.timeYear(d.createdAt), d.createdAt);
+    data.value[n].grade = d.grade;
+  });
+}
+
+// 왜인지 모르게 selectYear 함수를 html에서 작동시키면 proxy값이 달라져서 함수를 조금 바꿔서 다시 만듬
+function reUpdateData(year, getYears) {
+  // 각 연도 별 모든 날짜가 담긴 datesArray 생성
+  const startDate = new Date(`${year}-1-1`);
+  const endDate = new Date(`${year}-12-31`);
+  const datesArray = d3.timeDays(startDate, endDate);
+
+  // 상반기 하반기를 구분할 7월 1일 데이터
+  // var july = new Date(`July 1, ${year}`);
+
+  // data에 365일간의 날짜와 임의로 0으로 설정한 value가 포함된 object를 push
+  data.value = new Array();
+  datesArray.forEach((date) => {
+    var obj = new Object();
+    obj.createdAt = date;
+    obj.grade = 0;
     data.value.push(obj);
   });
 
   // 현재 선택한 년도에 맞는 userdata 기록 가져오기
   const targetYearArray = getYears.find(([year]) => year === getYear.value);
+
   const targetYearData = targetYearArray[1];
-  // data에 유저의 기록이 있는 날짜에 value 추가
+
+  // data에 유저의 기록이 있는 날짜에 grade 추가
   targetYearData.forEach((d) => {
-    const n = d3.timeDay.count(d3.timeYear(d.date), d.date);
-    data.value[n].value = d.value;
+    const n = d3.timeDay.count(d3.timeYear(d.createdAt), d.createdAt);
+    data.value[n].grade = d.grade;
   });
 }
 
@@ -135,8 +161,8 @@ function drawGrass(data, svg, year) {
   var july = new Date(`July 1, ${year}`);
 
   // 해당 연도의 상반기, 하반기 데이터 가져오고 나누기
-  const firstHalf = d3.filter(data.value, (d) => d.date.getMonth() < 6);
-  const secondHalf = d3.filter(data.value, (d) => d.date.getMonth() >= 6);
+  const firstHalf = d3.filter(data.value, (d) => d.createdAt.getMonth() < 6);
+  const secondHalf = d3.filter(data.value, (d) => d.createdAt.getMonth() >= 6);
   var years = [
     ["상반기", firstHalf],
     ["하반기", secondHalf],
@@ -176,13 +202,15 @@ function drawGrass(data, svg, year) {
     .attr("height", cellSize - 1)
     .attr("stroke", "rgba(250,250,250, 0.4)")
     .attr("x", function (d) {
-      if (d.date.getMonth() < 6) {
-        return timeWeek.count(d3.timeYear(d.date), d.date) * cellSize + 0.5;
+      if (d.createdAt.getMonth() < 6) {
+        return (
+          timeWeek.count(d3.timeYear(d.createdAt), d.createdAt) * cellSize + 0.5
+        );
       } else {
-        return timeWeek.count(july, d.date) * cellSize + 0.5;
+        return timeWeek.count(july, d.createdAt) * cellSize + 0.5;
       }
     })
-    .attr("y", (d) => countDay(d.date.getDay()) * cellSize + 0.5)
+    .attr("y", (d) => countDay(d.createdAt.getDay()) * cellSize + 0.5)
     .attr("fill", function (d) {
       if (d) {
         return coloring(d);
@@ -193,14 +221,14 @@ function drawGrass(data, svg, year) {
     .attr("stroke", "rgba(0, 0, 0, 0.3)")
     .append("title")
     .text(function (d) {
-      return `${formatDate(d.date)} 학습량: ${d.value}`;
+      return `${formatDate(d.createdAt)} 학습량: ${d.grade}`;
     });
 
   const month = yearGrass
     .append("g")
     .selectAll()
     .data(([, values]) =>
-      d3.timeMonths(d3.timeMonth(values[0].date), values.at(-1).date)
+      d3.timeMonths(d3.timeMonth(values[0].createdAt), values.at(-1).createdAt)
     )
 
     .join("g");
@@ -229,8 +257,8 @@ function drawGrass(data, svg, year) {
 
 function drawGrassAgain(data, svg, july) {
   // 해당 연도의 상반기, 하반기 데이터 가져오고 나누기
-  const firstHalf = d3.filter(data.value, (d) => d.date.getMonth() < 6);
-  const secondHalf = d3.filter(data.value, (d) => d.date.getMonth() >= 6);
+  const firstHalf = d3.filter(data.value, (d) => d.createdAt.getMonth() < 6);
+  const secondHalf = d3.filter(data.value, (d) => d.createdAt.getMonth() >= 6);
   var years = [
     ["상반기", firstHalf],
     ["하반기", secondHalf],
@@ -242,10 +270,7 @@ function drawGrassAgain(data, svg, july) {
     .selectAll("g")
     .data(years)
     .join("g")
-    .attr(
-      "transform",
-      (d, i) => `translate(100.5 ,${height * i + cellSize * 1.5})`
-    );
+    .attr("transform", (d, i) => `translate(100.5 ,${height * i - 32})`);
 
   yearGrass
     .append("text")
@@ -275,13 +300,15 @@ function drawGrassAgain(data, svg, july) {
     .attr("height", cellSize - 1)
     .attr("stroke", "rgba(250,250,250, 0.4)")
     .attr("x", function (d) {
-      if (d.date.getMonth() < 6) {
-        return timeWeek.count(d3.timeYear(d.date), d.date) * cellSize + 0.5;
+      if (d.createdAt.getMonth() < 6) {
+        return (
+          timeWeek.count(d3.timeYear(d.createdAt), d.createdAt) * cellSize + 0.5
+        );
       } else {
-        return timeWeek.count(july, d.date) * cellSize + 0.5;
+        return timeWeek.count(july, d.createdAt) * cellSize + 0.5;
       }
     })
-    .attr("y", (d) => countDay(d.date.getDay()) * cellSize + 0.5)
+    .attr("y", (d) => countDay(d.createdAt.getDay()) * cellSize + 0.5)
     .attr("fill", function (d) {
       if (d) {
         return coloring(d);
@@ -292,14 +319,14 @@ function drawGrassAgain(data, svg, july) {
     .attr("stroke", "rgba(0, 0, 0, 0.3)")
     .append("title")
     .text(function (d) {
-      return `${formatDate(d.date)} 학습량: ${d.value}`;
+      return `${formatDate(d.createdAt)} 학습량: ${d.grade}`;
     });
 
   const month = yearGrass
     .append("g")
     .selectAll()
     .data(([, values]) =>
-      d3.timeMonths(d3.timeMonth(values[0].date), values.at(-1).date)
+      d3.timeMonths(d3.timeMonth(values[0].createdAt), values.at(-1).createdAt)
     )
 
     .join("g");
@@ -351,11 +378,39 @@ function pathMonth(t) {
 
 var svgRef = ref(null); // ref로 svg 엘리먼트 선언
 
-onMounted(() => {
-  var year = getYear.value;
-  updateData(getYear.value);
-  var svg = makesvg();
-  drawGrass(data, svg, year);
+// 초기 설정을 2024로 반응형 변수 생성
+const getYear = ref(2024);
+const getYears = ref();
+
+const userYears = ref();
+
+onMounted(async () => {
+  try {
+    const response = await axios.get(
+      "https://i10a609.p.ssafy.io/api/mypage/history"
+    );
+    getData.value = response.data.data;
+    // 각 data의 date를 Date 형식으로 변환
+    getData.value.forEach((d) => {
+      d.createdAt = new Date(d.createdAt);
+    });
+
+    // 받은 data를 연도별 최신순으로 구분
+    getYears.value = d3
+      .groups(getData.value, (d) => d.createdAt.getFullYear())
+      .reverse();
+
+    // 데이터가 있는 연도들만 담은 userYears 배열 생성
+    userYears.value = getYears.value.map(([year]) => year);
+
+    var year = getYear.value;
+    updateData(year, getYears);
+
+    var svg = makesvg();
+    drawGrass(data, svg, year);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 const dropdownOpen = ref(false);
@@ -364,12 +419,13 @@ const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value;
 };
 
-const selectYear = (year) => {
+const selectYear = (year, getYears) => {
   dropdownOpen.value = false;
   getYear.value = year;
-  updateData(year);
+  reUpdateData(year, getYears);
   var svg = resetGrass();
   var july = new Date(`${year}-7-1`);
+
   drawGrassAgain(data, svg, july);
 };
 </script>
@@ -384,7 +440,11 @@ const selectYear = (year) => {
         </button>
 
         <div v-if="dropdownOpen" class="dropdown-content">
-          <div v-for="year in userYears" :key="year" @click="selectYear(year)">
+          <div
+            v-for="year in userYears"
+            :key="year"
+            @click="selectYear(year, getYears)"
+          >
             {{ year }}
           </div>
         </div>

@@ -33,7 +33,6 @@ onMounted(async () => {
             .catch((error) => console.log(error));
         });
       });
-      console.log(cardKwd);
     }
   } catch (error) {
     console.error(error);
