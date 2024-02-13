@@ -67,14 +67,15 @@ li {
 .quiz-button-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
-    height: 45vh;
-    min-height: 500px;
-    margin-top: 18vh;
+    justify-content: center;
+    padding: 7vh 0 7vh 0;
+    max-height: 1000px;
 
     button {
         height: 90px;
-        margin: 30px 0 30px 0;
+        margin: 4vh 0 4vh 0;
+        padding: 5% 0 2% 0;
+        background-color: rgba($color: #ffffff, $alpha: 0.2);
     }
 }
 </style>

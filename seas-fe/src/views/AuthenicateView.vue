@@ -1,8 +1,13 @@
 <script setup>
 import { ref, onMounted, watch, computed } from "vue";
 import { useRouter } from "vue-router";
-import { loginRequest, signupRequest, checkIdRequest, refreshRequest } from "@/api/login.js";
-import { useauthControllerStore } from "@/stores/authController"; 
+import {
+    loginRequest,
+    signupRequest,
+    checkIdRequest,
+    refreshRequest,
+} from "@/api/login.js";
+import { useauthControllerStore } from "@/stores/authController";
 import { storeToRefs } from "pinia";
 
 // false가 로그인 창, true가 회원가입 창
@@ -18,7 +23,7 @@ const router = useRouter();
 const userStore = useauthControllerStore();
 
 // 변수들 모여라
-const isDuplicated = ref(false)
+const isDuplicated = ref(false);
 
 const loginInfo = ref({
     memberId: "",
@@ -29,7 +34,7 @@ const signupInfo = ref({
     memberId: "",
     password: "",
     passwordCheck: "",
-    name: "",
+    nickname: "",
     email: "",
 });
 
@@ -37,21 +42,26 @@ const password = ref(null);
 
 const login = async () => {
     // await userStore.login(loginInfo.value);
-    console.log(loginInfo.value)
-    await loginRequest(loginInfo.value, 
+    console.log(loginInfo.value);
+    await loginRequest(
+        {
+            memberId: loginInfo.value.memberId,
+            password: loginInfo.value.password,
+        },
         function (data) {
-            console.log(data)
+            console.log(data);
             // console.log(data.accessToken)
             // console.log(data.refreshToken)
-            userStore.myName = data.memberId;
-            userStore.myAccessToken = data.accessToken;
-            userStore.myRefreshToken = data.refreshToken;
-            console.log("complete")
+            userStore.myName = data.data.data.memberId;
+            userStore.myAccessToken = data.data.data.accessToken;
+            userStore.myRefreshToken = data.data.data.refreshToken;
+            userStore.myGrantType = data.data.data.grantType;
+            console.log("complete");
         },
         function (error) {
-            console.log(error)
+            console.log(error);
         }
-    )
+    );
     router.push("/");
 };
 
@@ -75,15 +85,22 @@ const checkSignup = () => {
 };
 
 const doSignup = async () => {
-    await signupRequest(signupInfo.value,
-        function(success) {
-            console.log("complete")
+    console.log(signupInfo.value);
+    await signupRequest(
+        {
+            memberId: signupInfo.value.memberId,
+            password: signupInfo.value.password,
+            nickname: signupInfo.value.nickname,
+            email: signupInfo.value.email,
         },
-        function(error) {
-            console.log("error")
+        function (response) {
+            console.log(response);
+        },
+        function (error) {
+            console.log(error);
         }
-    )
-    loginInfo.value.id = signupInfo.value.id;
+    );
+    loginInfo.value.memberId = signupInfo.value.memberId;
     active.value = false;
     password.value.focus();
 };
@@ -91,7 +108,7 @@ const doSignup = async () => {
 // 회원가입 id 입력칸에서 벗어날 때마다 실행하여 아이디의 중복 체크
 const duplicateMessage = ref("");
 const checkId = () => {
-    if (signupInfo.value.id.length < 4) {
+    if (signupInfo.value.memberId.length < 4) {
         duplicateMessage.value = "아이디는 4자리 이상이어야 합니다";
     } else {
         checkDuplicate();
@@ -99,17 +116,17 @@ const checkId = () => {
 };
 
 const checkDuplicate = async () => {
-    await checkIdRequest({ "id": userStore.myName },
+    await checkIdRequest(
+        { id: signupInfo.value.memberId },
         function (response) {
-            console.log(response)
-            isDuplicated.value = response.data.isDuplicated
-            console.log("isOk")
+            console.log(response);
+            isDuplicated.value = !response.data.isDuplicated;
+            console.log("isOk");
         },
 
         function (error) {
-            console.log(error)
+            console.log(error);
         }
-    
     );
     if (isDuplicated.value) {
         // alert("이미 사용 중인 아이디입니다. 다른 아이디를 입력해주세요.");
@@ -147,8 +164,8 @@ const checkDuplicate = async () => {
                         />
                         <input
                             type="text"
-                            placeholder="Name"
-                            v-model="signupInfo.name"
+                            placeholder="Nickname"
+                            v-model="signupInfo.nickname"
                         />
                         <input
                             type="email"

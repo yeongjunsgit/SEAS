@@ -4,7 +4,6 @@ import axios from "axios";
 import { useauthControllerStore } from "@/stores/authController.js";
 
 // export default instance;
-
 export function localAxios() {
   // 인스턴스 생성
   const instance = axios.create({
@@ -23,9 +22,9 @@ export function localAxios() {
       // pinia 스토어 불러오기
       const authStore = useauthControllerStore();
       const accessToken = authStore.myAccessToken;
-      if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
-      }
+
+      config.headers.Authorization = `Bearer ${accessToken}`;
+
       return config;
     },
     (error) => {
@@ -36,7 +35,19 @@ export function localAxios() {
   instance.interceptors.response.use(
     (response) => {
       // 응답 후 로직 추가 가능
-      console.log("요청 수신", response);
+      // pinia 스토어 불러오기
+      const authStore = useauthControllerStore();
+      const accessToken = authStore.myAccessToken;
+
+      if (accessToken) {
+        // Check if 'headers' property exists in 'response', if not, create it
+        if (!response.headers) {
+          response.headers = {};
+        }
+        // Add 'accessToken' property to 'headers'
+        response.headers.accessToken = accessToken;
+      }
+
       return response;
     },
     (error) => {
