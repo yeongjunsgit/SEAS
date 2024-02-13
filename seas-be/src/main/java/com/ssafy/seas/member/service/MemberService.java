@@ -1,5 +1,7 @@
 package com.ssafy.seas.member.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.ssafy.seas.member.dto.MemberDto;
@@ -25,16 +27,30 @@ public class MemberService {
 	@Transactional
 	public MemberDto.Response signin(MemberDto.Post memberDto) {
 		Member member = memberRepository.findByMemberIdAndPassword(memberDto.getMemberId(), memberDto.getPassword());
-		if(member == null) {
+		if (member == null) {
 			return new MemberDto.Response();
 		}
 		return memberMapper.MemberToMemberDtoResponse(member);
 	}
 
-	public String findMemberNicknameByMemberid(String memberId){
+	public String findMemberNicknameByMemberid(String memberId) {
 		Member member = memberRepository.findByMemberId(memberId)
 			.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다 !!!"));
 		return memberMapper.MemberToMemberDtoResponse(member)
 			.getNickname();
+	}
+
+	/**
+	 * 로그인 id 중복 검사
+	 * @param memberId : 로그인할 때 쓰는 아이디
+	 * @return boolean 중복 여부. true면 중복(가입불가), false면 중복 없음 (가입 가능)
+	 */
+	public MemberDto.checkIdResult isDuplicatedId(String memberId) {
+		Optional<Member> member = memberRepository.findByMemberId(memberId);
+		if (member.isPresent()) {
+			return new MemberDto.checkIdResult(true);
+		}
+		return new MemberDto.checkIdResult(false);
+
 	}
 }

@@ -48,4 +48,14 @@ public class MemberController {
 		}
 	}
 
+	@PostMapping("/check-id")
+	public ApiResponse<MemberDto.checkIdResult> login(@RequestBody MemberDto.checkId memberId) {
+		try{
+			return ApiResponse.success(SuccessCode.POST_SUCCESS, memberService.isDuplicatedId(memberId.getId()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ApiResponse.error(ErrorCode.SERVER_ERROR);
+		}
+	}
+
 }

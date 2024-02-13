@@ -23,6 +23,22 @@ public class MemberDto {
 	@Builder
 	@NoArgsConstructor
 	@AllArgsConstructor
+	public static class checkId {
+		private String id;
+	}
+
+	@Getter
+	@Builder
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class checkIdResult {
+		private Boolean isDuplicate;
+	}
+
+	@Getter
+	@Builder
+	@NoArgsConstructor
+	@AllArgsConstructor
 	public static class Response {
 		private String memberId;
 		private String password;
