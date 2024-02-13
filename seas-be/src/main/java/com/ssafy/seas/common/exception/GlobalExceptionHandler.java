@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -20,7 +21,7 @@ public class GlobalExceptionHandler {
 	private final DiscordNotifier discordNotifier;
 	private final StringBuilder sb = new StringBuilder();
 	@ExceptionHandler(Exception.class)
-	protected final ApiResponse<String> handleAllExceptions(Exception ex) {
+	protected final ResponseEntity<ApiResponse<String>> handleAllExceptions(Exception ex) {
 		log.error("Exception 발생!", ex);
 		sb.setLength(0);
 		StringWriter sw = new StringWriter();
@@ -28,7 +29,7 @@ public class GlobalExceptionHandler {
 		sb.append("🚨 Exception 발생! 🚨\n");
 		sb.append(sw).append("\n");
 		discordNotifier.notify(sb.toString());
-		return ApiResponse.error(HttpStatus.BAD_REQUEST, ex.getMessage());
+		ApiResponse<String> response = ApiResponse.error(HttpStatus.BAD_REQUEST, ex.getMessage());
+		return ResponseEntity.badRequest().body(response);
 	}
-
 }
