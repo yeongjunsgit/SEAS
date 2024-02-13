@@ -38,11 +38,10 @@ const isQuizData = ref(false);
 
 // watch를 이용해서 데이터가 들어오면 위의 변수를 true 값으로 바꿈
 // 따라서 v-if에서 위의 변수를 토대로 판단하여 데이터가 들어와야만 변경됨
-const watchRankData = watch(content, () => {
+watch(content, () => {
     if (content.value.length > 0) {
         isQuizData.value = true;
         currentQuestion.value = content.value[currentIndex.value];
-        console.log(isQuizData.value);
     }
 });
 
@@ -70,11 +69,16 @@ const submitAnswer = () => {
 };
 
 const checkAnswer = () => {
+    console.log(props.quizCategory);
+    console.log(currentQuestion.value.quizId);
+    console.log(answerInput.value);
     sendAnswer(
+        props.quizCategory,
         currentQuestion.value.quizId,
         answerInput.value,
         ({ data }) => {
             isCorrect.value = data.data.result; // 정답 여부를 저장
+            console.log(data.data.result);
             console.log(isCorrect.value);
         },
         (error) => {
@@ -114,6 +118,7 @@ const hint = ref("1");
 const showHint = () => {
     hintShown.value = true;
     getHint(
+        props.quizCategory,
         currentQuestion.value.quizId,
         ({ data }) => {
             hint.value = data.data.hint; // 정답 여부를 저장
@@ -145,12 +150,13 @@ const clearInput = () => {
                 {{ hint ? `힌트: ${hint}` : "존재하는 힌트가 없습니다." }}
             </h3>
         </div>
-        <div>
+        <div class="input-conatiner">
             <input
                 v-model="answerInput"
                 type="text"
                 id="answer"
                 autocomplete="off"
+                @keyup.enter="submitAnswer"
                 placeholder="정답을 입력하시오."
             />
         </div>

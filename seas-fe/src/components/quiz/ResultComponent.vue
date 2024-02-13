@@ -1,31 +1,47 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { getResult, getResultRank } from "@/api/quiz.js";
 
 const router = useRouter();
 
+// 퀴즈 결과 불러오기 ===========================================
 // 결과 저장 변수
 const resultInfo = ref({
-    correctCount: 0,
+    answerCount: 0,
     wrongCount: 0,
-    hintCount: 0,
-    score: 0,
+    usedHintCount: 0,
+    earnedScore: 0,
 });
 
-onMounted(() => {
-    // 결과 백엔드에서 불러오기
-    // resultInfo.value = getResult();
-    resultInfo.value = {
-        correctCount: 8,
-        wrongCount: 2,
-        hintCount: 3,
-        score: 81,
-    };
-});
+getResult(
+    ({ data }) => {
+        resultInfo.value = data.data;
+        console.log(resultInfo.value);
+    },
+    (error) => {
+        console.log(error);
+    }
+);
 
 // Props와 Emits를 정의합니다.
+const props = defineProps(["currentUserRank"]);
 const emit = defineEmits(["showTutorial"]);
 
+// 이전 티어와 퀴즈 후 티어 결과 비교 ===========================
+const isRankChanged = ref();
+getResultRank(
+    props.currentUserRank,
+    ({ data }) => {
+        isRankChanged.value = data.data;
+        console.log(isRankChanged.value);
+    },
+    (error) => {
+        console.log(error);
+    }
+);
+
+// 단순 라우팅 =================================================
 // showTutorial 버튼 클릭 시 실행되는 함수
 const goTutorial = () => {
     // @showTutorial 이벤트를 발생시킵니다.
@@ -46,14 +62,18 @@ const goMypage = () => {
             <h1>결과</h1>
         </div>
         <div>
-            <h2>맞춘 문제 수 : {{ resultInfo.correctCount }}</h2>
+            <h2>맞춘 문제 수 : {{ resultInfo.answerCount }}</h2>
             <h2>틀린 문제 수 : {{ resultInfo.wrongCount }}</h2>
-            <h2>힌트 사용 횟수 : {{ resultInfo.hintCount }}</h2>
-            <h2>획득한 골드 : {{ resultInfo.score }}</h2>
+            <h2>힌트 사용 횟수 : {{ resultInfo.usedHintCount }}</h2>
+            <h2>획득한 골드 : {{ resultInfo.earnedScore }}</h2>
         </div>
         <div>
-            <h2 v-if="resultInfo.score >= 80">당신은 훌륭한 해적이군요!</h2>
-            <h2 v-else-if="resultInfo.score >= 50">조금은 해적 같군요!</h2>
+            <h2 v-if="resultInfo.earnedScore >= 80">
+                당신은 훌륭한 해적이군요!
+            </h2>
+            <h2 v-else-if="resultInfo.earnedScore >= 50">
+                조금은 해적 같군요!
+            </h2>
             <h2 v-else>이제 막 해적질을 시작한 초보인가요?</h2>
         </div>
     </div>

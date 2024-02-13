@@ -69,11 +69,12 @@ li {
     flex-wrap: wrap;
     justify-content: space-around;
     height: 45vh;
-    margin-top: 32vh;
+    min-height: 500px;
+    margin-top: 18vh;
 
     button {
         height: 90px;
-        font-size: 1.9vw;
+        margin: 30px 0 30px 0;
     }
 }
 </style>
