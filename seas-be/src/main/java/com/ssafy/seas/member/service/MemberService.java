@@ -15,6 +15,7 @@ import com.ssafy.seas.member.jwt.TokenProvider;
 import com.ssafy.seas.member.mapper.MemberMapper;
 import com.ssafy.seas.member.repository.MemberRepository;
 import com.ssafy.seas.member.util.MemberUtil;
+import com.ssafy.seas.member.util.TokenUtil;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class MemberService {
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
 	private final TokenProvider tokenProvider;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
+	private final TokenUtil tokenUtil;
 	private final MemberUtil memberUtil;
 
 	@Transactional
@@ -53,9 +54,8 @@ public class MemberService {
 		MemberDto.AuthResponse authResponse = tokenProvider.generateTokenResponse(authentication);
 		log.info("Authentication : {}", authentication.toString());
 
-		// memberUtil.getLoginMemberId();
-
-		// Todo : Refresh Token Redis에 저장
+		// Refresh Token Redis에 저장
+		tokenUtil.setRefreshToken(authResponse.getRefreshToken());
 
 		return authResponse;
 	}
@@ -65,8 +65,10 @@ public class MemberService {
 		tokenProvider.validateToken(tokenRequest.getRefreshToken());
 		// Access Token 파싱해서 새로운 인증객체 만들기
 		Authentication authentication = tokenProvider.getAuthentication(tokenRequest.getAccessToken());
-		// Todo : Redis에 저장되어있는 Refresh Token과 Request로 받은 Refresh Token 비교
-
+		// Redis에 저장되어있는 Refresh Token과 Request로 받은 Refresh Token 비교
+		if(tokenUtil.checkRefreshTokenEquals(tokenRequest.getRefreshToken()) == false){
+			throw new RuntimeException("저장되어 있는 토큰과 일치하지 않습니다 !!!");
+		}
 		// 인증 객체로 토큰 재발행
 		MemberDto.AuthResponse authResponse = tokenProvider.generateTokenResponse(authentication);
 
