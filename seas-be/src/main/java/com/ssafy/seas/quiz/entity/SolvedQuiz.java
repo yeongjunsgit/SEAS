@@ -32,8 +32,8 @@ public class SolvedQuiz extends BaseEntity {
 	}
 
 	public void updateCount(boolean isRight){
-		if(isRight) correctCount += 1;
-		else failedCount += 1;
+		if(isRight) this.correctCount += 1;
+		else this.failedCount += 1;
 	}
 
 }

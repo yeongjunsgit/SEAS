@@ -31,7 +31,6 @@ public class QuizUtil {
         quizWeight[0][0] = weightInfo.get(0).getQuizId();
         quizWeight[0][1] = toFixed(1 / (weightInfo.get(0).getQuizInterval() * weightInfo.get(0).getEf()), 1);
 
-        // 10개를 충족시켜야하는데, 여기서가 문제구나 문제 9가 중복될 수도 있으니까...
         for(int factorIndex = 1; factorIndex < size; factorIndex++){
             QuizDto.QuizWeightInfoDto quizWeightInfo = weightInfo.get(factorIndex);
 
@@ -44,10 +43,6 @@ public class QuizUtil {
             quizWeight[factorIndex][0] = toFixed(quizId, 1);
             // weight가 작을 수록 많이 뽑혀야 하므로, weight를 역수로 치환
             quizWeight[factorIndex][1] = toFixed((quizWeight[factorIndex - 1][1]) + 1 / weight, 1);
-
-            // Factor 테이블에 데이터가 저장되는 문제 때문에 달아놓은 조건
-            if(unDuplicatedQuizId.size() == 10)
-                break;
         }
 
         return quizWeight;

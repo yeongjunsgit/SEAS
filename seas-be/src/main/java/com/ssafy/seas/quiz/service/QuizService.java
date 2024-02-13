@@ -2,8 +2,6 @@ package com.ssafy.seas.quiz.service;
 
 
 import com.ssafy.seas.member.util.MemberUtil;
-import com.ssafy.seas.quiz.constant.EasinessFactor;
-import com.ssafy.seas.quiz.constant.Interval;
 import com.ssafy.seas.quiz.dto.*;
 import com.ssafy.seas.quiz.repository.CorrectAnswerRepository;
 import com.ssafy.seas.quiz.repository.FactorRepository;
@@ -60,16 +58,16 @@ public class QuizService {
         List<QuizDto.QuizWeightInfoDto> quizWeightInfos = new ArrayList<>();
 
         // 아무런 문제도 안 풀었을 경우(=처음) or, 10개 미만으로 풀었을 경우, 모든 문제를 불러옴
-        if(quizFactors.size() < 10){
-            int requiredCount = 10 - quizFactors.size();
-            log.info("불러와야 하는 문제 수 : " +requiredCount);
-
-            List<QuizDto.QuizInfoDto> quizInfos = quizCustomRepository.findQuizzesLimitedBy(requiredCount, categoryId);
-            log.info(">>>>>> QUIZINFO SIZE : " + quizInfos.size());
-            List<QuizDto.QuizFactorDto> infos = quizInfos.stream().map(dto -> new QuizDto.QuizFactorDto(memberId, dto.getQuizId(), dto.getQuiz(), dto.getHint(), Interval.FIRST.getValue(), EasinessFactor.MINIMUM.getValue())).collect(Collectors.toList());
-
-            quizFactors.addAll(infos);
-        }
+//        if(quizFactors.size() < 10){
+//            int requiredCount = 10 - quizFactors.size();
+//            log.info("불러와야 하는 문제 수 : " +requiredCount);
+//
+//            List<QuizDto.QuizInfoDto> quizInfos = quizCustomRepository.findQuizzesLimitedBy(requiredCount, categoryId);
+//            log.info(">>>>>> QUIZINFO SIZE : " + quizInfos.size());
+//            List<QuizDto.QuizFactorDto> infos = quizInfos.stream().map(dto -> new QuizDto.QuizFactorDto(memberId, dto.getQuizId(), dto.getQuiz(), dto.getHint(), Interval.FIRST.getValue(), EasinessFactor.MINIMUM.getValue())).collect(Collectors.toList());
+//
+//            quizFactors.addAll(infos);
+//        }
 
         // factor 테이블의 정보를 저장
         quizWeightInfos.addAll(
@@ -77,8 +75,6 @@ public class QuizService {
                     return new QuizDto.QuizWeightInfoDto(dto.getQuizId(), dto.getQuizInterval(), dto.getEf());
                 }).collect(Collectors.toList())
         );
-
-        log.info(">>>>>>>>>> QUIZ_WEIGHT_INFO : " + quizWeightInfos.size());
 
         for(int i = 0; i < 10; i++) {
             double[][] prefixWeightList = quizUtil.getPrefixWeightArray(quizWeightInfos);
@@ -90,7 +86,6 @@ public class QuizService {
             String quiz = quizFactors.stream().filter(dto -> dto.getQuizId() == quizId).findFirst().get().getQuiz();
             quizInfoList.add(new QuizListDto.QuizInfo(quizId, quiz));
         }
-
 
         quizUtil.storeQuizToRedis(memberId, quizFactors);
 
@@ -114,6 +109,8 @@ public class QuizService {
 
         List<String> quizAnswers = quizCustomRepository.findAllQuizAnswerByQuizId(quizId);
 
+        quizAnswers.stream().forEach(System.out::println);
+
         Integer memberId = MemberUtil.getLoginMemberId();
 
         for(String quizAnswer : quizAnswers){
@@ -126,15 +123,16 @@ public class QuizService {
                 // factor 갱신
                 //factorRepository.updateFactor(factor.getEf(), factor.getInterval(), quizId, memberId);
                 correctAnswerRepository.saveOrUpdateStreakAndScoreHistory(factor);
-                correctAnswerRepository.saveOrUpdateFactorAndSolvedQuiz(factor);
+                correctAnswerRepository.saveOrUpdateFactorAndSolvedQuiz(factor, memberId);
                 return new QuizAnswerDto.Response(true);
             }
         }
 
         QuizAnswerDto.UpdatedFactors factor = quizUtil.getNewFactor(memberId, quizId, categoryId);
         wrongAnswerRepostory.saveOrUpdateIncorrectNoteAndSolvedQuiz(memberId, quizId);
+        //wrongAnswerRepostory.saveOrUpdateFactor(memberId, factor);
         //factor 테이블 갱신
-        //factorRepository.updateFactor(factor.getEf(), factor.getInterval(), quizId, memberId);
+        factorRepository.updateFactor(factor.getEf(), factor.getInterval(), quizId, memberId);
         return new QuizAnswerDto.Response(false);
     }
 
