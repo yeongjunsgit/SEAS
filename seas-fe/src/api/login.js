@@ -11,6 +11,7 @@ function signupRequest(payload, success, fail) {
 }
 
 function checkIdRequest(payload, success, fail) {
+  console.log(payload);
   local.post(`/auth/check-id`, payload).then(success).catch(fail);
 }
 

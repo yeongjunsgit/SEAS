@@ -117,10 +117,10 @@ const checkId = () => {
 
 const checkDuplicate = async () => {
   await checkIdRequest(
-    { id: userStore.myName },
+    { id: signupInfo.value.memberId },
     function (response) {
       console.log(response);
-      isDuplicated.value = response.data.isDuplicated;
+      isDuplicated.value = !response.data.isDuplicated;
       console.log("isOk");
     },
 
