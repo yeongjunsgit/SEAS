@@ -21,6 +21,7 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.seas.common.dto.ApiResponse;
+import com.ssafy.seas.common.exception.ExceptionUtil;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -65,7 +66,6 @@ public class LoggingFilter extends OncePerRequestFilter {
 			logRequest(request);
 			filterChain.doFilter(request, response);
 		} catch (Exception ex) {
-			handleException(ex, response);
 			throw ex; // Re-throw the exception to propagate it to the outer catch block
 		} finally {
 			logResponse(response);
@@ -133,14 +133,20 @@ public class LoggingFilter extends OncePerRequestFilter {
 
 	private void handleException(Exception ex, HttpServletResponse response) throws IOException {
 		log.error("Exception during request processing", ex);
-		ex.printStackTrace();
-		String logMessage = String.format("[ERROR] : %s", ex.getMessage() + "\n\n" + ex.getStackTrace());
+
+		String logMessage = String.format("[ERROR] : %s", ex.getMessage() + "\n\n");
 		stringBuilder.append(logMessage).append("\n");
+
+		stringBuilder.append("🚨 Exception 발생! 🚨\n");
+		stringBuilder.append(ExceptionUtil.exceptionToString(ex)).append("\n");
+
 		ApiResponse<?> errorResponse = ApiResponse.error(HttpStatus.BAD_REQUEST, ex.getMessage());
 		ObjectMapper objectMapper = new ObjectMapper();
 		String jsonResponse = objectMapper.writeValueAsString(errorResponse);
 		// Customize the response based on the exception
 		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
 		response.getWriter().write(jsonResponse);
 	}
 }
