@@ -10,6 +10,8 @@ import com.ssafy.seas.member.entity.Member;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Integer>, MemberRepositoryCustom {
 	Member findByMemberIdAndPassword(String memberId, String Password);
-	Optional<Member> findByNickname(String nickname);
+
 	Optional<Member> findByMemberId(String memberId);
+
+	Optional<Member> findByNickname(String nickname);
 }
