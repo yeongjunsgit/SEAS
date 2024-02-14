@@ -99,6 +99,7 @@ public class QuizService {
         List<String> quizAnswers = quizCustomRepository.findAllQuizAnswerByQuizId(quizId);
 
         Integer memberId = memberUtil.getLoginMemberId();
+        log.info("현재 로그인한 유저의 ID : {}", memberId);
 
         for(String quizAnswer : quizAnswers){
             if(quizAnswer.equals(submit)){
