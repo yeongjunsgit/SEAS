@@ -24,11 +24,7 @@ public class MemberUtil {
 
 
 	public Integer getLoginMemberId() {
-		// TODO: 현재 로그인한 유저의 id(pk)를 반환하는 로직 구현
-		// Integer id = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
-		// log.info("MemberUtil getLoginMemberId ::::::::: id '{}'", id);
-		// return id;
-
+		// 현재 로그인한 유저의 id(pk)를 반환
 		Member member = memberRepository.findByMemberId(SecurityContextHolder.getContext().getAuthentication().getName())
 			.orElseThrow(() -> new CustomException("일치하는 사용자가 없습니다."));
 		log.info("MemberUtil getLoginMemberId ::::::::: id '{}'", member.getId());

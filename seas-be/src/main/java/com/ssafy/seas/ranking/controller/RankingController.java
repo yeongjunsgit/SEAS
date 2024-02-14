@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.seas.common.constants.ErrorCode;
 import com.ssafy.seas.common.constants.SuccessCode;
 import com.ssafy.seas.common.dto.ApiResponse;
+import com.ssafy.seas.member.util.MemberUtil;
 import com.ssafy.seas.ranking.dto.BadgeDto;
 import com.ssafy.seas.ranking.dto.RankDto;
 import com.ssafy.seas.ranking.dto.RankerDto;
@@ -23,18 +23,18 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/ranking")
 public class RankingController {
 	private final RankingService rankingService;
-	// private final Rank
+	private final MemberUtil memberUtil;
 
 	@GetMapping("/list")
 	public ApiResponse<RankDto.Response> getRankingList() {
-		// Todo : (1) 현재 로그인한 유저의 id 가져오기
-		String uuid = "toast";
+		// (1) 현재 로그인한 유저의 id 가져오기
+		String nickname = memberUtil.getLoginMember().getNickname();
 
 		List<RankerDto.RankResponse> rankerDtoList = rankingService.getRankers();
 		List<RankerDto.RankResponse> rankerDtoTop3List = new ArrayList<>();
 		// Todo : (2) 쿼리 겹치는 부분 최적화 하기
 		// (2) 여기랑
-		List<RankerDto.RankResponse> myRankDto = rankingService.getMyRank(uuid);
+		List<RankerDto.RankResponse> myRankDto = rankingService.getMyRank(nickname);
 
 		for(RankerDto.RankResponse currentRanker : rankerDtoList){
 			List<BadgeDto.BadgeResponse> badgeList = rankingService.getBadgeList(currentRanker.getNickname());

@@ -1,5 +1,6 @@
 package com.ssafy.seas.member.controller;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,5 +50,19 @@ public class MemberController {
 		log.info("Refresh Token 재발행 시작 !!!!!!!!!!");
 		MemberDto.AuthResponse authResponse = memberService.reIssue(tokenRequest);
 		return ApiResponse.success(SuccessCode.POST_SUCCESS, authResponse);
+	}
+
+	@DeleteMapping("/logout")
+	public ApiResponse<String> logout() {
+		log.info("로그아웃 시작 !!!!!!!!");
+		memberService.logout();
+		return ApiResponse.success(SuccessCode.DELETE_SUCCESS, "로그아웃 성공");
+	}
+
+	@DeleteMapping("/quit")
+	public ApiResponse<String> quitMember() {
+		log.info("회원탈퇴 시작 !!!!!!!!!");
+		memberService.deleteMember();
+		return ApiResponse.success(SuccessCode.DELETE_SUCCESS, "회원탈퇴 성공");
 	}
 }
