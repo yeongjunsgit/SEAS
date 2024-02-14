@@ -68,11 +68,11 @@ public class RankerRepositoryImpl implements RankerRepositoryCustom {
 
 
 	@Override
-	public List<RankerDto.RankResponse> getMyRank(String uuid) {
+	public List<RankerDto.RankResponse> getMyRank(String memberId) {
 		return queryFactory
 			.select(new QRankerDto_RankResponse(member.nickname, member.point, tier.name))
 			.from(member)
-			.where(member.memberId.eq(uuid))
+			.where(member.memberId.eq(memberId))
 			.innerJoin(tier)
 			.on(member.point.between(tier.minScore, tier.maxScore))
 			.fetch();

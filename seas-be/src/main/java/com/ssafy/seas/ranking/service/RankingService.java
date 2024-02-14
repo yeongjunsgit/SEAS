@@ -27,9 +27,8 @@ public class RankingService {
 		return rankerRepositoryCustom.getBadgeList(nickname);
 	}
 
-	public List<RankerDto.RankResponse> getMyRank(String uuid){
-		return rankerRepositoryCustom.getMyRank(uuid);
-		// return rankerRepositoryImpl.getMyRank(uuid);
+	public List<RankerDto.RankResponse> getMyRank(String memberId){
+		return rankerRepositoryCustom.getMyRank(memberId);
 	}
 
 	public List<RankerDto.RankResponse> getRankByNickname(String nickname){
