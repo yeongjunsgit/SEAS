@@ -26,7 +26,6 @@ public class QuizController {
         return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getQuizzes(categoryId));
     }
 
-
     @GetMapping("/hint/{categoryId}/{quizId}")
     public ApiResponse<QuizHintDto.Response> getHint(
             @PathVariable("categoryId") Integer categoryId,
@@ -40,6 +39,10 @@ public class QuizController {
                                                                       @PathVariable("categoryId") Integer categoryId,
                                                                       @PathVariable("quizId") Integer quizId) {
         try {
+            if(request.getSubmit().equals("")){
+                return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getSubmitResult(request, categoryId, quizId));
+            }
+            //  빈 값일때 body 안들어왔다는 에러 뜸
             return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getSubmitResult(request, categoryId, quizId));
         }
         catch (IllegalStateException e){
@@ -49,6 +52,12 @@ public class QuizController {
             return ApiResponse.error(ErrorCode.SERVER_ERROR);
         }
     }
+
+    @GetMapping("/reset")
+    public ApiResponse<QuizDto.BaseResponse> getReset(){
+        return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.redisReset());
+    }
+
 
     @GetMapping("/result")
     public ApiResponse<QuizResultDto.Response> getTotalResult(){
