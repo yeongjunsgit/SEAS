@@ -29,4 +29,20 @@ const authControllerStore = useauthControllerStore();
 
 app.provide("store", authControllerStore);
 
+function loadLoginDataFromLocalStorage() {
+  const savedName = localStorage.getItem("myName");
+  const savedRefreshToken = localStorage.getItem("refreshToken");
+  const savedMyGrantType = localStorage.getItem("myGrantType");
+  const savedAccessToken = localStorage.getItem("accessToken");
+
+  authControllerStore.myName = savedName;
+  authControllerStore.myAccessToken = savedRefreshToken;
+  authControllerStore.myRefreshToken = savedMyGrantType;
+  authControllerStore.myGrantType = savedAccessToken;
+}
+
+window.onload = () => {
+  loadLoginDataFromLocalStorage();
+};
+
 app.mount("#app");

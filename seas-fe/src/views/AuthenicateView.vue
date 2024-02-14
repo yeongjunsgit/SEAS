@@ -41,8 +41,6 @@ const signupInfo = ref({
 const password = ref(null);
 
 const login = async () => {
-  // await userStore.login(loginInfo.value);
-  console.log(loginInfo.value);
   await loginRequest(
     {
       memberId: loginInfo.value.memberId,
@@ -50,8 +48,12 @@ const login = async () => {
     },
     function (data) {
       console.log(data);
-      // console.log(data.accessToken)
-      // console.log(data.refreshToken)
+
+      localStorage.setItem("myName", data.data.data.memberId);
+      localStorage.setItem("accessToken", data.data.data.accessToken);
+      localStorage.setItem("refreshToken", data.data.data.refreshToken);
+      localStorage.setItem("myGrantType", data.data.data.grantType);
+
       userStore.myName = data.data.data.memberId;
       userStore.myAccessToken = data.data.data.accessToken;
       userStore.myRefreshToken = data.data.data.refreshToken;
