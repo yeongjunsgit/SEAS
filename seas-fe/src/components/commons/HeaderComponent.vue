@@ -21,17 +21,17 @@ const movePage = (destination) => {
 
 const logout = () => {
     // isLogin.value = false;
-    userStore.resetState();
     logOutRequest(
         ({ data }) => {
-            console.log("로그아웃 백에서 해줘 : " + data.data.message);
+            console.log("로그아웃 백에서 해줘 : " + data.data);
+            userStore.resetState();
+            console.log("Logged out");
+            movePage("/");
         },
         (error) => {
             console.log(error);
         }
     );
-    console.log("Logged out");
-    movePage("/");
 };
 </script>
 
