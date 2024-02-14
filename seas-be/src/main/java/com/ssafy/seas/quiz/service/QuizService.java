@@ -38,7 +38,7 @@ public class QuizService {
 
     public QuizListDto.Response getQuizzes(Integer categoryId){
 
-        Integer memberId = MemberUtil.getLoginMemberId();
+        Integer memberId = memberUtil.getLoginMemberId();
 
         List<QuizListDto.QuizInfo> quizInfoList = new ArrayList<>();
 
@@ -83,7 +83,7 @@ public class QuizService {
 
     public QuizHintDto.Response getHint(Integer quizId){
 
-        Integer memberId = MemberUtil.getLoginMemberId();
+        Integer memberId = memberUtil.getLoginMemberId();
 
         quizUtil.updateHintState(memberId, quizId);
         String hint = quizUtil.getQuizHint(memberId, quizId);
@@ -100,7 +100,7 @@ public class QuizService {
 
         quizAnswers.stream().forEach(System.out::println);
 
-        Integer memberId = MemberUtil.getLoginMemberId();
+        Integer memberId = memberUtil.getLoginMemberId();
 
         for(String quizAnswer : quizAnswers){
             if(quizAnswer.equals(submit)){
@@ -126,7 +126,7 @@ public class QuizService {
 
     public QuizResultDto.Response getTotalResult(){
 
-        Integer memberId = MemberUtil.getLoginMemberId();
+        Integer memberId = memberUtil.getLoginMemberId();
 
         QuizResultDto.Response response = quizUtil.getResult(memberId);
         quizUtil.resetRedis(memberId);
@@ -134,7 +134,7 @@ public class QuizService {
     }
 
     public QuizDto.BaseResponse redisReset(){
-        Integer memberId = MemberUtil.getLoginMemberId();
+        Integer memberId = memberUtil.getLoginMemberId();
         quizUtil.resetRedis(memberId);
 
         return new QuizDto.BaseResponse("레디스 값 삭제 성공");
