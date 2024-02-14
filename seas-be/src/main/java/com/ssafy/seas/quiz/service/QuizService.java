@@ -79,7 +79,7 @@ public class QuizService {
             quizInfoList.add(new QuizListDto.QuizInfo(quizId, quiz));
         }
 
-        quizUtil.storeQuizToRedis(memberId, quizFactors);
+        quizUtil.storeQuizToRedis(memberId, quizFactors, quizInfoList);
 
         return new QuizListDto.Response(quizInfoList);
     }

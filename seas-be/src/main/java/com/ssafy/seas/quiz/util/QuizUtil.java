@@ -5,6 +5,7 @@ import com.ssafy.seas.quiz.constant.Interval;
 import com.ssafy.seas.quiz.constant.Quality;
 import com.ssafy.seas.quiz.dto.QuizAnswerDto;
 import com.ssafy.seas.quiz.dto.QuizDto;
+import com.ssafy.seas.quiz.dto.QuizListDto;
 import com.ssafy.seas.quiz.dto.QuizResultDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -188,14 +189,25 @@ public class QuizUtil {
     }
 
     // 저장 확인 완료
-    public void storeQuizToRedis(Integer memberId, List<QuizDto.QuizFactorDto> quizInfoList){
+    public void storeQuizToRedis(Integer memberId,
+                    List<QuizDto.QuizFactorDto> quizInfoList,
+                    List<QuizListDto.QuizInfo> quizWeightList) {
 
         Map<Integer, QuizDto.QuizFactorDto> map = new HashMap<>();
 
-        for(QuizDto.QuizFactorDto quizInfo : quizInfoList) {
+
+        // 퀴즈 정보를 담고 있는 리스트
+        for (QuizDto.QuizFactorDto quizInfo : quizInfoList) {
             Integer quizId = quizInfo.getQuizId();
-            map.put(quizId, quizInfo);
-            log.info("저장되는 quizID : {}\n", quizId);
+
+            // 선택된 문제 리스트를 순회하면서 해당 아이디와 같으면 레디스에 저장한다.
+            for (QuizListDto.QuizInfo weightDto : quizWeightList) {
+                if (quizId == weightDto.getQuizId()) {
+                    map.put(quizId, quizInfo);
+                    log.info("저장되는 quizID : {}\n", quizId);
+                    break;
+                }
+            }
         }
 
         redisTemplate.opsForValue().set(memberId, map);
