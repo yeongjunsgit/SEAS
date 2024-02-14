@@ -113,22 +113,22 @@ public class TokenProvider {
 
 
 	private void handleSecurityException(SecurityException e) {
-		throw new RuntimeException("서명이 유효하지 않습니다. SecurityException: " + e.getMessage());
+		throw new RuntimeException("서명이 유효하지 않습니다.");
 	}
 
 	private void handleMalformedJwtException(MalformedJwtException e) {
-		throw new RuntimeException("토큰의 형식이 올바르지 않습니다. MalformedJwtException: " + e.getMessage());
+		throw new RuntimeException("토큰의 형식이 올바르지 않습니다.");
 	}
 
 	private void handleExpiredJwtException(ExpiredJwtException e) {
-		throw new RuntimeException("토큰의 유효 기간이 만료되었습니다. ExpiredJwtException: " + e.getMessage());
+		throw new RuntimeException("토큰의 유효 기간이 만료되었습니다.");
 	}
 
 	private void handleUnsupportedJwtException(UnsupportedJwtException e) {
-		throw new RuntimeException("지원하지 않는 JWT 기능이 사용되었습니다. UnsupportedJwtException: " + e.getMessage());
+		throw new RuntimeException("지원하지 않는 JWT 기능이 사용되었습니다.");
 	}
 
 	private void handleIllegalArgumentException(IllegalArgumentException e) {
-		throw new RuntimeException("잘못된 인수가 전달되었습니다. IllegalArgumentException: " + e.getMessage());
+		throw new RuntimeException("잘못된 인수가 전달되었습니다.");
 	}
 }

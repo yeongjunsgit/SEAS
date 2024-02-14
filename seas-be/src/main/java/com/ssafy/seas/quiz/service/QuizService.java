@@ -98,8 +98,6 @@ public class QuizService {
 
         List<String> quizAnswers = quizCustomRepository.findAllQuizAnswerByQuizId(quizId);
 
-        quizAnswers.stream().forEach(System.out::println);
-
         Integer memberId = memberUtil.getLoginMemberId();
 
         for(String quizAnswer : quizAnswers){
@@ -107,10 +105,11 @@ public class QuizService {
                 // 퀴즈 정답 횟수 + 1
                 // 카테고리 별 맞힌 횟수 + 1
 
-                quizUtil.updateQuizState(memberId, quizId);
+                quizUtil.updateQuizAnswerState(memberId, quizId);
                 QuizAnswerDto.UpdatedFactors factor = quizUtil.getNewFactor(memberId, quizId, categoryId);
                 // factor 갱신
-                //factorRepository.updateFactor(factor.getEf(), factor.getInterval(), quizId, memberId);
+
+
                 correctAnswerRepository.saveOrUpdateStreakAndScoreHistory(factor);
                 correctAnswerRepository.saveOrUpdateFactor(factor, memberId);
                 return new QuizAnswerDto.Response(true);

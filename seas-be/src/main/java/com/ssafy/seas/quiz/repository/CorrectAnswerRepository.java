@@ -86,13 +86,11 @@ public class CorrectAnswerRepository {
         // 오늘 문제를 푼 흔적이 없다면
         if(todaySolvedQuiz == null){
             // 맞힌 문제 = 1을 가진 새로운 레코드를 넣는다.
-            jpaQueryFactory
-                    .insert(solvedQuiz)
-                    .set(solvedQuiz.correctCount, 1)
-                    .set(solvedQuiz.failedCount, 0)
-                    .set(solvedQuiz.member.id, factors.getMemberId())
-                    .set(solvedQuiz.quiz.id, factors.getQuizId())
-                    .execute();
+
+            Quiz quiz = entityManager.getReference(Quiz.class, factors.getQuizId());
+            // solvedQuiz 생성자 생성
+            SolvedQuiz solvedQuiz = new SolvedQuiz(member, quiz, 1, 0);
+            entityManager.persist(solvedQuiz);
         }
         else{ // 오늘 문제를 푼 흔적이 있다면
             if(todaySolvedQuiz.getCorrectCount() == 0) { // 문제를 한번도 맞추지 못했다면
@@ -100,7 +98,8 @@ public class CorrectAnswerRepository {
                 Integer point = existingMember.getPoint();
                 existingMember.setPoint(point + factors.getPoint());
             }
-            todaySolvedQuiz.updateCount(true);
+            Integer todaySolvedQuizCount = todaySolvedQuiz.getCorrectCount();
+            todaySolvedQuiz.setCorrectCount(todaySolvedQuizCount + 1);
             log.info("count : {}", todaySolvedQuiz.getCorrectCount());
         }
     }
