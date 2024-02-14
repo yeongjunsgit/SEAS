@@ -120,21 +120,21 @@ const checkDuplicate = async () => {
     { id: signupInfo.value.memberId },
     function (response) {
       console.log(response);
-      isDuplicated.value = !response.data.isDuplicated;
+      isDuplicated.value = response.data.data.isDuplicate;
       console.log("isOk");
+      if (isDuplicated.value) {
+        // alert("이미 사용 중인 아이디입니다. 다른 아이디를 입력해주세요.");
+        duplicateMessage.value = "이미 사용 중인 아이디입니다";
+      } else {
+        // alert("사용 가능한 아이디입니다.");
+        duplicateMessage.value = "사용 가능한 아이디입니다";
+      }
     },
 
     function (error) {
       console.log(error);
     }
   );
-  if (isDuplicated.value) {
-    // alert("이미 사용 중인 아이디입니다. 다른 아이디를 입력해주세요.");
-    duplicateMessage.value = "이미 사용 중인 아이디입니다";
-  } else {
-    // alert("사용 가능한 아이디입니다.");
-    duplicateMessage.value = "사용 가능한 아이디입니다";
-  }
 };
 </script>
 
