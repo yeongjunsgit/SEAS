@@ -8,7 +8,7 @@ import { useauthControllerStore } from "@/stores/authController.js";
 const userStore = useauthControllerStore();
 const user_access_token = userStore.myAccessToken;
 
-const props = defineProps(["type", "apiUrl"]);
+const props = defineProps(["type"]);
 const datas = ref([]);
 const cardKwd = ref({});
 

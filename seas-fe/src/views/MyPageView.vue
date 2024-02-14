@@ -5,6 +5,10 @@ import CategoryComponent from "@/components/mypage/CategoryComponent.vue";
 import LineChartVue from "@/components/mypage/LineChart.vue";
 import GrassComponentVue from "@/components/mypage/GrassComponent.vue";
 import { getLineChart } from "@/api/mypage.js";
+import { useauthControllerStore } from "@/stores/authController";
+
+const userStore = useauthControllerStore();
+const myname = userStore.myName;
 
 const categories = [
   "데이터베이스",

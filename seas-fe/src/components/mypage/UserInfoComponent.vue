@@ -3,9 +3,17 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 import RadarChart from "./RadarChart.vue";
 import TagComponent from "@/components/ranking/TagComponent.vue";
-import { getUserInfo, getUserBadge } from "@/api/mypage.js";
+import {
+  getMyInfo,
+  getUserInfo,
+  getMyBadge,
+  getUserBadge,
+} from "@/api/mypage.js";
 
 const userinfo = ref(Object);
+
+const props = defineProps(["nickname"]);
+console.log(props.nickname);
 
 const badgeList = ref([
   { id: 1, name: "알고리즘" },
@@ -17,44 +25,76 @@ const badgeList = ref([
 ]);
 
 // 전역 Axios 사용
-const getInitUserInfo = () => {
-  // axios함수를 통해 데이터를 불러온다.
-  getUserInfo(
-    ({ data }) => {
-      userinfo.value = data.data;
-    },
-    (error) => {
-      console.log(error);
-    }
-  );
-  getUserBadge(
-    ({ data }) => {
-      userinfo.value = data.data;
-
-      const idArray = [1, 2, 3, 4, 5, 6];
-      const tmpArray = idArray.filter(
-        (item) => !data.data.map((e) => e.id).includes(item)
-      );
-
-      for (var i = 0; i < badgeList.value.length; i++) {
-        if (tmpArray.some((e) => e === badgeList.value[i].id)) {
-          badgeList.value.splice(i, 1);
-          i--;
-        }
-      }
-    },
-    (error) => {
-      console.log(error);
-    }
-  );
-};
-
-onMounted(async () => {
+const getInitUserInfo = async () => {
   try {
-    getInitUserInfo();
+    if (props.nickname) {
+      // axios함수를 통해 데이터를 불러온다.
+      getUserInfo(
+        props.nickname,
+        ({ data }) => {
+          userinfo.value = data.data;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+      getUserBadge(
+        props.nickname,
+        ({ data }) => {
+          userinfo.value = data.data;
+
+          const idArray = [1, 2, 3, 4, 5, 6];
+          const tmpArray = idArray.filter(
+            (item) => !data.data.map((e) => e.id).includes(item)
+          );
+
+          for (var i = 0; i < badgeList.value.length; i++) {
+            if (tmpArray.some((e) => e === badgeList.value[i].id)) {
+              badgeList.value.splice(i, 1);
+              i--;
+            }
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    } else {
+      getMyInfo(
+        ({ data }) => {
+          userinfo.value = data.data;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+      getMyBadge(
+        ({ data }) => {
+          userinfo.value = data.data;
+
+          const idArray = [1, 2, 3, 4, 5, 6];
+          const tmpArray = idArray.filter(
+            (item) => !data.data.map((e) => e.id).includes(item)
+          );
+
+          for (var i = 0; i < badgeList.value.length; i++) {
+            if (tmpArray.some((e) => e === badgeList.value[i].id)) {
+              badgeList.value.splice(i, 1);
+              i--;
+            }
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    }
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
+};
+onMounted(() => {
+  getInitUserInfo();
 });
 </script>
 
@@ -70,13 +110,21 @@ onMounted(async () => {
           <img src="@/assets/images/Logo.png" alt="" />
         </div>
         <p>{{ userinfo.nickname }}</p>
-        <TagComponent :level="userinfo.tier" :tagList="badgeList" />
+        <div v-if="props.nickname">
+          <TagComponent :level="userinfo.tier" :tagList="badgeList" />
+        </div>
+        <div v-else>
+          <TagComponent :level="userinfo.tier" />
+        </div>
         <p>현상금액 : ${{ userinfo.point }}</p>
         <p>전체 푼 횟수 : {{ userinfo.solvedCount }}</p>
         <p>정답률 : {{ userinfo.correctRate }}%</p>
       </div>
       <div class="radar">
-        <div>
+        <div v-if="props.nickname">
+          <RadarChart :nickname="props.nickname" />
+        </div>
+        <div v-else>
           <RadarChart />
         </div>
       </div>
