@@ -17,9 +17,6 @@ const categories = [
 const loaded = ref(false);
 const categoryObj = ref();
 
-const favoriteApi = "https://i10a609.p.ssafy.io/api/mypage/flashcard/favorite";
-const incorrectApi = "https://i10a609.p.ssafy.io/api/mypage/incorrect";
-
 // 전역 Axios 사용
 const getInitLineChart = () => {
   // axios함수를 통해 데이터를 불러온다.
@@ -63,10 +60,10 @@ onMounted(async () => {
       </div>
       <div class="mypage-component-background mycard">
         <div>
-          <CategoryComponent type="즐겨찾기" :apiUrl="favoriteApi" />
+          <CategoryComponent type="즐겨찾기" />
         </div>
         <div>
-          <CategoryComponent type="오답노트" :apiUrl="incorrectApi" />
+          <CategoryComponent type="오답노트" />
         </div>
       </div>
     </div>

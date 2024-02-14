@@ -89,7 +89,7 @@ export function localAxios() {
 
           // 새로 받은 access Token으로 이전 요청 다시 보내기
           const config = error.config;
-          console.log(config);
+          //   console.log(config);
           config.headers.Authorization = `Bearer ${newStore.myAccessToken}`;
           return axios.request(config);
         } catch (refreshError) {

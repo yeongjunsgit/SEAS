@@ -19,7 +19,7 @@ function sendCardID(data, success, fail) {
 }
 
 function getLikeCard(cardId, success, fail) {
-  local.post(`/flashcard/${cardId}`).then(success).catch(fail);
+  local.get(`/flashcard/${cardId}`).then(success).catch(fail);
 }
 
 export { getCardData, deleteLike, postLike, sendCardID, getLikeCard };

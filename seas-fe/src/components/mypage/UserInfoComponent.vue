@@ -60,7 +60,10 @@ onMounted(async () => {
 
 <template>
   <div class="info-container">
-    <h2 class="text-center">유저 정보</h2>
+    <div>
+      <h2 class="text-center">유저 정보</h2>
+      <button class="del">회원탈퇴</button>
+    </div>
     <div class="user-container">
       <div class="user-box">
         <div>
@@ -116,5 +119,9 @@ onMounted(async () => {
     height: 15px;
     align-self: center;
   }
+}
+
+.del {
+  padding-left: 20%;
 }
 </style>
