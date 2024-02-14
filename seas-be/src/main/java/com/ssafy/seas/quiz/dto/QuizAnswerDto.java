@@ -3,6 +3,7 @@ package com.ssafy.seas.quiz.dto;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 public class QuizAnswerDto {
 
@@ -30,6 +31,7 @@ public class QuizAnswerDto {
     }
 
     @Getter
+    @ToString
     public static class UpdatedFactors{
         private final Integer memberId;
         private final Integer quizId;

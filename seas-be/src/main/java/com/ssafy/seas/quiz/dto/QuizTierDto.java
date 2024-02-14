@@ -1,10 +1,12 @@
 package com.ssafy.seas.quiz.dto;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 public class QuizTierDto {
 
     @Getter
+    @RequiredArgsConstructor
     public static class Request{
         private String prevTier;
     }
