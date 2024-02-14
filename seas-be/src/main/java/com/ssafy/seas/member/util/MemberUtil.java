@@ -10,7 +10,6 @@ import com.ssafy.seas.member.entity.Member;
 import com.ssafy.seas.member.mapper.MemberMapper;
 import com.ssafy.seas.member.repository.MemberRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,6 +24,7 @@ public class MemberUtil {
 
 	public Integer getLoginMemberId() {
 		// 현재 로그인한 유저의 id(pk)를 반환
+		log.info("getLoginMemberId ::::::::::: memberId '{}'", SecurityContextHolder.getContext().getAuthentication().getName());
 		Member member = memberRepository.findByMemberId(SecurityContextHolder.getContext().getAuthentication().getName())
 			.orElseThrow(() -> new CustomException("일치하는 사용자가 없습니다."));
 		log.info("MemberUtil getLoginMemberId ::::::::: id '{}'", member.getId());
