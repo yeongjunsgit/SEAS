@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.ssafy.seas.common.exception.CustomException;
 import com.ssafy.seas.common.exception.TokenException;
 import com.ssafy.seas.member.dto.MemberDto;
 
@@ -84,6 +85,20 @@ public class TokenProvider {
 		return new UsernamePasswordAuthenticationToken(principal, "");
 	}
 
+	public Authentication getPlainAuthentication(String accessToken) {
+		// Access Token 유효성 확인 및 파싱
+		String plainTextClaims = paresPlainTextClaims(accessToken);
+
+		// if (claims.get(AUTHORITIES_KEY) == null) {
+		// 	throw new RuntimeException();
+		// }
+
+		log.info("getPlainAuthentication ::::: plainTextClaims = {}", plainTextClaims.toString());
+		UserDetails principal = new User(plainTextClaims.toString(), "", new ArrayList<>());
+
+		return new UsernamePasswordAuthenticationToken(principal, "");
+	}
+
 	public boolean validateToken(String token) {
 		try {
 			// Refresh Token의 경우 파싱되기만 하면 OK
@@ -112,13 +127,21 @@ public class TokenProvider {
 		}
 	}
 
+	private String paresPlainTextClaims(String accessToken) {
+		try {
+			return Jwts.parserBuilder().setSigningKey(key).build().parsePlaintextJws(accessToken).getBody();
+		} catch (ExpiredJwtException e) {
+			return e.getMessage();
+		}
+	}
+
 
 	private void handleSecurityException(SecurityException e) {
-		throw new TokenException("서명이 유효하지 않습니다.");
+		throw new CustomException("서명이 유효하지 않습니다.");
 	}
 
 	private void handleMalformedJwtException(MalformedJwtException e) {
-		throw new TokenException("토큰의 형식이 올바르지 않습니다.");
+		throw new CustomException("토큰의 형식이 올바르지 않습니다.");
 	}
 
 	private void handleExpiredJwtException(ExpiredJwtException e) {
@@ -126,10 +149,10 @@ public class TokenProvider {
 	}
 
 	private void handleUnsupportedJwtException(UnsupportedJwtException e) {
-		throw new TokenException("지원하지 않는 JWT 기능이 사용되었습니다.");
+		throw new CustomException("지원하지 않는 JWT 기능이 사용되었습니다.");
 	}
 
 	private void handleIllegalArgumentException(IllegalArgumentException e) {
-		throw new TokenException("잘못된 인수가 전달되었습니다.");
+		throw new CustomException("잘못된 인수가 전달되었습니다.");
 	}
 }

@@ -11,6 +11,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.ssafy.seas.common.constants.ErrorCode;
 import com.ssafy.seas.common.exception.CustomException;
+import com.ssafy.seas.common.exception.TokenException;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -40,8 +41,8 @@ public class JwtFilter extends OncePerRequestFilter {
 			"/api/v3/api-docs/swagger-config",
 			"/api/auth/signup",		// 회원가입 페이지
 			"/api/auth/signin",		// 로그인 페이지
-			"/api/auth/check-id",	// 아이디 중복 검사
-			"/api/auth/refresh"		// 재발급 페이지 (후에 삭제)
+			"/api/auth/check-id"	// 아이디 중복 검사
+			// "/api/auth/refresh"		// 재발급 페이지 (후에 삭제)
 		);
 
 		// 2. 토큰이 필요하지 않은 API URL의 경우 -> 로직 처리없이 다음 필터로 이동한다.
@@ -56,10 +57,25 @@ public class JwtFilter extends OncePerRequestFilter {
 		}
 		log.info("JwtFilter ::::::::: resolvedToken = {}", token.toString());
 
-		if(StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
+		boolean isValidate = false;
+		boolean isRefresh = false;
+		try {
+			isValidate = tokenProvider.validateToken(token);
+		} catch (TokenException e) {
+			if(! request.getRequestURI().equals("/api/auth/refresh")){
+				throw new TokenException("토큰의 유효 기간이 만료되었습니다.");
+			} else {
+				isRefresh = true;
+			}
+		}
+
+		if((StringUtils.hasText(token) && isValidate) || isRefresh) {
 			log.info("JwtFilter ::::::::: 유효한 토큰입니다.");
 			//토큰 값에서 Authentication 값으로 가공해서 반환 후 저장
-			Authentication authentication = tokenProvider.getAuthentication(token);
+			Authentication authentication;
+			// if(isRefresh) authentication = tokenProvider.getPlainAuthentication(token);
+			// else authentication = tokenProvider.getAuthentication(token);
+			authentication = tokenProvider.getAuthentication(token);
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			log.info("JwtFilter ::::::::: Security Context에 '{}' 인증 정보를 저장했습니다", authentication.getName());
 			log.info("JwtFilter ::::::::: Security Context에 저장되어 있는 인증 정보 입니다. '{}'", SecurityContextHolder.getContext().getAuthentication().getName());
