@@ -4,6 +4,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.ssafy.seas.common.constants.ErrorCode;
+import com.ssafy.seas.common.exception.CustomException;
 import com.ssafy.seas.member.dto.MemberDto;
 import com.ssafy.seas.member.entity.Member;
 import com.ssafy.seas.member.mapper.MemberMapper;
@@ -29,7 +30,7 @@ public class MemberUtil {
 		// return id;
 
 		Member member = memberRepository.findByMemberId(SecurityContextHolder.getContext().getAuthentication().getName())
-			.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다."));
+			.orElseThrow(() -> new CustomException("일치하는 사용자가 없습니다."));
 		log.info("MemberUtil getLoginMemberId ::::::::: id '{}'", member.getId());
 		return member.getId();
 	}
@@ -38,7 +39,7 @@ public class MemberUtil {
 	public MemberDto.Response getLoginMemberDto() {
 		Integer id = getLoginMemberId();
 		Member member = memberRepository.findById(id)
-			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND.getMessage()));
+			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND.getMessage()));
 		return memberMapper.MemberToMemberDtoResponse(member);
 	}
 
@@ -46,13 +47,13 @@ public class MemberUtil {
 	public Member getLoginMember() {
 		Integer id = getLoginMemberId();
 		Member member = memberRepository.findById(id)
-			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND.getMessage()));
+			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND.getMessage()));
 		return member;
 	}
 
 	public Member getMemberByNickname(String nickname) {
 		Member member = memberRepository.findByNickname(nickname)
-			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND_WITH_NICKNAME.getMessage()));
+			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND_WITH_NICKNAME.getMessage()));
 		return member;
 	}
 }
