@@ -27,49 +27,39 @@ public class RankingController {
 
 	@GetMapping("/list")
 	public ApiResponse<RankDto.Response> getRankingList() {
-		try {
-			// Todo : (1) 현재 로그인한 유저의 id 가져오기
-			String uuid = "toast";
+		// Todo : (1) 현재 로그인한 유저의 id 가져오기
+		String uuid = "toast";
 
-			List<RankerDto.RankResponse> rankerDtoList = rankingService.getRankers();
-			List<RankerDto.RankResponse> rankerDtoTop3List = new ArrayList<>();
-			// Todo : (2) 쿼리 겹치는 부분 최적화 하기
-			// (2) 여기랑
-			List<RankerDto.RankResponse> myRankDto = rankingService.getMyRank(uuid);
+		List<RankerDto.RankResponse> rankerDtoList = rankingService.getRankers();
+		List<RankerDto.RankResponse> rankerDtoTop3List = new ArrayList<>();
+		// Todo : (2) 쿼리 겹치는 부분 최적화 하기
+		// (2) 여기랑
+		List<RankerDto.RankResponse> myRankDto = rankingService.getMyRank(uuid);
 
-			for(RankerDto.RankResponse currentRanker : rankerDtoList){
-				List<BadgeDto.BadgeResponse> badgeList = rankingService.getBadgeList(currentRanker.getNickname());
-				currentRanker.setBadgeList(badgeList);
-			}
-
-			for(int i = 0; i < 3 && i < rankerDtoList.size(); i++){
-				rankerDtoTop3List.add(rankerDtoList.get(i));
-			}
-
-			if(myRankDto.size() == 1){
-				RankerDto.RankResponse myDto = myRankDto.get(0);
-				myDto.setBadgeList(rankingService.getBadgeList(myDto.getNickname()));
-				// (2) 여기랑 쿼리가 많이 겹친다.
-				myDto.setRanking(rankingService.getRankByNickname(myDto.getNickname()).get(0).getRanking());
-			}
-
-			return ApiResponse.success(SuccessCode.GET_SUCCESS, new RankDto.Response(rankerDtoTop3List, rankerDtoList, myRankDto.get(0)));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ApiResponse.error(ErrorCode.SERVER_ERROR);
+		for(RankerDto.RankResponse currentRanker : rankerDtoList){
+			List<BadgeDto.BadgeResponse> badgeList = rankingService.getBadgeList(currentRanker.getNickname());
+			currentRanker.setBadgeList(badgeList);
 		}
+
+		for(int i = 0; i < 3 && i < rankerDtoList.size(); i++){
+			rankerDtoTop3List.add(rankerDtoList.get(i));
+		}
+
+		if(myRankDto.size() == 1){
+			RankerDto.RankResponse myDto = myRankDto.get(0);
+			myDto.setBadgeList(rankingService.getBadgeList(myDto.getNickname()));
+			// (2) 여기랑 쿼리가 많이 겹친다.
+			myDto.setRanking(rankingService.getRankByNickname(myDto.getNickname()).get(0).getRanking());
+		}
+
+		return ApiResponse.success(SuccessCode.GET_SUCCESS, new RankDto.Response(rankerDtoTop3List, rankerDtoList, myRankDto.get(0)));
 	}
 
 	@GetMapping("/search")
 	public ApiResponse<List<RankerDto.RankResponse>> getMemberRanking(@RequestParam("search") String searchNickname) {
-		try {
-			// list로 넘겨달라는 요청이 있었음.
-			List<RankerDto.RankResponse> result = rankingService.getRankByNickname(searchNickname);
-			result.get(0).setBadgeList(rankingService.getBadgeList(searchNickname));
-			return ApiResponse.success(SuccessCode.GET_SUCCESS, result);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ApiResponse.error(ErrorCode.SERVER_ERROR);
-		}
+		// list로 넘겨달라는 요청이 있었음.
+		List<RankerDto.RankResponse> result = rankingService.getRankByNickname(searchNickname);
+		result.get(0).setBadgeList(rankingService.getBadgeList(searchNickname));
+		return ApiResponse.success(SuccessCode.GET_SUCCESS, result);
 	}
 }
