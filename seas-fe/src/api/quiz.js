@@ -28,7 +28,7 @@ function getInitRank(success, fail) {
 
 function getResultRank(prevTier, success, fail) {
     console.log(prevTier);
-    local.post(`/quiz/tier`, prevTier).then(success).catch(fail);
+    local.post(`/quiz/tier`, { prevTier: prevTier }).then(success).catch(fail);
 }
 export {
     getQuizList,
