@@ -42,15 +42,14 @@ public class WrongAnswerRepostory {
             IncorrectNote incorrectNote = new IncorrectNote(member, quiz);
             entityManager.persist(incorrectNote);
 
-            SolvedQuiz solvedQuiz = new SolvedQuiz(member, quiz);
-            solvedQuiz.updateCount(false);
+            // 틀린 횟수 + 1
+            SolvedQuiz solvedQuiz = new SolvedQuiz(member, quiz, 0, 1);
             entityManager.persist(solvedQuiz);
 
             entityManager.flush();
         }
 
         else {
-
             Object[] result = (Object[]) query.getSingleResult();
             IncorrectNote incorrectNote = (IncorrectNote) result[0];
             SolvedQuiz solvedQuiz = (SolvedQuiz) result[1];
@@ -61,7 +60,8 @@ public class WrongAnswerRepostory {
             if (solvedQuiz != null) {
                 // 업데이트 로직 추가
                 log.info("현재 SolvedQuiz correct :{}, fail :{}", solvedQuiz.getCorrectCount(), solvedQuiz.getFailedCount());
-                solvedQuiz.updateCount(false);
+                Integer todayFailedSolvedQuiz = solvedQuiz.getFailedCount();
+                solvedQuiz.setWrongCount(todayFailedSolvedQuiz + 1);
                 log.info("현재 SolvedQuiz correct :{}, fail :{}", solvedQuiz.getCorrectCount(), solvedQuiz.getFailedCount());
 
                 // 저장 또는 업데이트
@@ -112,8 +112,7 @@ public class WrongAnswerRepostory {
                     .where(factor.cardQuiz.quiz.id.eq(factors.getQuizId())
                                     .and(factor.member.id.eq(factors.getMemberId())))
                     .execute();
+
         }
-
-
     }
 }
