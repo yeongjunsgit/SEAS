@@ -4,6 +4,8 @@ import axios from "axios";
 import { useauthControllerStore } from "@/stores/authController.js";
 
 // export default instance;
+import { inject } from "vue";
+
 export function localAxios() {
   // 인스턴스 생성
   const instance = axios.create({
@@ -34,7 +36,6 @@ export function localAxios() {
 
   instance.interceptors.response.use(
     (response) => {
-      console.log(response);
       // 응답 후 로직 추가 가능
       // pinia 스토어 불러오기
       const authStore = useauthControllerStore();
