@@ -21,7 +21,9 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.seas.common.dto.ApiResponse;
+import com.ssafy.seas.common.exception.CustomException;
 import com.ssafy.seas.common.exception.ExceptionUtil;
+import com.ssafy.seas.common.exception.TokenException;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -137,8 +139,10 @@ public class LoggingFilter extends OncePerRequestFilter {
 		String logMessage = String.format("[ERROR] : %s", ex.getMessage() + "\n\n");
 		stringBuilder.append(logMessage).append("\n");
 
-		stringBuilder.append("🚨 Exception 발생! 🚨\n");
-		stringBuilder.append(ExceptionUtil.exceptionToString(ex)).append("\n");
+		if (!(ex instanceof CustomException)) {
+			stringBuilder.append("🚨 Exception 발생! 🚨\n");
+			stringBuilder.append(ExceptionUtil.exceptionToString(ex)).append("\n");
+		}
 
 		ApiResponse<?> errorResponse = ApiResponse.error(HttpStatus.BAD_REQUEST, ex.getMessage());
 		ObjectMapper objectMapper = new ObjectMapper();

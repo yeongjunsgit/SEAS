@@ -23,10 +23,12 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(Exception.class)
 	protected final ResponseEntity<ApiResponse<String>> handleAllExceptions(Exception ex) {
 		log.error("Exception 발생!", ex);
-		sb.setLength(0);
-		sb.append("🚨 Exception 발생! 🚨\n");
-		sb.append(ExceptionUtil.exceptionToString(ex)).append("\n");
-		discordNotifier.notify(sb.toString());
+		if (!(ex instanceof CustomException)) {
+			sb.setLength(0);
+			sb.append("🚨 Exception 발생! 🚨\n");
+			sb.append(ExceptionUtil.exceptionToString(ex)).append("\n");
+			discordNotifier.notify(sb.toString());
+		}
 		ApiResponse<String> response = ApiResponse.error(HttpStatus.BAD_REQUEST, ex.getMessage());
 		return ResponseEntity.badRequest().body(response);
 	}
