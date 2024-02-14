@@ -45,8 +45,6 @@ public class WrongAnswerRepostory {
             // 틀린 횟수 + 1
             SolvedQuiz solvedQuiz = new SolvedQuiz(member, quiz, 0, 1);
             entityManager.persist(solvedQuiz);
-
-            entityManager.flush();
         }
 
         else {
@@ -66,9 +64,10 @@ public class WrongAnswerRepostory {
 
                 // 저장 또는 업데이트
                 entityManager.merge(solvedQuiz);
-                entityManager.flush();
             }
         }
+
+        entityManager.flush();
     }
 
     public void saveOrUpdateFactor(Integer memberId, QuizAnswerDto.UpdatedFactors factors){
@@ -100,7 +99,6 @@ public class WrongAnswerRepostory {
             Factor newFactor = new Factor(member, cardQuiz, factors.getInterval(), factors.getEf());
 
             entityManager.persist(newFactor);
-            entityManager.flush();
         }
         else { // Factor update
 
@@ -114,5 +112,7 @@ public class WrongAnswerRepostory {
                     .execute();
 
         }
+
+        entityManager.flush();
     }
 }

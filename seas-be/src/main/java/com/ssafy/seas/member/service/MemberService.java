@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.seas.common.exception.CustomException;
+import com.ssafy.seas.common.exception.TokenException;
 import com.ssafy.seas.member.dto.MemberDto;
 import com.ssafy.seas.member.entity.Member;
 import com.ssafy.seas.member.jwt.TokenProvider;
@@ -45,7 +47,7 @@ public class MemberService {
 	@Transactional
 	public MemberDto.AuthResponse signin(MemberDto.AuthRequest memberDto) {
 		Member member = memberRepository.findByMemberId(memberDto.getMemberId())
-			.orElseThrow(() -> new UsernameNotFoundException("일치하는 사용자가 존재하지 않습니다."));
+			.orElseThrow(() -> new CustomException("일치하는 사용자가 존재하지 않습니다."));
 		log.info("로그인 시도한 멤버 :::::::::: {}, {}", member.getId(), member.getPassword());
 		Authentication authentication = authenticationManagerBuilder.getObject()
 			.authenticate(memberDto.toAuthentication());
@@ -72,7 +74,7 @@ public class MemberService {
 		log.info("MemberService :::::::::: 인증객체 생성 {}", authentication.getName());
 		// Redis에 저장되어있는 Refresh Token과 Request로 받은 Refresh Token 비교
 		if(tokenUtil.checkRefreshTokenEquals(tokenRequest.getRefreshToken()) == false){
-			throw new RuntimeException("저장되어 있는 토큰과 일치하지 않습니다 !!!");
+			throw new TokenException("저장되어 있는 토큰과 일치하지 않습니다 !!!");
 		}
 		// 인증 객체로 토큰 재발행
 		MemberDto.AuthResponse authResponse = tokenProvider.generateTokenResponse(authentication);
@@ -82,7 +84,7 @@ public class MemberService {
 
 	public String findMemberNicknameByMemberid(String memberId) {
 		Member member = memberRepository.findByMemberId(memberId)
-			.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다 !!!"));
+			.orElseThrow(() -> new CustomException("일치하는 사용자가 없습니다 !!!"));
 		return memberMapper.MemberToMemberDtoResponse(member)
 			.getNickname();
 	}

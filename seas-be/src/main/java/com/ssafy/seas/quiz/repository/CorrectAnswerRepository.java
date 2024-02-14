@@ -91,17 +91,31 @@ public class CorrectAnswerRepository {
             // solvedQuiz 생성자 생성
             SolvedQuiz solvedQuiz = new SolvedQuiz(member, quiz, 1, 0);
             entityManager.persist(solvedQuiz);
+
+            Integer memberPoint = existingMember.getPoint();
+            existingMember.setPoint(memberPoint + factors.getPoint());
+
+            entityManager.merge(existingMember);
+            log.info("member POINT : {} || GET POINT : {}", memberPoint, factors.getPoint());
         }
         else{ // 오늘 문제를 푼 흔적이 있다면
             if(todaySolvedQuiz.getCorrectCount() == 0) { // 문제를 한번도 맞추지 못했다면
                 // 멤버 테이블 포인트 추가, SolvedQuiz 맞힌 문제 + 1
-                Integer point = existingMember.getPoint();
-                existingMember.setPoint(point + factors.getPoint());
+
+                Integer memberPoint = existingMember.getPoint();
+                existingMember.setPoint(memberPoint + factors.getPoint());
+
+                entityManager.merge(existingMember);
+
+                log.info("member POINT : {} || GET POINT : {}", memberPoint, factors.getPoint());
+
             }
             Integer todaySolvedQuizCount = todaySolvedQuiz.getCorrectCount();
             todaySolvedQuiz.setCorrectCount(todaySolvedQuizCount + 1);
             log.info("count : {}", todaySolvedQuiz.getCorrectCount());
         }
+
+        entityManager.flush();
     }
 
 
@@ -135,8 +149,6 @@ public class CorrectAnswerRepository {
                 Factor newFactor = new Factor(member, cardQuiz, factors.getInterval(), factors.getEf());
 
                 entityManager.persist(newFactor);
-
-                entityManager.flush();
             }
             else { // Factor 레코드가 있다면 업데이트
                 Object[] result = (Object[]) factorQuery.getSingleResult();
@@ -144,6 +156,8 @@ public class CorrectAnswerRepository {
 
                 factor.updateFactor(factors.getInterval(), factors.getEf());
             }
+
+            entityManager.flush();
     }
 }
 

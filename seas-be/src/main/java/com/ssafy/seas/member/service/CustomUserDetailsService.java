@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import com.ssafy.seas.common.exception.CustomException;
 import com.ssafy.seas.member.entity.Member;
 import com.ssafy.seas.member.repository.MemberRepository;
 
@@ -27,7 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Member findMember = memberRepository.findByMemberId(username)
-			.orElseThrow(() -> new UsernameNotFoundException("사용자가 존재하지 않습니다."));
+			.orElseThrow(() -> new CustomException("사용자가 존재하지 않습니다."));
 		// return null;
 		// return new User(
 		// findMember.getMemberId(),
