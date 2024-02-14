@@ -137,7 +137,7 @@ public class QuizService {
         Integer memberId = MemberUtil.getLoginMemberId();
         quizUtil.resetRedis(memberId);
 
-        return QuizDto.BaseResponse("레디스 값 삭제 성공");
+        return new QuizDto.BaseResponse("레디스 값 삭제 성공");
     }
 
     public QuizTierDto.Response getCurrentTier(){
