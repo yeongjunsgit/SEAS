@@ -21,7 +21,7 @@ const isRankData = ref(false);
 
 // watch를 이용해서 데이터가 들어오면 위의 변수를 true 값으로 바꿈
 // 따라서 v-if에서 위의 변수를 토대로 판단하여 데이터가 들어와야만 변경됨
-const watchRankData = watch(rankData, () => {
+watch(rankData, () => {
   if (rankData.value.length > 0) {
     isRankData.value = true;
   }
