@@ -5,19 +5,18 @@ import com.ssafy.seas.member.dto.MemberDto;
 import com.ssafy.seas.member.repository.MemberRepository;
 import com.ssafy.seas.member.util.MemberUtil;
 import com.ssafy.seas.quiz.dto.*;
-import com.ssafy.seas.quiz.repository.CorrectAnswerRepository;
-import com.ssafy.seas.quiz.repository.FactorRepository;
-import com.ssafy.seas.quiz.repository.QuizCustomRepository;
-import com.ssafy.seas.quiz.repository.WrongAnswerRepostory;
+import com.ssafy.seas.quiz.repository.*;
 import com.ssafy.seas.quiz.util.QuizUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ServerErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,9 +28,11 @@ public class QuizService {
     private final FactorRepository factorRepository;
     private final WrongAnswerRepostory wrongAnswerRepostory;
     private final CorrectAnswerRepository correctAnswerRepository;
-    private final MemberRepository memberRepository;
     private final QuizUtil quizUtil;
     private final MemberUtil memberUtil;
+    private final MemberRepository memberRepository;
+
+    private final RedisTemplate<Integer, Map<Integer, QuizDto.QuizFactorDto>> redisTemplate;
 
     /*
         현재 문제 :
@@ -48,18 +49,6 @@ public class QuizService {
         // factor 테이블에 아직 없을 시에는 interval, ef null
         List<QuizDto.QuizFactorDto> quizFactors = quizCustomRepository.findAllQuizInnerJoin(memberId, categoryId);
         List<QuizDto.QuizWeightInfoDto> quizWeightInfos = new ArrayList<>();
-
-        // 아무런 문제도 안 풀었을 경우(=처음) or, 10개 미만으로 풀었을 경우, 모든 문제를 불러옴
-//        if(quizFactors.size() < 10){
-//            int requiredCount = 10 - quizFactors.size();
-//            log.info("불러와야 하는 문제 수 : " +requiredCount);
-//
-//            List<QuizDto.QuizInfoDto> quizInfos = quizCustomRepository.findQuizzesLimitedBy(requiredCount, categoryId);
-//            log.info(">>>>>> QUIZINFO SIZE : " + quizInfos.size());
-//            List<QuizDto.QuizFactorDto> infos = quizInfos.stream().map(dto -> new QuizDto.QuizFactorDto(memberId, dto.getQuizId(), dto.getQuiz(), dto.getHint(), Interval.FIRST.getValue(), EasinessFactor.MINIMUM.getValue())).collect(Collectors.toList());
-//
-//            quizFactors.addAll(infos);
-//        }
 
         // factor 테이블의 정보를 저장
         quizWeightInfos.addAll(
@@ -111,25 +100,57 @@ public class QuizService {
 
                 quizUtil.updateQuizAnswerState(memberId, quizId);
                 QuizAnswerDto.UpdatedFactors factor = quizUtil.getNewFactor(memberId, quizId, categoryId);
-                // factor 갱신
-
-
-                correctAnswerRepository.saveOrUpdateStreakAndScoreHistory(factor);
-                correctAnswerRepository.saveOrUpdateFactor(factor, memberId);
+                
+                // 포인트, 점수 저장
+                quizUtil.updateQuizPointAndPoint(memberId, quizId, factor.getPoint(), factor.getScore());
+                // 가중치 레디스 저장
+                quizUtil.updateWeightFactor(memberId, quizId, factor.getEf(), factor.getInterval());
+                
+                //correctAnswerRepository.saveOrUpdateStreakAndScoreHistory(factor);
+                //correctAnswerRepository.saveOrUpdateFactor(factor, memberId);
                 return new QuizAnswerDto.Response(true);
             }
         }
 
         QuizAnswerDto.UpdatedFactors factor = quizUtil.getNewFactor(memberId, quizId, categoryId);
-        wrongAnswerRepostory.saveOrUpdateIncorrectNoteAndSolvedQuiz(memberId, quizId);
-        wrongAnswerRepostory.saveOrUpdateFactor(memberId, factor);
+//        wrongAnswerRepostory.saveOrUpdateIncorrectNoteAndSolvedQuiz(memberId, quizId);
+//        wrongAnswerRepostory.saveOrUpdateFactor(memberId, factor);
         return new QuizAnswerDto.Response(false);
+    }
+
+
+    public void applyTotalResult(Integer memberId){
+        Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
+        Integer categoryId = 0;
+        Integer totalScore = 0;
+
+        for(Map.Entry<Integer, QuizDto.QuizFactorDto> quizResult : value.entrySet()){
+            QuizDto.QuizFactorDto factorDto = quizResult.getValue();
+            Integer quizId = factorDto.getQuizId();
+            categoryId = factorDto.getCategoryId();
+
+            log.info("현재 interval : {} ef : {}", factorDto.getEf(), factorDto.getQuizInterval());
+            totalScore += factorDto.getScore();
+            // 맞았을 때
+            if(factorDto.getIsCorrect()){
+                correctAnswerRepository.saveOrUpdateStreakAndSolvedQuiz(factorDto, memberId);
+                correctAnswerRepository.saveOrUpdateFactor(factorDto, memberId);
+            }
+            else{
+                wrongAnswerRepostory.saveOrUpdateIncorrectNoteAndSolvedQuiz(memberId, quizId);
+                wrongAnswerRepostory.saveOrUpdateFactor(memberId, factorDto);
+            }
+        }
+
+        quizCustomRepository.saveScoreHistory(memberId, categoryId, totalScore);
     }
 
 
     public QuizResultDto.Response getTotalResult(){
 
         Integer memberId = memberUtil.getLoginMemberId();
+
+        applyTotalResult(memberId);
 
         QuizResultDto.Response response = quizUtil.getResult(memberId);
         quizUtil.resetRedis(memberId);

@@ -105,6 +105,29 @@ public class QuizUtil {
         log.info("updateQuizState : " + quizId + " || " + value.get(nestedKey).getQuiz());
     }
 
+    // 퀴즈와 포인트를 저장하는 부분
+    public void updateQuizPointAndPoint(Integer memberId, Integer quizId, Integer point, Integer score){
+        Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
+
+        String nestedKey = toKey(quizId);
+        log.info("MAP 출력 : " + value.toString());
+        value.get(nestedKey).setPoint(point);
+        value.get(nestedKey).setScore(score);
+
+        redisTemplate.opsForValue().set(memberId, value);
+    }
+
+    public void updateWeightFactor(Integer memberId, Integer quizId, Double ef, Double interval){
+        Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
+
+        String nestedKey = toKey(quizId);
+        log.info("MAP 출력 : " + value.toString());
+        value.get(nestedKey).setQuizInterval(interval);
+        value.get(nestedKey).setEf(ef);
+
+        redisTemplate.opsForValue().set(memberId, value);
+    }
+
     public QuizAnswerDto.UpdatedFactors getNewFactor(Integer memberId, Integer quizId, Integer categoryId) {
         Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
         String nestedKey = toKey(quizId);
@@ -134,14 +157,11 @@ public class QuizUtil {
         }
 
 		Double newEf = calculateNewEf(ef, quality);
-
         Double newInterval = calculateNewInterval(interval , ef);
 
-        QuizAnswerDto.UpdatedFactors var = new QuizAnswerDto.UpdatedFactors(memberId, quizId, categoryId, newInterval, newEf, score, point);
-        log.info(var.toString());
-
-        return var;
+        return new QuizAnswerDto.UpdatedFactors(memberId, quizId, categoryId, newInterval, newEf, score, point);
     }
+
 	public static Double calculateNewEf(Double ef, int quality) {
 		Double newEf = ef - 0.06 + 0.08 * quality + 0.02 * quality * quality;
 
