@@ -4,7 +4,7 @@ import UserInfoComponent from "@/components/mypage/UserInfoComponent.vue";
 import CategoryComponent from "@/components/mypage/CategoryComponent.vue";
 import LineChartVue from "@/components/mypage/LineChart.vue";
 import GrassComponentVue from "@/components/mypage/GrassComponent.vue";
-import axios from "axios";
+import { getLineChart } from "@/api/mypage.js";
 
 const categories = [
   "데이터베이스",
@@ -17,18 +17,25 @@ const categories = [
 const loaded = ref(false);
 const categoryObj = ref();
 
-const favoriteApi = "https://i10a609.p.ssafy.io/api/mypage/flashcard/favorite";
-const incorrectApi = "https://i10a609.p.ssafy.io/api/mypage/incorrect";
+// 전역 Axios 사용
+const getInitLineChart = () => {
+  // axios함수를 통해 데이터를 불러온다.
+  getLineChart(
+    ({ data }) => {
+      categoryObj.value = data.data;
+
+      loaded.value = true;
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+};
 
 onMounted(async () => {
   loaded.value = false;
   try {
-    const response = await fetch("https://i10a609.p.ssafy.io/api/mypage/graph");
-
-    const categoryData = await response.json();
-    categoryObj.value = await categoryData.data;
-
-    loaded.value = true;
+    getInitLineChart();
   } catch (error) {
     console.error(error);
   }
@@ -53,10 +60,10 @@ onMounted(async () => {
       </div>
       <div class="mypage-component-background mycard">
         <div>
-          <CategoryComponent type="즐겨찾기" :apiUrl="favoriteApi" />
+          <CategoryComponent type="즐겨찾기" />
         </div>
         <div>
-          <CategoryComponent type="오답노트" :apiUrl="incorrectApi" />
+          <CategoryComponent type="오답노트" />
         </div>
       </div>
     </div>

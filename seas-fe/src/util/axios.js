@@ -2,9 +2,9 @@
 
 import axios from "axios";
 import { useauthControllerStore } from "@/stores/authController.js";
-import router from "@/router";
 
 // export default instance;
+import { inject } from "vue";
 
 export function localAxios() {
   // 인스턴스 생성
@@ -40,6 +40,19 @@ export function localAxios() {
   instance.interceptors.response.use(
     async (response) => {
       // 응답 후 로직 추가 가능
+      // pinia 스토어 불러오기
+      const authStore = useauthControllerStore();
+      const accessToken = authStore.myAccessToken;
+
+      if (accessToken) {
+        // Check if 'headers' property exists in 'response', if not, create it
+        if (!response.headers) {
+          response.headers = {};
+        }
+        // Add 'accessToken' property to 'headers'
+        response.headers.accessToken = accessToken;
+      }
+
       return response;
     },
     async (error) => {
@@ -76,7 +89,7 @@ export function localAxios() {
 
           // 새로 받은 access Token으로 이전 요청 다시 보내기
           const config = error.config;
-          console.log(config);
+          //   console.log(config);
           config.headers.Authorization = `Bearer ${newStore.myAccessToken}`;
           return axios.request(config);
         } catch (refreshError) {

@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 import RadarChart from "./RadarChart.vue";
 import TagComponent from "@/components/ranking/TagComponent.vue";
+import { getUserInfo, getUserBadge } from "@/api/mypage.js";
 
 const userinfo = ref(Object);
 
@@ -15,27 +16,42 @@ const badgeList = ref([
   { id: 6, name: "데이터베이스" },
 ]);
 
+// 전역 Axios 사용
+const getInitUserInfo = () => {
+  // axios함수를 통해 데이터를 불러온다.
+  getUserInfo(
+    ({ data }) => {
+      userinfo.value = data.data;
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+  getUserBadge(
+    ({ data }) => {
+      userinfo.value = data.data;
+
+      const idArray = [1, 2, 3, 4, 5, 6];
+      const tmpArray = idArray.filter(
+        (item) => !data.data.map((e) => e.id).includes(item)
+      );
+
+      for (var i = 0; i < badgeList.value.length; i++) {
+        if (tmpArray.some((e) => e === badgeList.value[i].id)) {
+          badgeList.value.splice(i, 1);
+          i--;
+        }
+      }
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+};
+
 onMounted(async () => {
   try {
-    const infoResponse = await axios.get(
-      "https://i10a609.p.ssafy.io/api/mypage/my-info"
-    );
-    userinfo.value = infoResponse.data.data;
-
-    const badgeResponse = await axios.get(
-      "https://i10a609.p.ssafy.io/api/mypage/badge"
-    );
-    const idArray = [1, 2, 3, 4, 5, 6];
-    const tmpArray = idArray.filter(
-      (item) => !badgeResponse.data.data.map((e) => e.id).includes(item)
-    );
-
-    for (var i = 0; i < badgeList.value.length; i++) {
-      if (tmpArray.some((e) => e === badgeList.value[i].id)) {
-        badgeList.value.splice(i, 1);
-        i--;
-      }
-    }
+    getInitUserInfo();
   } catch (error) {
     console.error(error);
   }
@@ -44,7 +60,10 @@ onMounted(async () => {
 
 <template>
   <div class="info-container">
-    <h2 class="text-center">유저 정보</h2>
+    <div>
+      <h2 class="text-center">유저 정보</h2>
+      <button class="del">회원탈퇴</button>
+    </div>
     <div class="user-container">
       <div class="user-box">
         <div>
@@ -100,5 +119,9 @@ onMounted(async () => {
     height: 15px;
     align-self: center;
   }
+}
+
+.del {
+  padding-left: 20%;
 }
 </style>

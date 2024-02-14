@@ -1,38 +1,58 @@
 <script setup>
 import axios from "axios";
 import { ref, onMounted } from "vue";
+import { getFavorite, getIncorrect } from "@/api/mypage.js";
+import { getLikeCard } from "@/api/card.js";
+import { useauthControllerStore } from "@/stores/authController.js";
+
+const userStore = useauthControllerStore();
+const user_access_token = userStore.myAccessToken;
 
 const props = defineProps(["type", "apiUrl"]);
 const datas = ref([]);
-
 const cardKwd = ref({});
 
 onMounted(async () => {
   try {
-    await axios
-      .get(props.apiUrl)
-      .then((response) => (datas.value = response.data.data))
-      .catch((error) => console.log(error));
-  } catch (error) {
-    console.error(error);
-  }
-
-  try {
     if (props.type == "즐겨찾기") {
-      await datas.value.forEach((data) => {
+      const res = await axios
+        .get("https://i10a609.p.ssafy.io/api/mypage/flashcard/favorite", {
+          headers: {
+            Authorization: `Bearer ${user_access_token}`,
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => (datas.value = response.data.data))
+        .catch((error) => console.log(error));
+
+      datas.value.forEach((data) => {
+        console.log("foreach data", data);
         data.flashcardIds.forEach((cardNum) => {
-          axios
-            .get(`https://i10a609.p.ssafy.io/api/flashcard/${cardNum}`)
-            .then(
-              (response) =>
-                (cardKwd.value = {
-                  ...cardKwd.value,
-                  [cardNum]: response.data.data.keyword,
-                })
-            )
-            .catch((error) => console.log(error));
+          console.log("cardNum : ", cardNum);
+          getLikeCard(
+            cardNum,
+            ({ data }) => {
+              console.log(data);
+              cardKwd.value = {
+                ...cardKwd.value,
+                [cardNum]: data.data.keyword,
+              };
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
         });
       });
+    } else {
+      getIncorrect(
+        ({ data }) => {
+          datas.value = data.data;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     }
   } catch (error) {
     console.error(error);
@@ -64,18 +84,18 @@ function showToolTips(bool) {
 }
 
 function popupCard(categoryName, flashcardIds) {
-  var url = `mypage/popupcard?category=${categoryName}&cardNum=${flashcardIds}`;
+  var url = `mypage/popupcard?category=${categoryName}&cardNum=${flashcardIds}&auth=${user_access_token}`;
   var name = "";
   var option =
-    "width = 500, height = 500, top = 100, left = 200, location = no, scrollbars = no, resizeable = no";
+    "width = 800, height = 600, top = 100, left = 200, location = no, scrollbars = no, resizeable = no";
   window.open(url, name, option);
 }
 
 function popupQuiz(categoryId, quizId) {
-  var url = `mypage/popupquiz?categoryId=${categoryId}&quizId=${quizId}`;
+  var url = `mypage/popupquiz?categoryId=${categoryId}&quizId=${quizId}&auth=${user_access_token}`;
   var name = "";
   var option =
-    "width = 500, height = 500, top = 100, left = 200, location = no, scrollbars = no, resizeable = no";
+    "width = 800, height = 600, top = 100, left = 200, location = no, scrollbars = no, resizeable = no";
   window.open(url, name, option);
 }
 </script>

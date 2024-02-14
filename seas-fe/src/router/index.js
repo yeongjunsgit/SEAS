@@ -78,7 +78,13 @@ router.beforeEach((to, from, next) => {
   const userStore = useauthControllerStore();
   const isAuthenticated = userStore.isAuthenticated;
 
-  if (to.name !== "home" && to.name !== "authenicate" && !isAuthenticated) {
+  if (
+    to.name !== "home" &&
+    to.name !== "popupcard" &&
+    to.name !== "popupquiz" &&
+    to.name !== "authenicate" &&
+    !isAuthenticated
+  ) {
     next({ name: "authenicate" }); // 로그인 페이지로 리다이렉트
   } else {
     next(); // 계속 진행
