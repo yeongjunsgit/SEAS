@@ -2,6 +2,7 @@
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useauthControllerStore } from "@/stores/authController.js";
+import { logOutRequest } from "@/api/login.js";
 // import { storeToRefs } from "pinia";
 
 const userStore = useauthControllerStore();
@@ -21,6 +22,14 @@ const movePage = (destination) => {
 const logout = () => {
     // isLogin.value = false;
     userStore.resetState();
+    logOutRequest(
+        ({ data }) => {
+            console.log("로그아웃 백에서 해줘 : " + data.data.message);
+        },
+        (error) => {
+            console.log(error);
+        }
+    );
     console.log("Logged out");
     movePage("/");
 };
