@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.ssafy.seas.common.exception.TokenException;
 import com.ssafy.seas.member.dto.MemberDto;
 
 import io.jsonwebtoken.Claims;
@@ -113,22 +114,22 @@ public class TokenProvider {
 
 
 	private void handleSecurityException(SecurityException e) {
-		throw new RuntimeException("서명이 유효하지 않습니다.");
+		throw new TokenException("서명이 유효하지 않습니다.");
 	}
 
 	private void handleMalformedJwtException(MalformedJwtException e) {
-		throw new RuntimeException("토큰의 형식이 올바르지 않습니다.");
+		throw new TokenException("토큰의 형식이 올바르지 않습니다.");
 	}
 
 	private void handleExpiredJwtException(ExpiredJwtException e) {
-		throw new RuntimeException("토큰의 유효 기간이 만료되었습니다.");
+		throw new TokenException("토큰의 유효 기간이 만료되었습니다.");
 	}
 
 	private void handleUnsupportedJwtException(UnsupportedJwtException e) {
-		throw new RuntimeException("지원하지 않는 JWT 기능이 사용되었습니다.");
+		throw new TokenException("지원하지 않는 JWT 기능이 사용되었습니다.");
 	}
 
 	private void handleIllegalArgumentException(IllegalArgumentException e) {
-		throw new RuntimeException("잘못된 인수가 전달되었습니다.");
+		throw new TokenException("잘못된 인수가 전달되었습니다.");
 	}
 }

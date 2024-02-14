@@ -18,6 +18,7 @@ import com.ssafy.seas.category.service.CategoryService;
 import com.ssafy.seas.common.constants.ErrorCode;
 import com.ssafy.seas.common.constants.SuccessCode;
 import com.ssafy.seas.common.dto.ApiResponse;
+import com.ssafy.seas.common.exception.CustomException;
 import com.ssafy.seas.flashcard.dto.FlashcardDto;
 import com.ssafy.seas.flashcard.service.FlashcardService;
 
@@ -39,7 +40,7 @@ public class FlashcardController {
 			.findFirst();
 
 		// categoryName과 일치하는 카테고리가 없다면 NoSuchElementException 발생
-		categoryId.orElseThrow(() -> new NoSuchElementException(ErrorCode.BAD_CATEGORY_NAME.getMessage()));
+		categoryId.orElseThrow(() -> new CustomException(ErrorCode.BAD_CATEGORY_NAME.getMessage()));
 
 		return ApiResponse.success(SuccessCode.GET_SUCCESS,
 			flashcardService.getFlashcardsByCategoryId(categoryId.get()));
