@@ -3,6 +3,8 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { getResult, getResultRank } from "@/api/quiz.js";
 
+import Modal from "@/components/commons/Modal.vue";
+
 const router = useRouter();
 
 // 퀴즈 결과 불러오기 ===========================================
@@ -29,12 +31,12 @@ const props = defineProps(["currentUserRank"]);
 const emit = defineEmits(["showTutorial"]);
 
 // 이전 티어와 퀴즈 후 티어 결과 비교 ===========================
-const isRankChanged = ref();
+const updatedRank = ref();
 getResultRank(
     props.currentUserRank,
     ({ data }) => {
-        isRankChanged.value = data.data;
-        console.log(isRankChanged.value);
+        updatedRank.value = data.data;
+        console.log(updatedRank.value.upgraded);
     },
     (error) => {
         console.log(error);
@@ -53,6 +55,11 @@ const goHome = () => {
 };
 const goMypage = () => {
     router.push({ path: "/mypage" });
+};
+
+// 모달 닫기 함수
+const closeModal = () => {
+    updatedRank.value = false;
 };
 </script>
 
@@ -82,6 +89,14 @@ const goMypage = () => {
         <button class="menu-button" @click="goHome">메인으로</button>
         <button class="menu-button" @click="goMypage">마이페이지로</button>
     </div>
+    <!-- 모달 컴포넌트 -->
+    <Modal v-if="updatedRank.upgraded" @close="closeModal">
+        <!-- 모달 내용 -->
+        <h2>
+            {{ props.currentUserRank }}에서 {{ updatedRank.tier }}로
+            승급하셨습니다!
+        </h2>
+    </Modal>
 </template>
 
 <style scoped lang="scss">
