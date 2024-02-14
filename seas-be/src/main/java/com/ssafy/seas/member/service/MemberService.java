@@ -95,6 +95,20 @@ public class MemberService {
 			return new MemberDto.checkIdResult(true);
 		}
 		return new MemberDto.checkIdResult(false);
+	}
 
+	public void logout() {
+		if(tokenUtil.deleteRefreshToken() == false){
+			throw new RuntimeException("저장된 토큰을 삭제할 수 없습니다 !!!!!");
+		}
+	}
+
+	public void deleteMember() {
+		logout();
+
+		memberRepository.delete(
+			memberRepository.findById(memberUtil.getLoginMemberId())
+				.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다 !!!!!"))
+		);
 	}
 }

@@ -22,6 +22,10 @@ public class TokenUtil {
 		return redisTemplate.opsForValue().get("token" + memberUtil.getLoginMemberId());
 	}
 
+	public boolean deleteRefreshToken() {
+		return redisTemplate.delete("token" + memberUtil.getLoginMemberId());
+	}
+
 	public boolean checkRefreshTokenEquals(String refreshToken) {
 		return refreshToken.equals(getRefreshToken());
 	}
