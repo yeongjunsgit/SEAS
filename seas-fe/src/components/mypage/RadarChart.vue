@@ -1,6 +1,7 @@
 <script setup>
 import { Radar } from "vue-chartjs";
 import { ref, onMounted } from "vue";
+import { getRadarChart } from "@/api/mypage.js";
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -20,7 +21,7 @@ ChartJS.register(
   Legend
 );
 
-const data = ref({
+const chartData = ref({
   labels: [
     "데이터베이스",
     "네트워크",
@@ -90,13 +91,24 @@ onMounted(async () => {
   loaded.value = false;
 
   try {
-    const response = await fetch(
-      "https://i10a609.p.ssafy.io/api/mypage/quiz-rate"
-    );
-    const userQuizRate = await response.json();
-    data.value.datasets[0].data = userQuizRate.data.map((e) => e.rate);
+    getRadarChart(
+      ({ data }) => {
+        chartData.value.datasets[0].data = data.data.map((e) => e.rate);
 
-    loaded.value = true;
+        loaded.value = true;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+
+    // const response = await fetch(
+    //   "https://i10a609.p.ssafy.io/api/mypage/quiz-rate"
+    // );
+    // const userQuizRate = await response.json();
+    // data.value.datasets[0].data = userQuizRate.data.map((e) => e.rate);
+
+    // loaded.value = true;
   } catch (error) {
     console.error(error);
   }
@@ -104,5 +116,5 @@ onMounted(async () => {
 </script>
 
 <template>
-  <Radar v-if="loaded" :data="data" :options="options" />
+  <Radar v-if="loaded" :data="chartData" :options="options" />
 </template>

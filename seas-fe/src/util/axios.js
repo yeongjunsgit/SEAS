@@ -3,9 +3,6 @@
 import axios from "axios";
 import { useauthControllerStore } from "@/stores/authController.js";
 
-// export default instance;
-import { inject } from "vue";
-
 export function localAxios() {
   // 인스턴스 생성
   const instance = axios.create({
@@ -40,7 +37,7 @@ export function localAxios() {
       // pinia 스토어 불러오기
       const authStore = useauthControllerStore();
       const accessToken = authStore.myAccessToken;
-
+      //   console.log("response", response);
       if (accessToken) {
         // Check if 'headers' property exists in 'response', if not, create it
         if (!response.headers) {

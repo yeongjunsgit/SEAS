@@ -1,6 +1,8 @@
 <script setup>
 import axios from "axios";
 import { ref, onMounted } from "vue";
+import { getFavorite, getIncorrect } from "@/api/mypage.js";
+import { getLikeCard } from "@/api/card.js";
 
 const props = defineProps(["type", "apiUrl"]);
 const datas = ref([]);
@@ -9,10 +11,42 @@ const cardKwd = ref({});
 
 onMounted(async () => {
   try {
-    await axios
-      .get(props.apiUrl)
-      .then((response) => (datas.value = response.data.data))
-      .catch((error) => console.log(error));
+    if (props.type == "즐겨찾기") {
+      getFavorite(
+        ({ data }) => {
+          console.log(data);
+          datas.value = data.data;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+      await datas.value.forEach((data) => {
+        data.flashcardIds.forEach((cardNum) => {
+          getLikeCard(
+            cardNum,
+            ({ data }) => {
+              cardKwd.value = {
+                ...cardKwd.value,
+                [cardNum]: data.data.keyword,
+              };
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
+        });
+      });
+    } else {
+      getIncorrect(
+        ({ data }) => {
+          datas.value = data.data;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    }
   } catch (error) {
     console.error(error);
   }
@@ -21,16 +55,18 @@ onMounted(async () => {
     if (props.type == "즐겨찾기") {
       await datas.value.forEach((data) => {
         data.flashcardIds.forEach((cardNum) => {
-          axios
-            .get(`https://i10a609.p.ssafy.io/api/flashcard/${cardNum}`)
-            .then(
-              (response) =>
-                (cardKwd.value = {
-                  ...cardKwd.value,
-                  [cardNum]: response.data.data.keyword,
-                })
-            )
-            .catch((error) => console.log(error));
+          getLikeCard(
+            cardNum,
+            ({ data }) => {
+              cardKwd.value = {
+                ...cardKwd.value,
+                [cardNum]: data.data.keyword,
+              };
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
         });
       });
     }

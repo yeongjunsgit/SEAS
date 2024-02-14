@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import * as d3 from "d3";
-import axios from "axios";
+import { getCalendarChart } from "@/api/mypage.js";
 
 // 차트 사이즈
 const width = 1100;
@@ -55,6 +55,7 @@ const countDay = (i) => i % 7;
 //   { date: "2024-12-3", value: 5 },
 //   { date: "2024-12-30", value: 5 },
 // ];
+const today = new Date();
 
 const getData = ref([]);
 
@@ -379,22 +380,32 @@ function pathMonth(t) {
 var svgRef = ref(null); // ref로 svg 엘리먼트 선언
 
 // 초기 설정을 2024로 반응형 변수 생성
-const getYear = ref(2024);
+const getYear = ref(today.getFullYear());
+
 const getYears = ref();
 
 const userYears = ref();
 
 onMounted(async () => {
   try {
-    const response = await axios.get(
-      "https://i10a609.p.ssafy.io/api/mypage/history"
+    getCalendarChart(
+      ({ data }) => {
+        getData.value = data.data;
+      },
+      (error) => {
+        console.log(error);
+      }
     );
-    getData.value = response.data.data;
+
+    if (getData.value == 0) {
+      getData.value = [{ createdAt: today, value: 0 }];
+    }
+
     // 각 data의 date를 Date 형식으로 변환
     getData.value.forEach((d) => {
       d.createdAt = new Date(d.createdAt);
     });
-
+    console.log(getData.value);
     // 받은 data를 연도별 최신순으로 구분
     getYears.value = d3
       .groups(getData.value, (d) => d.createdAt.getFullYear())
@@ -402,7 +413,7 @@ onMounted(async () => {
 
     // 데이터가 있는 연도들만 담은 userYears 배열 생성
     userYears.value = getYears.value.map(([year]) => year);
-
+    console.log(getYears.value);
     var year = getYear.value;
     updateData(year, getYears);
 

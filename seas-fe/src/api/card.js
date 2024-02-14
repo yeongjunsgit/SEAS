@@ -18,4 +18,8 @@ function sendCardID(data, success, fail) {
   local.patch(`/flashcard/weight`, data).then(success).catch(fail);
 }
 
-export { getCardData, deleteLike, postLike, sendCardID };
+function getLikeCard(cardId, success, fail) {
+  local.post(`/flashcard/${cardId}`).then(success).catch(fail);
+}
+
+export { getCardData, deleteLike, postLike, sendCardID, getLikeCard };
