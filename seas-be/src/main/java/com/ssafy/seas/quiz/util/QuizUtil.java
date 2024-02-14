@@ -92,7 +92,7 @@ public class QuizUtil {
     }
 
     // 퀴즈가 맞았는지를 판별
-    public void updateQuizState(Integer memberId, Integer quizId){
+    public void updateQuizAnswerState(Integer memberId, Integer quizId){
         Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
 
         String nestedKey = toKey(quizId);
@@ -111,6 +111,7 @@ public class QuizUtil {
 
         boolean isCorrect = preFactors.getIsCorrect();
         boolean usedHint = preFactors.getIsUsedHint();
+
         Integer point = 0;
         Integer score = 0;
 
