@@ -1,0 +1,10 @@
+INSERT INTO seas.tier (id, max_score, min_score, created_at, updated_at, name)
+VALUES (1, 99, 0, '2024-01-29 13:37:13.000000', '2024-01-29 13:37:15.000000', 'none');
+INSERT INTO seas.tier (id, max_score, min_score, created_at, updated_at, name)
+VALUES (2, 199, 100, '2024-01-29 13:39:29.000000', '2024-01-29 13:39:31.000000', 'iron');
+INSERT INTO seas.tier (id, max_score, min_score, created_at, updated_at, name)
+VALUES (3, 399, 200, '2024-01-29 13:39:58.000000', '2024-01-29 13:40:00.000000', 'bronze');
+INSERT INTO seas.tier (id, max_score, min_score, created_at, updated_at, name)
+VALUES (4, 799, 400, '2024-01-29 13:41:00.000000', '2024-01-29 13:41:05.000000', 'silver');
+INSERT INTO seas.tier (id, max_score, min_score, created_at, updated_at, name)
+VALUES (5, 2147483647, 800, '2024-01-29 13:41:34.000000', '2024-01-29 13:41:35.000000', 'gold');
