@@ -53,9 +53,16 @@ public class MemberController {
 	}
 
 	@DeleteMapping("/logout")
-	public ApiResponse<?> logout() {
-		log.info("logout 시작 !!!!!!!!!");
-		memberService.deleteMember();
+	public ApiResponse<String> logout() {
+		log.info("로그아웃 시작 !!!!!!!!");
+		memberService.logout();
 		return ApiResponse.success(SuccessCode.DELETE_SUCCESS, "로그아웃 성공");
+	}
+
+	@DeleteMapping("/quit")
+	public ApiResponse<String> quitMember() {
+		log.info("회원탈퇴 시작 !!!!!!!!!");
+		memberService.deleteMember();
+		return ApiResponse.success(SuccessCode.DELETE_SUCCESS, "회원탈퇴 성공");
 	}
 }
