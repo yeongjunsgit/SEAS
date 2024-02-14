@@ -70,8 +70,8 @@ public class QuizController {
     }
 
     @PostMapping("/tier")
-    public ApiResponse<?> getTier(@RequestBody QuizTierDto.Request request){
-        return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getTier(request.getPrevTier()));
+    public ApiResponse<?> getTotalTier(@RequestBody QuizTierDto.Request request){
+        return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getTotalTier(request.getPrevTier()));
     }
 
 }

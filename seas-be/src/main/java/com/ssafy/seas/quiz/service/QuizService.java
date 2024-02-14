@@ -1,6 +1,8 @@
 package com.ssafy.seas.quiz.service;
 
 
+import com.ssafy.seas.member.dto.MemberDto;
+import com.ssafy.seas.member.repository.MemberRepository;
 import com.ssafy.seas.member.util.MemberUtil;
 import com.ssafy.seas.quiz.dto.*;
 import com.ssafy.seas.quiz.repository.CorrectAnswerRepository;
@@ -27,6 +29,7 @@ public class QuizService {
     private final FactorRepository factorRepository;
     private final WrongAnswerRepostory wrongAnswerRepostory;
     private final CorrectAnswerRepository correctAnswerRepository;
+    private final MemberRepository memberRepository;
     private final QuizUtil quizUtil;
     private final MemberUtil memberUtil;
 
@@ -141,13 +144,23 @@ public class QuizService {
     }
 
     public QuizTierDto.Response getCurrentTier(){
-        return new QuizTierDto.Response("선원", false);
+
+        Integer memberId = memberUtil.getLoginMemberId();
+
+        MemberDto.MyInfoResponse myInfo = memberRepository.getMyInfoResponse(memberId);
+
+        return new QuizTierDto.Response(myInfo.getTier(), false);
     }
 
-    public QuizTierDto.Response getTier(String prevTier){
+    public QuizTierDto.Response getTotalTier(String prevTier){
 
-        QuizTierDto.Response response = new QuizTierDto.Response("선장",true);
+        Integer memberId = memberUtil.getLoginMemberId();
 
-        return new QuizTierDto.Response("선장",true);
+        MemberDto.MyInfoResponse myInfo = memberRepository.getMyInfoResponse(memberId);
+
+        log.info("POINT : {}", myInfo.getPoint());
+        boolean isUpgraded = !myInfo.getTier().equals(prevTier);
+
+        return new QuizTierDto.Response(myInfo.getTier(),isUpgraded);
     }
 }
