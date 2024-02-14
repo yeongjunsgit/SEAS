@@ -28,13 +28,13 @@ public class RankingController {
 	@GetMapping("/list")
 	public ApiResponse<RankDto.Response> getRankingList() {
 		// (1) 현재 로그인한 유저의 id 가져오기
-		String nickname = memberUtil.getLoginMember().getNickname();
+		String memberId = memberUtil.getLoginMember().getMemberId();
 
 		List<RankerDto.RankResponse> rankerDtoList = rankingService.getRankers();
 		List<RankerDto.RankResponse> rankerDtoTop3List = new ArrayList<>();
 		// Todo : (2) 쿼리 겹치는 부분 최적화 하기
 		// (2) 여기랑
-		List<RankerDto.RankResponse> myRankDto = rankingService.getMyRank(nickname);
+		List<RankerDto.RankResponse> myRankDto = rankingService.getMyRank(memberId);
 
 		for(RankerDto.RankResponse currentRanker : rankerDtoList){
 			List<BadgeDto.BadgeResponse> badgeList = rankingService.getBadgeList(currentRanker.getNickname());
