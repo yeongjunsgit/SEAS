@@ -95,4 +95,11 @@ public class MemberService {
 		return new MemberDto.checkIdResult(false);
 
 	}
+
+	public void deleteMember() {
+		memberRepository.delete(
+			memberRepository.findById(memberUtil.getLoginMemberId())
+				.orElseThrow(() -> new RuntimeException("일치하는 사용자가 없습니다 !!!!!"))
+		);
+	}
 }
