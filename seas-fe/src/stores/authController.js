@@ -13,11 +13,19 @@ export const useauthControllerStore = defineStore("authController", () => {
     return !!myAccessToken.value;
   });
 
+  const resetState = () => {
+    myName.value = null;
+    myAccessToken.value = null;
+    myRefreshToken.value = null;
+    myGrantType.value = null;
+  };
+
   return {
     myName,
     myAccessToken,
     myRefreshToken,
     myGrantType,
     isAuthenticated,
+    resetState,
   };
 });
