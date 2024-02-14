@@ -1,28 +1,22 @@
 package com.ssafy.seas.quiz.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ServerErrorException;
 
 import com.ssafy.seas.member.util.MemberUtil;
-import com.ssafy.seas.quiz.dto.QuizAnswerDto;
-import com.ssafy.seas.quiz.dto.QuizDto;
-import com.ssafy.seas.quiz.dto.QuizHintDto;
-import com.ssafy.seas.quiz.dto.QuizListDto;
-import com.ssafy.seas.quiz.dto.QuizResultDto;
-import com.ssafy.seas.quiz.dto.QuizTierDto;
+import com.ssafy.seas.quiz.dto.*;
 import com.ssafy.seas.quiz.repository.CorrectAnswerRepository;
 import com.ssafy.seas.quiz.repository.FactorRepository;
 import com.ssafy.seas.quiz.repository.QuizCustomRepository;
 import com.ssafy.seas.quiz.repository.WrongAnswerRepostory;
 import com.ssafy.seas.quiz.util.QuizUtil;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ServerErrorException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -36,18 +30,40 @@ public class QuizService {
     private final QuizUtil quizUtil;
     private final MemberUtil memberUtil;
 
+    /*
+        현재 문제 :
+            swagger에서  가 들어갈 때 JSON 에러 남
+     */
+
+
     public QuizListDto.Response getQuizzes(Integer categoryId){
 
-        Integer memberId = memberUtil.getLoginMemberId();
+        Integer memberId = MemberUtil.getLoginMemberId();
 
         List<QuizListDto.QuizInfo> quizInfoList = new ArrayList<>();
 
+        // factor 테이블에 아직 없을 시에는 interval, ef null
         List<QuizDto.QuizFactorDto> quizFactors = quizCustomRepository.findAllQuizInnerJoin(memberId, categoryId);
+        List<QuizDto.QuizWeightInfoDto> quizWeightInfos = new ArrayList<>();
 
-        List<QuizDto.QuizWeightInfoDto> quizWeightInfos =
+        // 아무런 문제도 안 풀었을 경우(=처음) or, 10개 미만으로 풀었을 경우, 모든 문제를 불러옴
+//        if(quizFactors.size() < 10){
+//            int requiredCount = 10 - quizFactors.size();
+//            log.info("불러와야 하는 문제 수 : " +requiredCount);
+//
+//            List<QuizDto.QuizInfoDto> quizInfos = quizCustomRepository.findQuizzesLimitedBy(requiredCount, categoryId);
+//            log.info(">>>>>> QUIZINFO SIZE : " + quizInfos.size());
+//            List<QuizDto.QuizFactorDto> infos = quizInfos.stream().map(dto -> new QuizDto.QuizFactorDto(memberId, dto.getQuizId(), dto.getQuiz(), dto.getHint(), Interval.FIRST.getValue(), EasinessFactor.MINIMUM.getValue())).collect(Collectors.toList());
+//
+//            quizFactors.addAll(infos);
+//        }
+
+        // factor 테이블의 정보를 저장
+        quizWeightInfos.addAll(
                 quizFactors.stream().map(dto -> {
                     return new QuizDto.QuizWeightInfoDto(dto.getQuizId(), dto.getQuizInterval(), dto.getEf());
-                }).collect(Collectors.toList());
+                }).collect(Collectors.toList())
+        );
 
         for(int i = 0; i < 10; i++) {
             double[][] prefixWeightList = quizUtil.getPrefixWeightArray(quizWeightInfos);
@@ -60,14 +76,14 @@ public class QuizService {
             quizInfoList.add(new QuizListDto.QuizInfo(quizId, quiz));
         }
 
-        quizUtil.storeQuizToRedis(quizFactors);
+        quizUtil.storeQuizToRedis(memberId, quizFactors);
 
         return new QuizListDto.Response(quizInfoList);
     }
 
     public QuizHintDto.Response getHint(Integer quizId){
 
-        Integer memberId = memberUtil.getLoginMemberId();
+        Integer memberId = MemberUtil.getLoginMemberId();
 
         quizUtil.updateHintState(memberId, quizId);
         String hint = quizUtil.getQuizHint(memberId, quizId);
@@ -78,42 +94,50 @@ public class QuizService {
     @Transactional
     public QuizAnswerDto.Response getSubmitResult(QuizAnswerDto.Request request, Integer categoryId, Integer quizId) throws ServerErrorException {
 
-        String submit = request.getSubmit().replaceAll("\s+", "_").replaceAll("\t+", "_").replaceAll(" ", "").toLowerCase().trim();
+        String submit = request.getSubmit().replaceAll("\s+", "").replaceAll("\t+", "").replaceAll(" ", "").toLowerCase().trim();
 
         List<String> quizAnswers = quizCustomRepository.findAllQuizAnswerByQuizId(quizId);
-        Integer memberId = memberUtil.getLoginMemberId();
+
+        quizAnswers.stream().forEach(System.out::println);
+
+        Integer memberId = MemberUtil.getLoginMemberId();
 
         for(String quizAnswer : quizAnswers){
             if(quizAnswer.equals(submit)){
                 // 퀴즈 정답 횟수 + 1
                 // 카테고리 별 맞힌 횟수 + 1
+
                 quizUtil.updateQuizState(memberId, quizId);
                 QuizAnswerDto.UpdatedFactors factor = quizUtil.getNewFactor(memberId, quizId, categoryId);
                 // factor 갱신
-                factorRepository.updateFactor(factor.getEf(), factor.getInterval(), quizId, memberId);
-                //correctAnswerRepository.
+                //factorRepository.updateFactor(factor.getEf(), factor.getInterval(), quizId, memberId);
                 correctAnswerRepository.saveOrUpdateStreakAndScoreHistory(factor);
-                correctAnswerRepository.saveOrUpdateFactorAndSolvedQuiz(factor);
+                correctAnswerRepository.saveOrUpdateFactor(factor, memberId);
                 return new QuizAnswerDto.Response(true);
             }
         }
 
         QuizAnswerDto.UpdatedFactors factor = quizUtil.getNewFactor(memberId, quizId, categoryId);
         wrongAnswerRepostory.saveOrUpdateIncorrectNoteAndSolvedQuiz(memberId, quizId);
-        //factor 테이블 갱신
-        factorRepository.updateFactor(factor.getEf(), factor.getInterval(), quizId, memberId);
+        wrongAnswerRepostory.saveOrUpdateFactor(memberId, factor);
         return new QuizAnswerDto.Response(false);
     }
 
 
     public QuizResultDto.Response getTotalResult(){
-        Integer memberId = memberUtil.getLoginMemberId();
-        //
-        // List<QuizWeightFactorDto> newWeight = quizUtil.getNewFactor(memberId);
+
+        Integer memberId = MemberUtil.getLoginMemberId();
 
         QuizResultDto.Response response = quizUtil.getResult(memberId);
         quizUtil.resetRedis(memberId);
         return response;
+    }
+
+    public QuizDto.BaseResponse redisReset(){
+        Integer memberId = MemberUtil.getLoginMemberId();
+        quizUtil.resetRedis(memberId);
+
+        return QuizDto.BaseResponse("레디스 값 삭제 성공");
     }
 
     public QuizTierDto.Response getCurrentTier(){
