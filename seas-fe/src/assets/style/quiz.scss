@@ -1,0 +1,34 @@
+.quiz-content {
+    width: 50%;
+    min-height: 500px;
+    height: 80%;
+    margin: 11vh 0 0 10%;
+    background-image: url($url-path + "images/quiz_bg.png");
+    background-size: 100% 100%;
+    background-position: center;
+    padding: 5% 6% 7% 7%;
+    animation: fadeInUp 1s;
+    font-size: larger;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.quiz-button-container {
+    width: 27%;
+    height: 80%;
+    margin: 11vh 10% 0 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: xxx-large;
+    animation: fadeInUp 1s;
+
+    button {
+        width: 12vw;
+        font-size: 2vw;
+        padding-top: 1.5vh;
+    }
+}
