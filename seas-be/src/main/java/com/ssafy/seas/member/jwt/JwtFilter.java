@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.ssafy.seas.common.constants.ErrorCode;
+import com.ssafy.seas.common.exception.CustomException;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -51,7 +52,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
 		String token = resolveToken(request);
 		if (token == null) {
-			throw new IllegalArgumentException(ErrorCode.NO_TOKEN.getMessage());
+			throw new CustomException(ErrorCode.NO_TOKEN.getMessage());
 		}
 		log.info("JwtFilter ::::::::: resolvedToken = {}", token.toString());
 
