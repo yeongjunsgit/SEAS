@@ -57,7 +57,7 @@ const currentQuestion = ref({
 
 // 정답 체크 ====================================================================
 // 정답 여부 변수s
-const isCorrect = ref(false);
+const isCorrect = ref(null);
 const answerShown = ref(false);
 
 // 다음 문제를 표시하는 메소드
@@ -91,41 +91,6 @@ const checkAnswer = () => {
     // 얻어낸 bool값으로 해당 문제 맞았는지 틀렸는지 알려주기
     answerShown.value = true;
 };
-// const checkAnswer = async () => {
-//     try {
-//         console.log(props.quizCategory);
-//         console.log(currentQuestion.value.quizId);
-//         console.log(answerInput.value);
-
-//         const { data } = await sendAnswerAsync(
-//             props.quizCategory,
-//             currentQuestion.value.quizId,
-//             answerInput.value
-//         );
-
-//         isCorrect.value = data.data.result; // 정답 여부를 저장
-//         console.log(data.data.result);
-//         console.log(isCorrect.value);
-
-//         // 얻어낸 bool값으로 해당 문제 맞았는지 틀렸는지 알려주기
-//         answerShown.value = true;
-//     } catch (error) {
-//         console.log(error);
-//     }
-// };
-
-// // Define a new asynchronous version of the sendAnswer function
-// const sendAnswerAsync = (category, quizId, answer) => {
-//     return new Promise((resolve, reject) => {
-//         sendAnswer(
-//             category,
-//             quizId,
-//             answer,
-//             (response) => resolve(response),
-//             (error) => reject(error)
-//         );
-//     });
-// };
 
 // 정답 여부 시간차 표시 및 넘기기 ==============================================
 const delayResult = () => {
@@ -157,6 +122,7 @@ const showHint = () => {
         props.quizCategory,
         currentQuestion.value.quizId,
         ({ data }) => {
+            console.log(data.data);
             hint.value = data.data.hint; // 정답 여부를 저장
             console.log(hint.value);
         },
@@ -232,9 +198,6 @@ const clearInput = () => {
     height: 50%;
 }
 
-.hint-container {
-    height: 10%;
-}
 .result-container {
     height: 20%;
     display: flex;

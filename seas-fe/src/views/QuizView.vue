@@ -77,10 +77,12 @@ getInitRank(
     position: absolute;
     background-image: url($url-path + "images/map.jpg");
     background-size: cover;
+    min-height: 600px;
     height: 100%;
     width: 100%;
     display: flex;
     justify-content: space-evenly;
     font-size: larger;
+    padding-top: 2%;
 }
 </style>

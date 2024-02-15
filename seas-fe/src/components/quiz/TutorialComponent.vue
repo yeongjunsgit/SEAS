@@ -43,11 +43,14 @@ const categoryList = ref([
         </div>
     </div>
     <div class="quiz-button-container">
-        <div v-for="(category, index) in categoryList" :key="category">
-            <button class="menu-button" @click="startQuiz(index + 1)">
-                {{ category.category }}
-            </button>
-        </div>
+        <button
+            v-for="(category, index) in categoryList"
+            :key="category"
+            class="menu-button"
+            @click="startQuiz(index + 1)"
+        >
+            {{ category.category }}
+        </button>
     </div>
 </template>
 
@@ -68,13 +71,15 @@ li {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    padding: 7vh 0 7vh 0;
-    max-height: 1000px;
+    min-height: 400px;
+    height: 70vh;
+    padding-top: 5vh;
+    margin-left: 2vw;
 
     button {
-        height: 90px;
-        margin: 4vh 0 4vh 0;
-        padding: 5% 0 2% 0;
+        height: 12vh;
+        margin: 3vh 4vw 3vh 0;
+        padding: 2% 0 0 0;
         background-color: rgba($color: #ffffff, $alpha: 0.2);
     }
 }
