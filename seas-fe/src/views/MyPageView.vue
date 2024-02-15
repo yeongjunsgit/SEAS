@@ -41,10 +41,10 @@ const getInitLineChart = () => {
 };
 
 const removeStorage = function () {
-  localStorage.removeItem("myName");
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("refreshToken");
-  localStorage.removeItem("myGrantType");
+  sessionStorage.removeItem("myName");
+  sessionStorage.removeItem("accessToken");
+  sessionStorage.removeItem("refreshToken");
+  sessionStorage.removeItem("myGrantType");
 };
 
 const getInitDelete = () => {
@@ -131,6 +131,7 @@ onMounted(async () => {
   rotate: -90deg;
 }
 .mypage-component-background {
+  width: 80vw;
   height: auto;
   overflow: hidden;
   margin-inline: 10%;
@@ -143,19 +144,18 @@ onMounted(async () => {
 
 .mychart {
   display: grid;
+  place-items: center;
   grid-template-columns: repeat(3, 1fr);
 }
 
-.chart-box {
-  padding-left: 40px;
-}
 .transparent-card {
   background: transparent;
-  padding-left: 30px;
+  padding-inline: 20px;
   width: 350px;
 }
 .mycard {
   display: grid;
+  place-items: center;
   grid-template-columns: 1fr 1fr;
 }
 
@@ -180,6 +180,7 @@ onMounted(async () => {
 }
 @media screen and (max-width: 960px) {
   .mychart {
+    padding-top: 70px;
     grid-template-columns: repeat(1, 1fr);
     row-gap: 30px;
   }
