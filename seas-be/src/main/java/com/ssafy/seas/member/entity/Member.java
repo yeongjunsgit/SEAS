@@ -8,6 +8,7 @@ import com.ssafy.seas.flashcard.entity.Favorite;
 import com.ssafy.seas.mypage.entity.Streak;
 import com.ssafy.seas.quiz.entity.IncorrectNote;
 import com.ssafy.seas.quiz.entity.Quiz;
+import com.ssafy.seas.ranking.entity.MemberBadge;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -41,4 +42,7 @@ public class Member extends BaseEntity {
 
 	@OneToMany(mappedBy = "member")
 	private List<IncorrectNote> incorrectNotes = new ArrayList<>();
+
+	// @OneToMany(mappedBy = "member")
+	// private List<MemberBadge> memberBadges = new ArrayList<>();
 }

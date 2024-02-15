@@ -21,10 +21,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import static com.ssafy.seas.category.entity.QCategory.*;
 import static com.ssafy.seas.member.entity.QMember.member;
 import static com.ssafy.seas.mypage.entity.QStreak.streak;
 import static com.ssafy.seas.quiz.entity.QCardQuiz.cardQuiz;
 import static com.ssafy.seas.quiz.entity.QFactor.factor;
+import static com.ssafy.seas.quiz.entity.QQuiz.*;
 import static com.ssafy.seas.quiz.entity.QSolvedQuiz.solvedQuiz;
 
 @Repository
@@ -161,6 +163,18 @@ public class CorrectAnswerRepository {
         }
 
         entityManager.flush();
+    }
+
+    public Long getCorrectCountPerCategoryByMemberIdAndCategoryId(Integer memberId, Integer categoryId) {
+        return jpaQueryFactory
+            .select(solvedQuiz.count())
+            .from(solvedQuiz)
+            .join(quiz).on(solvedQuiz.quiz.id.eq(quiz.id))
+            .join(category).on(quiz.category.id.eq(category.id))
+            .where(category.id.eq(categoryId)
+                .and(solvedQuiz.member.id.eq(memberId))
+                .and(solvedQuiz.correctCount.goe(1)))
+            .fetchOne();
     }
 }
 
