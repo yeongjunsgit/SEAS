@@ -28,6 +28,7 @@ public class QuizService {
     private final FactorRepository factorRepository;
     private final WrongAnswerRepostory wrongAnswerRepostory;
     private final CorrectAnswerRepository correctAnswerRepository;
+    private final IncorrectNoteRepository incorrectNoteRepository;
     private final QuizUtil quizUtil;
     private final MemberUtil memberUtil;
     private final MemberRepository memberRepository;
@@ -118,7 +119,7 @@ public class QuizService {
         return new QuizAnswerDto.Response(false);
     }
 
-
+    @org.springframework.transaction.annotation.Transactional
     public void applyTotalResult(Integer memberId){
         Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
         Integer categoryId = 0;
@@ -135,6 +136,7 @@ public class QuizService {
             if(factorDto.getIsCorrect()){
                 correctAnswerRepository.saveOrUpdateStreakAndSolvedQuiz(factorDto, memberId);
                 correctAnswerRepository.saveOrUpdateFactor(factorDto, memberId);
+                incorrectNoteRepository.deleteByMemberIdAndQuizId(memberId, factorDto.getQuizId());
             }
             else{
                 wrongAnswerRepostory.saveOrUpdateIncorrectNoteAndSolvedQuiz(memberId, quizId);
