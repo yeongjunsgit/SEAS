@@ -366,26 +366,15 @@ onMounted(async () => {
         },
       })
       .then(function (response) {
-        if (response.data.data) {
-          getData.value = response.data.data;
-        } else {
+        console.log(response.data.data);
+        if (response.data.data == 0) {
           getData.value = [{ createdAt: today, grade: 0 }];
+        } else {
+          getData.value = response.data.data;
         }
       })
       .catch((error) => console.log(error));
-    // getCalendarChart(
-    //   ({ data }) => {
-    //     console.log(data.data);
-    //     if (data.data) {
-    //       getData.value = data.data;
-    //     } else {
-    //       getData.value = [{ createdAt: today, grade: 0 }];
-    //     }
-    //   },
-    //   (error) => {
-    //     console.log(error);
-    //   }
-    // );
+
     console.log(getData.value);
 
     // 각 data의 date를 Date 형식으로 변환

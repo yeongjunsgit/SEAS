@@ -1,14 +1,18 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import UserInfoComponent from "@/components/mypage/UserInfoComponent.vue";
 import CategoryComponent from "@/components/mypage/CategoryComponent.vue";
 import LineChartVue from "@/components/mypage/LineChart.vue";
 import GrassComponentVue from "@/components/mypage/GrassComponent.vue";
 import { getLineChart } from "@/api/mypage.js";
 import { useauthControllerStore } from "@/stores/authController";
+import axios from "axios";
 
 const userStore = useauthControllerStore();
-const myname = userStore.myName;
+const user_access_token = userStore.myAccessToken;
+
+const router = useRouter();
 
 const categories = [
   "데이터베이스",
@@ -27,13 +31,47 @@ const getInitLineChart = () => {
   getLineChart(
     ({ data }) => {
       categoryObj.value = data.data;
-
+      console.log(data.data);
       loaded.value = true;
     },
     (error) => {
       console.log(error);
     }
   );
+};
+
+const removeStorage = function () {
+  localStorage.removeItem("myName");
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+  localStorage.removeItem("myGrantType");
+};
+
+const getInitDelete = () => {
+  router.push({ name: "home" });
+
+  removeStorage();
+  userStore.resetState();
+  // axios.delete("https://i10a609.p.ssafy.io/api/auth/logout", {
+  //   headers: {
+  //     Authorization: `Bearer ${user_access_token}`,
+  //     "Content-Type": "application/json",
+  //   },
+  // });
+
+  axios.delete("https://i10a609.p.ssafy.io/api/auth/quit", {
+    headers: {
+      Authorization: `Bearer ${user_access_token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  // .then(function () {
+  //   removeStorage();
+  //   userStore.resetState();
+  //   router.push({ name: "home" });
+  // })
+  // .catch((error) => console.log(error));
 };
 
 onMounted(async () => {
@@ -50,7 +88,10 @@ onMounted(async () => {
   <div class="mypage-background text-font">
     <div class="container">
       <div class="mypage-component-background userinfo">
-        <UserInfoComponent />
+        <div style="text-align: center">
+          <UserInfoComponent />
+          <button class="del" @click="getInitDelete()">회원탈퇴</button>
+        </div>
         <GrassComponentVue />
       </div>
       <div class="mypage-component-background mychart">
@@ -162,6 +203,16 @@ onMounted(async () => {
     width: 600px; /* 또는 원하는 크기로 설정 */
     margin: 0 auto; /* 가운데 정렬을 위해 사용 */
     /* 추가로 필요한 스타일 설정 */
+  }
+}
+
+.del {
+  border: 1px solid black;
+  border-radius: 3cap;
+  padding-inline: 5px;
+  padding-top: 3px;
+  &:hover {
+    background-color: rgba(255, 0, 0, 0.5);
   }
 }
 </style>
