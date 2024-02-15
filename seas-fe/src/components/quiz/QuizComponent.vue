@@ -86,14 +86,12 @@ const checkAnswer = () => {
             console.log(error);
         }
     );
-
-    // isCorrect.value = answerInput.value != null ? true : false; // 임시 정답 처리 되는지 확인 코드
-    // 얻어낸 bool값으로 해당 문제 맞았는지 틀렸는지 알려주기
-    answerShown.value = true;
 };
 
 // 정답 여부 시간차 표시 및 넘기기 ==============================================
 const delayResult = () => {
+    // 얻어낸 bool값으로 해당 문제 맞았는지 틀렸는지 알려주기
+    answerShown.value = true;
     setTimeout(() => {
         // 제출 후 인풋 제거
         clearInput();
@@ -109,7 +107,7 @@ const delayResult = () => {
         // 현재 인덱스의 문제 업데이트
         hintShown.value = false;
         currentQuestion.value = content.value[currentIndex.value];
-        answerShown.value = null;
+        answerShown.value = false;
     }, 1000); // Convert seconds to milliseconds
 };
 
@@ -163,12 +161,13 @@ const clearInput = () => {
             />
         </div>
         <div class="result-container">
-            <h3
-                v-if="answerShown"
-                class="input-result"
-                :class="{ correct: isCorrect, wrong: !isCorrect }"
-            >
-                {{ isCorrect ? "맞았습니다" : "틀렸습니다" }}
+            <h3 v-if="answerShown" class="input-result">
+                <p v-if="isCorrect == true" class="result correct">
+                    맞았습니다
+                </p>
+                <p v-else-if="isCorrect == false" class="result wrong">
+                    틀렸습니다
+                </p>
             </h3>
         </div>
     </div>
@@ -206,15 +205,19 @@ const clearInput = () => {
     font-size: 140%;
 
     .input-result {
-        border: double;
-        border-width: 6px;
-        padding-top: 1%;
         width: 60%;
         display: flex;
         flex-direction: column;
         justify-content: center;
 
         transform: rotate(-10deg); /* 45도로 요소를 회전 */
+
+        .result {
+            padding: 2vh 0 1vh 0;
+            border: double;
+            border-width: 6px;
+            width: 100%;
+        }
     }
 
     .correct {
