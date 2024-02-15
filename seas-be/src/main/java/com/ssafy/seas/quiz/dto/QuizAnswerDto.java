@@ -17,6 +17,10 @@ public class QuizAnswerDto {
         public Request(String submit){
             this.submit = submit;
         }
+
+        public Request(Integer submit){
+            this.submit = submit.toString();
+        }
     }
 
     @Getter
