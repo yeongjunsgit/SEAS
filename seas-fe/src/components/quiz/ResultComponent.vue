@@ -20,7 +20,7 @@ getResult(
     ({ data }) => {
         resultInfo.value = data.data;
         console.log(resultInfo.value);
-        checkResultRank();
+        getResultRank();
     },
     (error) => {
         console.log(error);
@@ -33,26 +33,16 @@ const emit = defineEmits(["showTutorial"]);
 
 // 이전 티어와 퀴즈 후 티어 결과 비교 ===========================
 const updatedRank = ref();
-const isRankUpdated = ref();
-const modalOn = ref(false);
-const checkResultRank = () => {
-    getResultRank(
-        props.currentUserRank,
-        ({ data }) => {
-            updatedRank.value = data.data.tier;
-            isRankUpdated.value = data.data.upgraded;
-            console.log(updatedRank.value);
-            console.log(isRankUpdated.value);
-
-            if (isRankUpdated.value == true) {
-                modalOn.value = true;
-            }
-        },
-        (error) => {
-            console.log(error);
-        }
-    );
-};
+getResultRank(
+    props.currentUserRank,
+    ({ data }) => {
+        updatedRank.value = data.data;
+        console.log(updatedRank.value.upgraded);
+    },
+    (error) => {
+        console.log(error);
+    }
+);
 
 // 단순 라우팅 =================================================
 // showTutorial 버튼 클릭 시 실행되는 함수
@@ -70,7 +60,7 @@ const goMypage = () => {
 
 // 모달 닫기 함수
 const closeModal = () => {
-    modalOn.value = false;
+    updatedRank.value = false;
 };
 </script>
 
@@ -101,11 +91,10 @@ const closeModal = () => {
         <button class="menu-button" @click="goMypage">마이페이지로</button>
     </div>
     <!-- 모달 컴포넌트 -->
-    <Modal v-if="modalOn" @close="closeModal">
+    <Modal v-if="updatedRank.upgraded" @close="closeModal">
         <!-- 모달 내용 -->
-        <h1>축하합니다!!</h1>
         <h2>
-            {{ props.currentUserRank }}에서 {{ updatedRank }}(으)로
+            {{ props.currentUserRank }}에서 {{ updatedRank.tier }}로
             승급하셨습니다!
         </h2>
     </Modal>
