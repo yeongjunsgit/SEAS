@@ -20,6 +20,7 @@ getResult(
     ({ data }) => {
         resultInfo.value = data.data;
         console.log(resultInfo.value);
+        getResultRank();
     },
     (error) => {
         console.log(error);
