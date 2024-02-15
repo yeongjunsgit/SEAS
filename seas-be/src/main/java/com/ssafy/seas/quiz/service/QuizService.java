@@ -1,24 +1,43 @@
 package com.ssafy.seas.quiz.service;
 
-import com.ssafy.seas.member.dto.MemberDto;
-import com.ssafy.seas.member.repository.MemberRepository;
-import com.ssafy.seas.member.util.MemberUtil;
-import com.ssafy.seas.quiz.dto.*;
-import com.ssafy.seas.quiz.repository.*;
-import com.ssafy.seas.quiz.util.QuizUtil;
-
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ServerErrorException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.ssafy.seas.category.dto.CategoryDto;
+import com.ssafy.seas.category.util.CategoryUtil;
+import com.ssafy.seas.common.constants.ErrorCode;
+import com.ssafy.seas.common.exception.CustomException;
+import com.ssafy.seas.member.dto.MemberDto;
+import com.ssafy.seas.member.repository.MemberRepository;
+import com.ssafy.seas.member.util.MemberUtil;
+import com.ssafy.seas.quiz.dto.QuizAnswerDto;
+import com.ssafy.seas.quiz.dto.QuizDto;
+import com.ssafy.seas.quiz.dto.QuizHintDto;
+import com.ssafy.seas.quiz.dto.QuizListDto;
+import com.ssafy.seas.quiz.dto.QuizResultDto;
+import com.ssafy.seas.quiz.dto.QuizTierDto;
+import com.ssafy.seas.quiz.repository.CorrectAnswerRepository;
+import com.ssafy.seas.quiz.repository.FactorRepository;
+import com.ssafy.seas.quiz.repository.IncorrectNoteRepository;
+import com.ssafy.seas.quiz.repository.QuizCustomRepository;
+import com.ssafy.seas.quiz.repository.WrongAnswerRepostory;
+import com.ssafy.seas.quiz.util.QuizUtil;
+import com.ssafy.seas.ranking.entity.Badge;
+import com.ssafy.seas.ranking.entity.MemberBadge;
+import com.ssafy.seas.ranking.repository.BadgeRepository;
+import com.ssafy.seas.ranking.repository.MemberBadgeRepository;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -30,8 +49,11 @@ public class QuizService {
 	private final WrongAnswerRepostory wrongAnswerRepostory;
 	private final CorrectAnswerRepository correctAnswerRepository;
 	private final IncorrectNoteRepository incorrectNoteRepository;
+	private final BadgeRepository badgeRepository;
+	private final MemberBadgeRepository memberBadgeRepository;
 	private final QuizUtil quizUtil;
 	private final MemberUtil memberUtil;
+	private final CategoryUtil categoryUtil;
 	private final MemberRepository memberRepository;
 
 	private final RedisTemplate<Integer, Map<Integer, QuizDto.QuizFactorDto>> redisTemplate;
@@ -147,6 +169,43 @@ public class QuizService {
 		}
 
 		quizCustomRepository.saveScoreHistory(memberId, categoryId, totalScore);
+
+		applyBadge(memberId, categoryId);
+	}
+
+	@org.springframework.transaction.annotation.Transactional
+	public boolean applyBadge(Integer memberId, Integer categoryId) {
+		List<CategoryDto.Response> categories = categoryUtil.getCategories();
+
+		// categoryId에 해당하는 category 가져오기
+		CategoryDto.Response category = categories.stream()
+			.filter(c -> categoryId.equals(c.getId()))
+			.findFirst()
+			.orElseThrow(() -> new CustomException(ErrorCode.BAD_CATEGORY_ID.getMessage()));
+
+		// 카테고리에 해당하는 뱃지를 이미 갖고 있는지 검사
+		Badge badge = badgeRepository.findByName(category.getName())
+			.orElseThrow(() -> new CustomException(ErrorCode.BAD_BADGE_NAME.getMessage()));
+
+		Optional<MemberBadge> memberBadge = memberBadgeRepository.findByMemberIdAndBadgeId(memberId, badge.getId());
+
+		// 이미 갖고 있으면 더이상 진행 안 함
+		if (memberBadge.isPresent()) {
+			return false;
+		}
+
+		// 해당 카테고리 맞힌 개수: solved_quiz의 quiz_id와 quiz의 id 및 quiz의 category_id와 category의 id 조인한 테이블에서 category_id가 categoryId이면서 member_id가 memberId 이면서 correctCount가 1이상인 데이터 개수
+		Long correctCountPerCategory = correctAnswerRepository.getCorrectCountPerCategoryByMemberIdAndCategoryId(
+			memberId, categoryId);
+
+		// 해당 카테고리 맞힌 개수가 category 문제 수와 일치하는지 검사
+		if (Objects.equals(correctCountPerCategory.intValue(), category.getQuizCount())) {
+			// 일치하면 새로 엔티티 생성 및 save
+			MemberBadge newMemberBadge = new MemberBadge(memberId, badge.getId());
+			memberBadgeRepository.save(newMemberBadge);
+		}
+
+		return true;
 	}
 
 	public QuizResultDto.Response getTotalResult() {
