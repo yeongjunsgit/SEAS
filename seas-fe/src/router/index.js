@@ -10,6 +10,7 @@ import PopupCardView from "@/views/PopupCardView.vue";
 import PopupQuizView from "@/views/PopupQuizView.vue";
 import PreMyPageView from "@//views/PreMyPageView.vue";
 import { useauthControllerStore } from "@/stores/authController.js";
+import { computed } from "vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -75,8 +76,19 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const userStore = useauthControllerStore();
-  const isAuthenticated = userStore.isAuthenticated;
+  const isAuthenticated = computed(() => {
+    const isName = localStorage.getItem("myName");
+    const isAccessToken = localStorage.getItem("accessToken");
+    const isRefreshToken = localStorage.getItem("refreshToken");
+    const isGrantType = localStorage.getItem("myGrantType");
+
+    return (
+      isName !== null &&
+      isAccessToken !== null &&
+      isRefreshToken !== null &&
+      isGrantType !== null
+    );
+  }).value;
 
   if (
     to.name !== "home" &&
