@@ -41,8 +41,13 @@ public class MemberController {
 	}
 
 	@PostMapping("/check-id")
-	public ApiResponse<MemberDto.checkIdResult> login(@RequestBody MemberDto.checkId memberId) {
-		return ApiResponse.success(SuccessCode.POST_SUCCESS, memberService.isDuplicatedId(memberId.getId()));
+	public ApiResponse<MemberDto.checkIdResult> checkId(@RequestBody MemberDto.checkId memberId) {
+		return ApiResponse.success(SuccessCode.GET_SUCCESS, memberService.isDuplicatedId(memberId.getId()));
+	}
+
+	@PostMapping("/check-nickname")
+	public ApiResponse<MemberDto.checkIdResult> checkNickname(@RequestBody MemberDto.checkNickname memberNickname) {
+		return ApiResponse.success(SuccessCode.GET_SUCCESS, memberService.isDuplicatedNickname(memberNickname.getNickname()));
 	}
 
 	@PostMapping("/refresh")

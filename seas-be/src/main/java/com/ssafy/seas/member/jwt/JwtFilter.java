@@ -41,7 +41,8 @@ public class JwtFilter extends OncePerRequestFilter {
 			"/api/v3/api-docs/swagger-config",
 			"/api/auth/signup",		// 회원가입 페이지
 			"/api/auth/signin",		// 로그인 페이지
-			"/api/auth/check-id"	// 아이디 중복 검사
+			"/api/auth/check-id",	// 아이디 중복 검사
+			"/api/auth/check-nickname"	// 닉네임 중복 검사
 			// "/api/auth/refresh"		// 재발급 페이지 (후에 삭제)
 		);
 
