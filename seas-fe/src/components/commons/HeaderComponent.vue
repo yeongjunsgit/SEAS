@@ -32,10 +32,10 @@ const logout = () => {
   logOutRequest(
     ({ data }) => {
       console.log("로그아웃 백에서 해줘 : " + data.data);
-      removeStorage();
-      userStore.resetState();
       console.log("Logged out");
       movePage("/");
+      removeStorage();
+      userStore.resetState();
     },
     (error) => {
       console.log(error);
