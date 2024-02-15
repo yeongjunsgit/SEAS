@@ -8,30 +8,30 @@
 
 ## 목차
 
--   개요
--   사이트 설명
--   팀 소개
--   팀원별 역할 분담
+- 개요
+- 사이트 설명
+- 팀 소개
+- 팀원별 역할 분담
 
 ## 개요
 
--   프로젝트 이름: SEAS
--   프로젝트 기간: 2024.01 - 2024.02 (6주)
--   개발 언어 및 라이브러리
-    -   백엔드
-        -   https://github.com/Ileriayo/markdown-badges
-        -   여기서 배지 찾아서 넣으세요
-        -   <img src="https://img.shields.io/badge/Framework-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"><img src="https://img.shields.io/badge/2.7.13-515151?style=for-the-badge">
-        -   <img src="https://img.shields.io/badge/Build-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=Gradle&logoColor=white"><img src="https://img.shields.io/badge/7.1.1-515151?style=for-the-badge">
-        -   <img src="https://img.shields.io/badge/Language-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/java-%23ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"><img src="https://img.shields.io/badge/11-515151?style=for-the-badge">
-        -   <img src="https://img.shields.io/badge/Project Encoding-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/UTF 8-EA2328?style=for-the-badge">
-    -   프론트
-        -   <img src="https://img.shields.io/badge/Design-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white">
-        -   <img src="https://img.shields.io/badge/Platform-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white">
-        -   <img src="https://img.shields.io/badge/Framework-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D">
-        -   <img src="https://img.shields.io/badge/Library-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=AEDDFF">
-        -   <img src="https://img.shields.io/badge/Language-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E"><img src="https://img.shields.io/badge/SASS-hotpink.svg?style=for-the-badge&logo=SASS&logoColor=white">
--   팀: 아이9허리야 (이정은, 엄세현, 송정훈, 권기용, 배진현, 김영준)
+- 프로젝트 이름: SEAS
+- 프로젝트 기간: 2024.01 - 2024.02 (6주)
+- 개발 언어 및 라이브러리
+  - 백엔드
+    - https://github.com/Ileriayo/markdown-badges
+    - 여기서 배지 찾아서 넣으세요
+    - <img src="https://img.shields.io/badge/Framework-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"><img src="https://img.shields.io/badge/2.7.13-515151?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/Build-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=Gradle&logoColor=white"><img src="https://img.shields.io/badge/7.1.1-515151?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/Language-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/java-%23ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"><img src="https://img.shields.io/badge/11-515151?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/Project Encoding-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/UTF 8-EA2328?style=for-the-badge">
+  - 프론트
+    - <img src="https://img.shields.io/badge/Design-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white">
+    - <img src="https://img.shields.io/badge/Platform-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white"><img src="https://img.shields.io/badge/20.10.0-515151?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/Framework-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D">
+    - <img src="https://img.shields.io/badge/Library-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=AEDDFF"><img src="https://img.shields.io/badge/axios-%23593d88?style=for-the-badge"><img src="https://img.shields.io/badge/pinia-2c4f7c?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/Language-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E"><img src="https://img.shields.io/badge/SASS-hotpink.svg?style=for-the-badge&logo=SASS&logoColor=white">
+- 팀: 아이9허리야 (이정은, 엄세현, 송정훈, 권기용, 배진현, 김영준)
 
 ## 사이트 설명
 
@@ -59,25 +59,25 @@
 
 > ### 작업한 페이지
 >
-> -   메인페이지
+> - 메인페이지
 >
-> -   메뉴 페이지
+> - 메뉴 페이지
 >
-> -   로그인, 회원가입 페이지
+> - 로그인, 회원가입 페이지
 >
-> -   퀴즈 페이지
+> - 퀴즈 페이지
 >
-> -   랭킹 페이지
+> - 랭킹 페이지
 >
 > ### 문제 해결
 >
-> -   백엔드와의 의사소통
+> - 백엔드와의 의사소통
 >
-> -   axios의 요청 통일성
+> - axios의 요청 통일성
 >
-> -   인터셉터 사용
->     -   문제:
->     -   해결 방법:
+> - 인터셉터 사용
+>   - 문제:
+>   - 해결 방법:
 >
 > ### 개선점
 >
