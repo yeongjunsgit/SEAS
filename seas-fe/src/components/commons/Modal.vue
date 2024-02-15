@@ -38,7 +38,7 @@ const closeModal = () => {
 }
 
 .modal-content {
-    padding: 10% 5% 5% 5%;
+    padding: 5%;
     border-radius: 8px;
     background-image: url($url-path + "images/mypage_paper.png");
     background-size: contain;
