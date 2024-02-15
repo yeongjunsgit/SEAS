@@ -53,8 +53,8 @@ public class WrongAnswerRepostory {
 
         log.info("INCORRECTNOTE WITH SOLVEDQUIZ JOIN RESULT SIZE : {}", result.size());
         result.forEach((tp) ->{
-            System.out.println("SOLVEQUIZ id: " + tp.get(1, SolvedQuiz.class).getId());
-            System.out.println("IncorrectNote is exist : " + tp.get(0, IncorrectNote.class));
+            System.out.println("SOLVEQUIZ id: " + tp.get(0, SolvedQuiz.class).getId());
+            System.out.println("IncorrectNote is exist : " + tp.get(1, IncorrectNote.class));
         });
 
 
