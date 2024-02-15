@@ -51,10 +51,10 @@ const login = async () => {
         function (data) {
             console.log(data);
 
-            localStorage.setItem("myName", data.data.data.memberId);
-            localStorage.setItem("accessToken", data.data.data.accessToken);
-            localStorage.setItem("refreshToken", data.data.data.refreshToken);
-            localStorage.setItem("myGrantType", data.data.data.grantType);
+            sessionStorage.setItem("myName", data.data.data.memberId);
+            sessionStorage.setItem("accessToken", data.data.data.accessToken);
+            sessionStorage.setItem("refreshToken", data.data.data.refreshToken);
+            sessionStorage.setItem("myGrantType", data.data.data.grantType);
 
             userStore.myName = data.data.data.memberId;
             userStore.myAccessToken = data.data.data.accessToken;

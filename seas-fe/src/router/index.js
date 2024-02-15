@@ -78,10 +78,10 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     const isAuthenticated = computed(() => {
-        const isName = localStorage.getItem("myName");
-        const isAccessToken = localStorage.getItem("accessToken");
-        const isRefreshToken = localStorage.getItem("refreshToken");
-        const isGrantType = localStorage.getItem("myGrantType");
+        const isName = sessionStorage.getItem("myName");
+        const isAccessToken = sessionStorage.getItem("accessToken");
+        const isRefreshToken = sessionStorage.getItem("refreshToken");
+        const isGrantType = sessionStorage.getItem("myGrantType");
 
         return (
             isName !== null &&
@@ -102,10 +102,10 @@ router.beforeEach((to, from, next) => {
     } else {
         const authControllerStore = useauthControllerStore();
         function loadLoginDataFromLocalStorage() {
-            const savedName = localStorage.getItem("myName");
-            const savedRefreshToken = localStorage.getItem("refreshToken");
-            const savedMyGrantType = localStorage.getItem("myGrantType");
-            const savedAccessToken = localStorage.getItem("accessToken");
+            const savedName = sessionStorage.getItem("myName");
+            const savedRefreshToken = sessionStorage.getItem("refreshToken");
+            const savedMyGrantType = sessionStorage.getItem("myGrantType");
+            const savedAccessToken = sessionStorage.getItem("accessToken");
 
             authControllerStore.myName = savedName;
             authControllerStore.myAccessToken = savedRefreshToken;
