@@ -8,15 +8,16 @@
 
 ## 📜 Index
 
-- [Deploy URL](#deploy)
-- [Repository](#repo)
-- [Member](#member)
-- [Architect](#specific)
-- [Project Outline](#outline)
+- [DEPLOY URL](#deploy)
+- [REPOSITORY](#repo)
+- [MEMBER](#member)
+- [ARCHITECT](#specific)
+- [PROJECT OUTLINE](#outline)
 - [Architect](#architect)
-- [Distributed Roles](#roles)
-- [Site Introduction](#intro)
-- [Function](#function)
+- [ERD](#erd)
+- [SITE INTRODUCTION](#intro)
+- [DISTRIBUTED ROLES](#roles)
+- [FUNCTION](#function)
 
 <a name="deploy"></a>
 
