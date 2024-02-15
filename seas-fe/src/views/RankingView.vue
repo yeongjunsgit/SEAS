@@ -97,10 +97,7 @@ const closeModal = () => {
 <template>
   <div class="ranking-container text-font">
     <div class="ranking-board">
-      <img
-        src="https://d2qkxc1ity7pm2.cloudfront.net/images/mypage_paper.png"
-        alt=""
-      />
+      <img src="https://d2qkxc1ity7pm2.cloudfront.net/images/mypage_paper.png" alt="" />
       <div class="board">
         <div class="ranking-title"><h1>현상금 순위 RANK</h1></div>
         <div class="top-ranker" v-if="isRankData">
@@ -160,10 +157,7 @@ const closeModal = () => {
                 </td>
                 <td class="tag-container">
                   <!-- name: "홍싸피", tag: [1, 2, 3, 4], score: 1442 -->
-                  <TagComponent
-                    :level="ranker.tier"
-                    :tagList="ranker.badgeList"
-                  />
+                  <TagComponent :level="ranker.tier" :tagList="ranker.badgeList" />
                 </td>
                 <td>
                   <div>
@@ -173,15 +167,10 @@ const closeModal = () => {
               </tr>
               <tr class="user-row">
                 <td>{{ userInfo.ranking }}</td>
-                <td @click="openModal(userInfo)" class="detail">
-                  {{ userInfo.nickname }}(나)
-                </td>
+                <td @click="openModal(userInfo)" class="detail">{{ userInfo.nickname }}(나)</td>
                 <td class="tag-container">
                   <!-- name: "홍싸피", tag: [1, 2, 3, 4], score: 1442 -->
-                  <TagComponent
-                    :level="userInfo.tier"
-                    :tagList="userInfo.badgeList"
-                  />
+                  <TagComponent :level="userInfo.tier" :tagList="userInfo.badgeList" />
                 </td>
                 <td>{{ userInfo.point }}</td>
               </tr>
