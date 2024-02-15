@@ -102,7 +102,7 @@ public class QuizService {
                 QuizAnswerDto.UpdatedFactors factor = quizUtil.getNewFactor(memberId, quizId, categoryId);
                 
                 // 포인트, 점수 저장
-                quizUtil.updateQuizPointAndPoint(memberId, quizId, factor.getPoint(), factor.getScore());
+                quizUtil.updateQuizPointAndScore(memberId, quizId, factor.getPoint(), factor.getScore());
                 // 가중치 레디스 저장
                 quizUtil.updateWeightFactor(memberId, quizId, factor.getEf(), factor.getInterval());
                 

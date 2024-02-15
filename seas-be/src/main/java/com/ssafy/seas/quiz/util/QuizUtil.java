@@ -106,7 +106,7 @@ public class QuizUtil {
     }
 
     // 퀴즈와 포인트를 저장하는 부분
-    public void updateQuizPointAndPoint(Integer memberId, Integer quizId, Integer point, Integer score){
+    public void updateQuizPointAndScore(Integer memberId, Integer quizId, Integer point, Integer score){
         Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
 
         String nestedKey = toKey(quizId);
