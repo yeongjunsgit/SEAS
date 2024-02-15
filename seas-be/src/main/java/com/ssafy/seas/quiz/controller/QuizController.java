@@ -43,6 +43,7 @@ public class QuizController {
                 return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getSubmitResult(request, categoryId, quizId));
             }
             //  빈 값일때 body 안들어왔다는 에러 뜸
+
             return ApiResponse.success(SuccessCode.GET_SUCCESS, quizService.getSubmitResult(request, categoryId, quizId));
         }
         catch (IllegalStateException e){
