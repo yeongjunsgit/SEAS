@@ -131,11 +131,8 @@ function popupQuiz(categoryId, quizId) {
             >
                 <th>{{ categoryEach }}</th>
                 <template v-for="data in datas">
-                    <td
-                        v-if="data.categoryName == categoryEach"
-                        class="scrollable-td"
-                    >
-                        <div>
+                    <td v-if="data.categoryName == categoryEach">
+                        <div class="scrollable-td">
                             <p
                                 v-for="flashcardId in data.flashcardIds"
                                 @click="
@@ -208,6 +205,7 @@ h1 {
 
 table {
     border-collapse: collapse;
+    min-height: 300px;
 }
 .categories {
     display: flex;
@@ -218,7 +216,6 @@ tr {
     width: 380px;
     align-items: center;
     height: 14%;
-    overflow-y: hidden;
 }
 th {
     width: 30%;
@@ -228,16 +225,20 @@ th {
 td div {
     display: flex;
     flex-wrap: wrap;
-    padding: 8px;
 }
 .scrollable-td {
-    max-height: 300px;
+    max-height: 50px; /* 스크롤 가능한 최대 높이 설정 */
     overflow-y: scroll; /* 수직 스크롤 적용 */
-}
-p {
-    margin-right: 5px;
-    color: rgb(57, 57, 176);
-    cursor: pointer;
-    line-height: 0.7;
+    padding: 1% 0 1% 0;
+    p {
+        margin: 5px 5px 0 0;
+        color: rgb(57, 57, 176);
+        cursor: pointer;
+        line-height: 0.7;
+    }
+
+    &::-webkit-scrollbar {
+        width: 0; /* 스크롤 바의 너비를 0으로 설정하여 숨김 */
+    }
 }
 </style>
