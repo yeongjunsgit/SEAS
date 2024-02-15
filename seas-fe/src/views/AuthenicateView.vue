@@ -14,6 +14,7 @@ import { storeToRefs } from "pinia";
 const active = ref(false);
 
 const transitionContainer = function () {
+    isUserExist.value = true;
     active.value = !active.value;
 };
 
@@ -39,6 +40,7 @@ const signupInfo = ref({
 });
 
 const password = ref(null);
+const isUserExist = ref(true);
 
 const login = async () => {
     await loginRequest(
@@ -59,12 +61,14 @@ const login = async () => {
             userStore.myRefreshToken = data.data.data.refreshToken;
             userStore.myGrantType = data.data.data.grantType;
             console.log("complete");
+            isUserExist.value = true;
+            router.push("/");
         },
         function (error) {
-            console.log(error);
+            isUserExist.value = false;
+            console.log(error.response.data.message);
         }
     );
-    router.push("/");
 };
 
 const checkSignup = () => {
@@ -144,6 +148,7 @@ const checkDuplicate = async () => {
     <div class="main-container">
         <div class="login-box">
             <div class="container" :class="{ active: active }" id="container">
+                <!-- 회원가입 -->
                 <div class="form-container sign-up">
                     <form @submit.prevent="checkSignup">
                         <h1>Create Account</h1>
@@ -177,6 +182,7 @@ const checkDuplicate = async () => {
                         <button>Sign Up</button>
                     </form>
                 </div>
+                <!-- 로그인 -->
                 <div class="form-container sign-in">
                     <form @submit.prevent="login">
                         <h1>Sign in</h1>
@@ -184,7 +190,11 @@ const checkDuplicate = async () => {
                             type="text"
                             placeholder="ID"
                             v-model="loginInfo.memberId"
+                            :class="{ noUserFound: !isUserExist }"
                         />
+                        <p v-if="isUserExist == false" class="noUserFound-text">
+                            일치하는 사용자가 없습니다.
+                        </p>
                         <input
                             type="password"
                             placeholder="Password"
@@ -493,5 +503,13 @@ video {
 
 img {
     width: 50%;
+}
+
+.noUserFound {
+    border: 2px solid red !important;
+}
+.noUserFound-text {
+    color: red;
+    font-size: small;
 }
 </style>
