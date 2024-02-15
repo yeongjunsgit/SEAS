@@ -11,8 +11,11 @@ function signupRequest(payload, success, fail) {
 }
 
 function checkIdRequest(payload, success, fail) {
-  console.log(payload);
   local.post(`/auth/check-id`, payload).then(success).catch(fail);
+}
+
+function checkNickRequest(payload, success, fail) {
+  local.post(`/auth/check-nickname`, payload).then(success).catch(fail);
 }
 
 function refreshRequest(payload, success, fail) {
@@ -31,6 +34,7 @@ export {
   loginRequest,
   signupRequest,
   checkIdRequest,
+  checkNickRequest,
   refreshRequest,
   logOutRequest,
   delRequest,

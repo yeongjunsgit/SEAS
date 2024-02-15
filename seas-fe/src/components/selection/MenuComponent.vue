@@ -33,7 +33,9 @@ function preloadResource(url, type) {
                 <p>{{ title }}</p>
             </div>
             <div class="content text-font">
-                <p>{{ content }}</p>
+                <p v-for="(text, index) in props.content" :key="index">
+                    {{ text }}
+                </p>
             </div>
         </div>
         <div class="button-container">
@@ -54,12 +56,14 @@ function preloadResource(url, type) {
     position: relative;
     background-image: url("https://d2qkxc1ity7pm2.cloudfront.net/images/menu.png");
     background-size: contain;
-    min-width: 300px;
+    width: 300px;
     max-height: 430px;
     display: flex;
     justify-content: center;
+    align-items: center;
 
     .menu-text {
+        width: 70%;
         text-align: center;
     }
 
@@ -74,7 +78,9 @@ function preloadResource(url, type) {
     }
 
     .content {
-        font-size: 25px;
+        font-size: 1.4vw;
+        text-align: center;
+        padding: 0 5% 0 5%;
     }
 }
 .menu-button p {
@@ -84,5 +90,6 @@ function preloadResource(url, type) {
 .button-container {
     display: flex;
     justify-content: center;
+    width: 100%;
 }
 </style>

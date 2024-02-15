@@ -2,7 +2,11 @@
 import { onMounted } from "vue";
 import MenuComponent from "@/components/selection/MenuComponent.vue";
 const titles = ["카드", "퀴즈", "랭킹"];
-const contents = ["안녕하세요", "퀴즈입니다", "랭킹입니다"];
+const contents = [
+    ["플래시 카드를 이용한 간단한 암기를 통해 선장이 될 준비를 하세요!"],
+    ["지닌 CS 지식으로 퀴즈를 풀고 본인의 몸 값을 올리세요!"],
+    ["올라간 자신의 몸 값을 확인하세요!"],
+];
 const paths = ["/flashcard", "/quiz", "/ranking"];
 
 // 이미지와 비디오의 경로
