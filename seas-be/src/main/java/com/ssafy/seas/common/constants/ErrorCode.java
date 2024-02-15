@@ -22,6 +22,10 @@ public enum ErrorCode {
 
 	// 카테고리
 	BAD_CATEGORY_NAME(BAD_REQUEST, "키테고리 이름이 잘못되었습니다."),
+	BAD_CATEGORY_ID(BAD_REQUEST, "키테고리 ID가 잘못되었습니다."),
+
+	// 뱃지
+	BAD_BADGE_NAME(BAD_REQUEST, "뱃지 이름이 잘못되었습니다."),
 
 	// 플래시카드
 	FLASHCARD_NOT_FOUND(BAD_REQUEST, "id에 해당하는 플래시카드가 없습니다."),
