@@ -59,6 +59,14 @@ public class MemberDto {
 	@Builder
 	@NoArgsConstructor
 	@AllArgsConstructor
+	public static class checkNickname {
+		private String nickname;
+	}
+
+	@Getter
+	@Builder
+	@NoArgsConstructor
+	@AllArgsConstructor
 	public static class checkIdResult {
 		private Boolean isDuplicate;
 	}
