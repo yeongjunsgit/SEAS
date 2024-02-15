@@ -102,6 +102,19 @@ public class MemberService {
 		return new MemberDto.checkIdResult(false);
 	}
 
+	/**
+	 * 회원가입 시 닉네임 중복 검사
+	 * @param nickname : 로그인할 때 쓰는 아이디
+	 * @return boolean 중복 여부. true면 중복(가입불가), false면 중복 없음 (가입 가능)
+	 */
+	public MemberDto.checkIdResult isDuplicatedNickname(String nickname) {
+		Optional<Member> member = memberRepository.findByNickname(nickname);
+		if (member.isPresent()) {
+			return new MemberDto.checkIdResult(true);
+		}
+		return new MemberDto.checkIdResult(false);
+	}
+
 	public void logout() {
 		if(tokenUtil.deleteRefreshToken() == false){
 			throw new RuntimeException("저장된 토큰을 삭제할 수 없습니다 !!!!!");
