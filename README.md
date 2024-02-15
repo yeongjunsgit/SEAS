@@ -48,7 +48,7 @@
 블라블라블라
 
 ## 아키텍처
-![image](/uploads/2aa72b341d4ac49dc808fd02d7a81c38/image.png)
+![image](/uploads/e7f82f6ae13ab1861d7da5d7f6d30220/image.png)
 
 ## ERD
 ![image](/uploads/274e414254692c85b64461763568a983/image.png)
