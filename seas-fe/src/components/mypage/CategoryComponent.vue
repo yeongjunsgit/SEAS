@@ -227,7 +227,7 @@ td div {
     flex-wrap: wrap;
 }
 .scrollable-td {
-    max-height: 50px; /* 스크롤 가능한 최대 높이 설정 */
+    max-height: 45px; /* 스크롤 가능한 최대 높이 설정 */
     overflow-y: scroll; /* 수직 스크롤 적용 */
     padding: 1% 0 1% 0;
     p {
