@@ -47,6 +47,12 @@
 
 블라블라블라
 
+## 아키텍처
+![image](/uploads/2aa72b341d4ac49dc808fd02d7a81c38/image.png)
+
+## ERD
+![image](/uploads/274e414254692c85b64461763568a983/image.png)
+
 ## 기능 목록
 
 - 퀴즈
