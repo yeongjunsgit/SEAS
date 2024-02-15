@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.ssafy.seas.common.exception.CustomException;
+import com.ssafy.seas.common.exception.TokenException;
 import com.ssafy.seas.member.dto.MemberDto;
 
 import io.jsonwebtoken.Claims;
@@ -28,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TokenProvider {
 	private static final String AUTHORITIES_KEY = "Authentication";
 	private static final String BEARER_TYPE = "Bearer ";
-	private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 60;
+	private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 10; // * 60;
 	private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 7;
 	private final Key key;
 
@@ -83,6 +85,20 @@ public class TokenProvider {
 		return new UsernamePasswordAuthenticationToken(principal, "");
 	}
 
+	public Authentication getPlainAuthentication(String accessToken) {
+		// Access Token 유효성 확인 및 파싱
+		String plainTextClaims = paresPlainTextClaims(accessToken);
+
+		// if (claims.get(AUTHORITIES_KEY) == null) {
+		// 	throw new RuntimeException();
+		// }
+
+		log.info("getPlainAuthentication ::::: plainTextClaims = {}", plainTextClaims.toString());
+		UserDetails principal = new User(plainTextClaims.toString(), "", new ArrayList<>());
+
+		return new UsernamePasswordAuthenticationToken(principal, "");
+	}
+
 	public boolean validateToken(String token) {
 		try {
 			// Refresh Token의 경우 파싱되기만 하면 OK
@@ -111,24 +127,32 @@ public class TokenProvider {
 		}
 	}
 
+	private String paresPlainTextClaims(String accessToken) {
+		try {
+			return Jwts.parserBuilder().setSigningKey(key).build().parsePlaintextJws(accessToken).getBody();
+		} catch (ExpiredJwtException e) {
+			return e.getMessage();
+		}
+	}
+
 
 	private void handleSecurityException(SecurityException e) {
-		throw new RuntimeException("서명이 유효하지 않습니다. SecurityException: " + e.getMessage());
+		throw new CustomException("서명이 유효하지 않습니다.");
 	}
 
 	private void handleMalformedJwtException(MalformedJwtException e) {
-		throw new RuntimeException("토큰의 형식이 올바르지 않습니다. MalformedJwtException: " + e.getMessage());
+		throw new CustomException("토큰의 형식이 올바르지 않습니다.");
 	}
 
 	private void handleExpiredJwtException(ExpiredJwtException e) {
-		throw new RuntimeException("토큰의 유효 기간이 만료되었습니다. ExpiredJwtException: " + e.getMessage());
+		throw new TokenException("토큰의 유효 기간이 만료되었습니다.");
 	}
 
 	private void handleUnsupportedJwtException(UnsupportedJwtException e) {
-		throw new RuntimeException("지원하지 않는 JWT 기능이 사용되었습니다. UnsupportedJwtException: " + e.getMessage());
+		throw new CustomException("지원하지 않는 JWT 기능이 사용되었습니다.");
 	}
 
 	private void handleIllegalArgumentException(IllegalArgumentException e) {
-		throw new RuntimeException("잘못된 인수가 전달되었습니다. IllegalArgumentException: " + e.getMessage());
+		throw new CustomException("잘못된 인수가 전달되었습니다.");
 	}
 }

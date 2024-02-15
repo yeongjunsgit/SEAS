@@ -2,8 +2,13 @@ package com.ssafy.seas.quiz.repository;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.seas.category.entity.Category;
+import com.ssafy.seas.member.entity.Member;
 import com.ssafy.seas.quiz.dto.QQuizDto_QuizInfoDto;
 import com.ssafy.seas.quiz.dto.QuizDto;
+import com.ssafy.seas.quiz.entity.ScoreHistory;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -22,6 +27,7 @@ import static com.ssafy.seas.quiz.entity.QQuizAnswer.quizAnswer;
 public class QuizCustomRepository{
 
     private final JPAQueryFactory jpaQueryFactory;
+    private final EntityManager entityManager;
     // 멤버별 factor 테이블의 퀴즈 정보를 가져옴
     public List<QuizDto.QuizFactorDto> findAllQuizInnerJoin(Integer memberId, Integer categoryId) {
 
@@ -36,7 +42,8 @@ public class QuizCustomRepository{
                                 quiz.hint,
                                 factor.quizInterval.coalesce(1.0),
                                 factor.ef.coalesce(1.3),
-                                factor.member.id.coalesce(-1)
+                                factor.member.id.coalesce(-1),
+                                quiz.category.id
                         )
                         .from(quiz)
                         .leftJoin(factor).on(factor.cardQuiz.quiz.id.eq(quiz.id).and(factor.member.id.eq(memberId.intValue())))
@@ -49,6 +56,7 @@ public class QuizCustomRepository{
                 tupleList.stream().map(dto -> new QuizDto.QuizFactorDto(
                         dto.get(factor.member.id.coalesce(-1)),
                         dto.get(quiz.id),
+                        categoryId,
                         dto.get(quiz.problem),
                         dto.get(quiz.hint),
                         dto.get(factor.quizInterval.coalesce(1.0)),
@@ -81,5 +89,17 @@ public class QuizCustomRepository{
                 .collect(Collectors.toList());
 
     }
+
+    @Transactional
+    public void saveScoreHistory(Integer memberId, Integer categoryId, Integer score){
+
+        Member member = entityManager.getReference(Member.class, memberId);
+        Category category = entityManager.getReference(Category.class, categoryId);
+
+        ScoreHistory scoreHistory = new ScoreHistory(member, category, score);
+        entityManager.persist(scoreHistory);
+
+    }
+
 
 }
