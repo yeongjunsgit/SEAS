@@ -31,7 +31,7 @@ const getInitLineChart = () => {
   getLineChart(
     ({ data }) => {
       categoryObj.value = data.data;
-      console.log(data.data);
+
       loaded.value = true;
     },
     (error) => {
@@ -52,12 +52,6 @@ const getInitDelete = () => {
 
   removeStorage();
   userStore.resetState();
-  // axios.delete("https://i10a609.p.ssafy.io/api/auth/logout", {
-  //   headers: {
-  //     Authorization: `Bearer ${user_access_token}`,
-  //     "Content-Type": "application/json",
-  //   },
-  // });
 
   axios.delete("https://i10a609.p.ssafy.io/api/auth/quit", {
     headers: {
@@ -65,13 +59,6 @@ const getInitDelete = () => {
       "Content-Type": "application/json",
     },
   });
-
-  // .then(function () {
-  //   removeStorage();
-  //   userStore.resetState();
-  //   router.push({ name: "home" });
-  // })
-  // .catch((error) => console.log(error));
 };
 
 onMounted(async () => {
