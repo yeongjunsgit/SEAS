@@ -366,7 +366,6 @@ onMounted(async () => {
         },
       })
       .then(function (response) {
-        console.log(response.data.data);
         if (response.data.data == 0) {
           getData.value = [{ createdAt: today, grade: 0 }];
         } else {
@@ -374,8 +373,6 @@ onMounted(async () => {
         }
       })
       .catch((error) => console.log(error));
-
-    console.log(getData.value);
 
     // 각 data의 date를 Date 형식으로 변환
     getData.value.forEach((d) => {
@@ -386,7 +383,7 @@ onMounted(async () => {
     getYears.value = d3
       .groups(getData.value, (d) => d.createdAt.getFullYear())
       .reverse();
-    console.log(getYears.value);
+
     // 데이터가 있는 연도들만 담은 userYears 배열 생성
     userYears.value = getYears.value.map(([year]) => year);
 
