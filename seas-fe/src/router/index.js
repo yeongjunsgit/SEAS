@@ -113,22 +113,20 @@ router.beforeEach((to, from, next) => {
             authControllerStore.myGrantType = savedAccessToken;
         }
         loadLoginDataFromLocalStorage();
-        // setTimeout(() => {
-        //     next(); // 3초 뒤에 페이지 이동을 진행합니다.
-        // }, 3000);
-
-        // next(); // 3초 뒤에 페이지 이동을 진행합니다.
 
         const pageStore = usePageStore(); // usePageStore 인스턴스 생성
         const shouldDelay = pageStore.shouldDelay(to.name); // 페이지 방문 여부 확인
 
         if (shouldDelay) {
+            document.body.style.cursor = "wait";
             pageStore.markPageAsVisited(to.name);
             setTimeout(() => {
-                next(); // 3초 뒤에 페이지 이동을 진행합니다.
+                document.body.style.cursor = "auto";
+                next(); // 1.5초 뒤에 페이지 이동을 진행합니다.
             }, 1500);
         } else {
             // 페이지 이동 후에 처리할 작업이 있다면 여기에 추가
+            document.body.style.cursor = "auto";
             next(); // 즉시 페이지 이동을 진행합니다.
         }
     }
