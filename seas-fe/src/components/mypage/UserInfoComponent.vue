@@ -24,6 +24,8 @@ const badgeList = ref([
   { id: 6, name: "데이터베이스" },
 ]);
 
+const loaded = ref(false);
+
 // 전역 Axios 사용
 const getInitUserInfo = async () => {
   try {
@@ -89,11 +91,13 @@ const getInitUserInfo = async () => {
         }
       );
     }
+    loaded.value = true;
   } catch (error) {
     console.log(error);
   }
 };
 onMounted(() => {
+  loaded.value = false;
   getInitUserInfo();
 });
 </script>
@@ -102,7 +106,6 @@ onMounted(() => {
   <div class="info-container">
     <div>
       <h2 class="text-center">유저 정보</h2>
-      <button class="del">회원탈퇴</button>
     </div>
     <div class="user-container">
       <div class="user-box">
@@ -114,7 +117,7 @@ onMounted(() => {
           <TagComponent :level="userinfo.tier" :tagList="badgeList" />
         </div>
         <div v-else>
-          <TagComponent :level="userinfo.tier" />
+          <TagComponent :level="userinfo.tier" :tagList="badgeList" />
         </div>
         <p>현상금액 : ${{ userinfo.point }}</p>
         <p>전체 푼 횟수 : {{ userinfo.solvedCount }}</p>
@@ -167,9 +170,5 @@ onMounted(() => {
     height: 15px;
     align-self: center;
   }
-}
-
-.del {
-  padding-left: 20%;
 }
 </style>
