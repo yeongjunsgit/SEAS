@@ -106,6 +106,7 @@ const delayResult = () => {
 
         // 현재 인덱스의 문제 업데이트
         hintShown.value = false;
+        hint.value = null;
         currentQuestion.value = content.value[currentIndex.value];
         answerShown.value = false;
     }, 1000); // Convert seconds to milliseconds
@@ -113,9 +114,8 @@ const delayResult = () => {
 
 // 힌트 표시 부분 ================================================================
 const hintShown = ref(false);
-const hint = ref("1");
+const hint = ref("");
 const showHint = () => {
-    hintShown.value = true;
     getHint(
         props.quizCategory,
         currentQuestion.value.quizId,
@@ -128,6 +128,14 @@ const showHint = () => {
             console.log(error);
         }
     );
+    delayHint();
+};
+
+const delayHint = () => {
+    // 얻어낸 bool값으로 해당 문제 맞았는지 틀렸는지 알려주기
+    setTimeout(() => {
+        hintShown.value = true;
+    }, 50); // Convert seconds to milliseconds
 };
 
 // 정답 인풋 =====================================================================
@@ -144,11 +152,12 @@ const clearInput = () => {
         <div class="question-container">
             <h2>Q. {{ currentQuestion.quiz }}</h2>
         </div>
-        <div class="hint-container">
+        <div class="hint-container" v-if="hintShown">
             <!-- 힌트 및 정답 여부 출력 -->
-            <h3 v-if="hintShown">
-                {{ hint ? `힌트: ${hint}` : "존재하는 힌트가 없습니다." }}
+            <h3 v-if="hint">
+                {{ `힌트: ${hint}` }}
             </h3>
+            <h3 v-else>존재하는 힌트가 없습니다.</h3>
         </div>
         <div class="input-conatiner">
             <input

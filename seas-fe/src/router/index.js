@@ -99,6 +99,19 @@ router.beforeEach((to, from, next) => {
   ) {
     next({ name: "authenicate" }); // 로그인 페이지로 리다이렉트
   } else {
+    const authControllerStore = useauthControllerStore();
+    function loadLoginDataFromLocalStorage() {
+      const savedName = localStorage.getItem("myName");
+      const savedRefreshToken = localStorage.getItem("refreshToken");
+      const savedMyGrantType = localStorage.getItem("myGrantType");
+      const savedAccessToken = localStorage.getItem("accessToken");
+
+      authControllerStore.myName = savedName;
+      authControllerStore.myAccessToken = savedRefreshToken;
+      authControllerStore.myRefreshToken = savedMyGrantType;
+      authControllerStore.myGrantType = savedAccessToken;
+    }
+    loadLoginDataFromLocalStorage();
     next(); // 계속 진행
   }
 });

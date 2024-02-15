@@ -162,7 +162,7 @@ onMounted(async () => {
 }
 .user-container {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 .user-box {
   padding-left: 80px;
