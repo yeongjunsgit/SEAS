@@ -23,9 +23,9 @@ const badgeList = ref([
   { id: 1, name: "알고리즘" },
   { id: 2, name: "네트워크" },
   { id: 3, name: "자료구조" },
-  { id: 4, name: "운영체제" },
+  { id: 4, name: "데이터베이스" },
   { id: 5, name: "컴퓨터구조" },
-  { id: 6, name: "데이터베이스" },
+  { id: 6, name: "운영체제" },
 ]);
 
 // 전역 Axios 사용

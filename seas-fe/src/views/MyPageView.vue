@@ -61,6 +61,16 @@ const getInitDelete = () => {
   });
 };
 
+const confirmDelete = async () => {
+  const userConfirmed = window.confirm("정말 탈퇴하시려구요..?");
+
+  if (userConfirmed) {
+    await getInitDelete();
+  } else {
+    console.log("휴");
+  }
+};
+
 onMounted(async () => {
   loaded.value = false;
   try {
@@ -77,7 +87,7 @@ onMounted(async () => {
       <div class="mypage-component-background userinfo">
         <div style="text-align: center">
           <UserInfoComponent />
-          <button class="del" @click="getInitDelete()">회원탈퇴</button>
+          <button class="del" @click="confirmDelete()">회원탈퇴</button>
         </div>
         <GrassComponentVue />
       </div>
