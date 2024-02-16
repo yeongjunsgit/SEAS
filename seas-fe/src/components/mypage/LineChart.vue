@@ -102,8 +102,8 @@ onMounted(async () => {
       var shortDate = formatDate(studiedDate);
       return shortDate;
     });
-    data.value.datasets[0].data = graphValues;
-    data.value.labels = graphDates;
+    data.value.datasets[0].data = graphValues.reverse();
+    data.value.labels = graphDates.reverse();
     loaded.value = true;
   } catch (error) {
     console.error(error);
