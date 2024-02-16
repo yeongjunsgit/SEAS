@@ -79,12 +79,12 @@ https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A609.git
         -   <img src="https://img.shields.io/badge/WAS-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/apache%20tomcat-%23F8DC75.svg?style=for-the-badge&logo=apache-tomcat&logoColor=black"><img src="https://img.shields.io/badge/10.1.18-515151?style=for-the-badge">
         -   <img src="https://img.shields.io/badge/CICD-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/jenkins-%232C5263.svg?style=for-the-badge&logo=jenkins&logoColor=white"><img src="https://img.shields.io/badge/2.441-515151?style=for-the-badge">
         -   <img src="https://img.shields.io/badge/CONTAINER-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white"><img src="https://img.shields.io/badge/24.0.5-515151?style=for-the-badge">
-  - Frontend
-    - <img src="https://img.shields.io/badge/Design-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white">
-    - <img src="https://img.shields.io/badge/Platform-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white"><img src="https://img.shields.io/badge/20.10.0-515151?style=for-the-badge">
-    - <img src="https://img.shields.io/badge/Framework-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D">
-    - <img src="https://img.shields.io/badge/Library-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=AEDDFF"><img src="https://img.shields.io/badge/axios-%23593d88?style=for-the-badge"><img src="https://img.shields.io/badge/pinia-2c4f7c?style=for-the-badge">
-    - <img src="https://img.shields.io/badge/Language-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E"><img src="https://img.shields.io/badge/SASS-hotpink.svg?style=for-the-badge&logo=SASS&logoColor=white">
+    - Frontend
+      - <img src="https://img.shields.io/badge/Design-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white">
+      - <img src="https://img.shields.io/badge/Platform-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white"><img src="https://img.shields.io/badge/20.10.0-515151?style=for-the-badge">
+      - <img src="https://img.shields.io/badge/Framework-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D">
+      - <img src="https://img.shields.io/badge/Library-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=AEDDFF"><img src="https://img.shields.io/badge/axios-%23593d88?style=for-the-badge"><img src="https://img.shields.io/badge/pinia-2c4f7c?style=for-the-badge">
+      - <img src="https://img.shields.io/badge/Language-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E"><img src="https://img.shields.io/badge/SASS-hotpink.svg?style=for-the-badge&logo=SASS&logoColor=white">
 
 <br>
 
