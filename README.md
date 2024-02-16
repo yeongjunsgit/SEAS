@@ -134,7 +134,7 @@ https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A609.git
 
 - 카드 페이지
 
-  ![auth관련](/uploads/44d82a68be6c682ca7e54b3079e2578e/auth관련.gif){: width="1000" height="483"}
+  ![카드](/uploads/62afcd19a0dff56c657ca70a33763c7a/카드.gif){: width="1000" height="483"}
 
 - 퀴즈 페이지
 
