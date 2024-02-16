@@ -15,7 +15,9 @@ const closeModal = () => {
         <div class="modal-content" @click.stop>
             <!-- 모달 내용을 슬롯으로 받아옵니다. -->
             <slot :rankerInfo="rankerInfo"></slot>
-            <button class="search-button" @click="closeModal">닫기</button>
+            <div class="modal-button-container">
+                <button class="search-button" @click="closeModal">닫기</button>
+            </div>
         </div>
     </div>
 </template>
@@ -38,10 +40,18 @@ const closeModal = () => {
 .modal-content {
     padding: 5%;
     border-radius: 8px;
-    text-align: center;
     background-image: url($url-path + "images/mypage_paper.png");
     background-size: contain;
     background-position: center;
+    min-height: 400px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.modal-button-container {
+    text-align: center;
 }
 
 .search-button {
@@ -49,6 +59,7 @@ const closeModal = () => {
     border-radius: 10px;
     padding: 10px 15px 5px 15px;
     min-width: 50px;
+    width: 70px;
 
     &:hover {
         background-color: $primary-color;

@@ -25,16 +25,21 @@ public class QuizDto {
         private String hint;
 
         private Integer memberId;
+        private Integer categoryId;
 
         private Boolean isCorrect = false;
         private Boolean isUsedHint = false;
 
+        private Integer score = 0;
+        private Integer point = 0;
+
         public QuizFactorDto(){}
 
         @QueryProjection
-        public QuizFactorDto(Integer memberId, Integer quizId, String quiz, String hint, Double quizInterval, Double ef){
+        public QuizFactorDto(Integer memberId, Integer quizId, Integer categoryId, String quiz, String hint, Double quizInterval, Double ef){
             this.memberId = memberId;
             this.quizId = quizId;
+            this.categoryId = categoryId;
             this.quiz = quiz;
             this.hint = hint;
             this.quizInterval = quizInterval;
@@ -49,6 +54,14 @@ public class QuizDto {
 
         public void setUsedHint(Boolean isUsed){
             this.isUsedHint = isUsed;
+        }
+
+        public void setScore(Integer score){
+            this.score = score;
+        }
+
+        public void setPoint(Integer point){
+            this.point = point;
         }
 
         @Override

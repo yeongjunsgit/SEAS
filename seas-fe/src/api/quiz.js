@@ -11,6 +11,7 @@ function getHint(categoryId, quizId, success, fail) {
 }
 
 function sendAnswer(categoryId, quizId, userInput, success, fail) {
+    if (userInput == null) userInput = " ";
     local
         .post(`/quiz/answer/${categoryId}/${quizId}`, userInput)
         .then(success)
@@ -26,7 +27,8 @@ function getInitRank(success, fail) {
 }
 
 function getResultRank(prevTier, success, fail) {
-    local.post(`/quiz/tier`, prevTier).then(success).catch(fail);
+    console.log(prevTier);
+    local.post(`/quiz/tier`, { prevTier: prevTier }).then(success).catch(fail);
 }
 export {
     getQuizList,

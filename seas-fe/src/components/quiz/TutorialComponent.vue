@@ -27,11 +27,8 @@ const categoryList = ref([
         </div>
         <div class="tutorial-content">
             <ul>
-                <li>
-                    퀴즈를 마지막까지 풀지 않고 종료할 경우 결과가 반영되지
-                    않습니다.
-                </li>
-                <li>각 문제당 10점을 획득 할 수 있습니다.</li>
+                <li>퀴즈를 풀때마다 결과가 반영됩니다.</li>
+                <li>각 문제당 점수는 10점입니다.</li>
                 <li>힌트 사용 후 정답을 맞출 경우 3점만 부여됩니다.</li>
                 <li>힌트는 사용을 취소할 수 없습니다.</li>
                 <li>
@@ -39,15 +36,19 @@ const categoryList = ref([
                 </li>
                 <li>뒤로 돌아갈 수 없습니다.</li>
                 <li>제출 시 각 문제의 정답 여부를 알 수 있습니다.</li>
+                <li>동일한 문제는 하루에 한 번만 점수를 획득할 수 있습니다.</li>
             </ul>
         </div>
     </div>
     <div class="quiz-button-container">
-        <div v-for="(category, index) in categoryList" :key="category">
-            <button class="menu-button" @click="startQuiz(index + 1)">
-                {{ category.category }}
-            </button>
-        </div>
+        <button
+            v-for="(category, index) in categoryList"
+            :key="category"
+            class="menu-button"
+            @click="startQuiz(index + 1)"
+        >
+            {{ category.category }}
+        </button>
     </div>
 </template>
 
@@ -68,13 +69,15 @@ li {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    padding: 7vh 0 7vh 0;
-    max-height: 1000px;
+    min-height: 400px;
+    height: 70vh;
+    padding-top: 5vh;
+    margin-left: 2vw;
 
     button {
-        height: 90px;
-        margin: 4vh 0 4vh 0;
-        padding: 5% 0 2% 0;
+        height: 12vh;
+        margin: 3vh 4vw 3vh 0;
+        padding: 2% 0 0 0;
         background-color: rgba($color: #ffffff, $alpha: 0.2);
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.seas.common.constants.ErrorCode;
+import com.ssafy.seas.common.exception.CustomException;
 import com.ssafy.seas.flashcard.dto.FavoriteDto;
 import com.ssafy.seas.flashcard.dto.FlashcardDto;
 import com.ssafy.seas.flashcard.entity.Favorite;
@@ -80,7 +81,7 @@ public class FlashcardService {
 
 	private Flashcard getFlashcardById(Integer flashcardId) {
 		return flashcardRepository.findById(flashcardId)
-			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.FLASHCARD_NOT_FOUND.getMessage()));
+			.orElseThrow(() -> new CustomException(ErrorCode.FLASHCARD_NOT_FOUND.getMessage()));
 	}
 
 	public List<FavoriteDto.CardIdPerCategory> getFavoriteFlashcardIds() {

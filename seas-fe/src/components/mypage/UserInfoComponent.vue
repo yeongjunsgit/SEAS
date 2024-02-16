@@ -3,8 +3,21 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 import RadarChart from "./RadarChart.vue";
 import TagComponent from "@/components/ranking/TagComponent.vue";
+import {
+  getMyInfo,
+  getUserInfo,
+  getMyBadge,
+  getUserBadge,
+} from "@/api/mypage.js";
+import { useauthControllerStore } from "@/stores/authController";
 
-const userinfo = ref(Object);
+const userStore = useauthControllerStore();
+
+const user_access_token = userStore.myAccessToken;
+
+const userinfo = ref({});
+
+const props = defineProps(["nickname"]);
 
 const badgeList = ref([
   { id: 1, name: "알고리즘" },
@@ -15,49 +28,124 @@ const badgeList = ref([
   { id: 6, name: "데이터베이스" },
 ]);
 
-onMounted(async () => {
+// 전역 Axios 사용
+const getInitUserInfo = async () => {
   try {
-    const infoResponse = await axios.get(
-      "https://i10a609.p.ssafy.io/api/mypage/my-info"
-    );
-    userinfo.value = infoResponse.data.data;
+    if (props.nickname) {
+      // axios함수를 통해 데이터를 불러온다.
+      await axios
+        .get(
+          `https://i10a609.p.ssafy.io/api/mypage/my-info?nickname=${props.nickname}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user_access_token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then(function (response) {
+          userinfo.value = response.data.data;
+          console.log(111);
+        })
+        .catch((error) => console.log(error));
 
-    const badgeResponse = await axios.get(
-      "https://i10a609.p.ssafy.io/api/mypage/badge"
-    );
-    const idArray = [1, 2, 3, 4, 5, 6];
-    const tmpArray = idArray.filter(
-      (item) => !badgeResponse.data.data.map((e) => e.id).includes(item)
-    );
+      await axios
+        .get(
+          `https://i10a609.p.ssafy.io/api/mypage/badge?nickname=${props.nickname}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user_access_token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then(function (response) {
+          const idArray = [1, 2, 3, 4, 5, 6];
+          const tmpArray = idArray.filter(
+            (item) => !response.data.data.map((e) => e.id).includes(item)
+          );
 
-    for (var i = 0; i < badgeList.value.length; i++) {
-      if (tmpArray.some((e) => e === badgeList.value[i].id)) {
-        badgeList.value.splice(i, 1);
-        i--;
-      }
+          for (var i = 0; i < badgeList.value.length; i++) {
+            if (tmpArray.some((e) => e === badgeList.value[i].id)) {
+              badgeList.value.splice(i, 1);
+              i--;
+            }
+          }
+          console.log(111111);
+        })
+        .catch((error) => console.log(error));
+    } else {
+      await axios
+        .get("https://i10a609.p.ssafy.io/api/mypage/my-info", {
+          headers: {
+            Authorization: `Bearer ${user_access_token}`,
+            "Content-Type": "application/json",
+          },
+        })
+        .then(function (response) {
+          userinfo.value = response.data.data;
+          console.log(111);
+        })
+        .catch((error) => console.log(error));
+
+      await axios
+        .get("https://i10a609.p.ssafy.io/api/mypage/badge", {
+          headers: {
+            Authorization: `Bearer ${user_access_token}`,
+            "Content-Type": "application/json",
+          },
+        })
+        .then(function (response) {
+          const idArray = [1, 2, 3, 4, 5, 6];
+          const tmpArray = idArray.filter(
+            (item) => !response.data.data.map((e) => e.id).includes(item)
+          );
+
+          for (var i = 0; i < badgeList.value.length; i++) {
+            if (tmpArray.some((e) => e === badgeList.value[i].id)) {
+              badgeList.value.splice(i, 1);
+              i--;
+            }
+          }
+          console.log(111111);
+        })
+        .catch((error) => console.log(error));
     }
+
+    console.log(222);
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
+};
+onMounted(async () => {
+  await getInitUserInfo();
+  console.log(333);
 });
 </script>
 
 <template>
   <div class="info-container">
-    <h2 class="text-center">유저 정보</h2>
+    <div>
+      <h2 class="text-center">유저 정보</h2>
+    </div>
     <div class="user-container">
       <div class="user-box">
         <div>
           <img src="@/assets/images/Logo.png" alt="" />
         </div>
         <p>{{ userinfo.nickname }}</p>
-        <TagComponent :level="userinfo.tier" :tagList="badgeList" />
+        <div>
+          <TagComponent :level="userinfo.tier" :tagList="badgeList" />
+        </div>
         <p>현상금액 : ${{ userinfo.point }}</p>
         <p>전체 푼 횟수 : {{ userinfo.solvedCount }}</p>
         <p>정답률 : {{ userinfo.correctRate }}%</p>
       </div>
       <div class="radar">
-        <div>
+        <div v-if="props.nickname">
+          <RadarChart :nickname="props.nickname" />
+        </div>
+        <div v-else>
           <RadarChart />
         </div>
       </div>
@@ -74,7 +162,7 @@ onMounted(async () => {
 }
 .user-container {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 .user-box {
   padding-left: 80px;
@@ -82,7 +170,7 @@ onMounted(async () => {
   height: auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-evenly;
   text-align: center;
   img {
     width: 100%;

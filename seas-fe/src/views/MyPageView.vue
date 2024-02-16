@@ -1,10 +1,18 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import UserInfoComponent from "@/components/mypage/UserInfoComponent.vue";
 import CategoryComponent from "@/components/mypage/CategoryComponent.vue";
 import LineChartVue from "@/components/mypage/LineChart.vue";
 import GrassComponentVue from "@/components/mypage/GrassComponent.vue";
+import { getLineChart } from "@/api/mypage.js";
+import { useauthControllerStore } from "@/stores/authController";
 import axios from "axios";
+
+const userStore = useauthControllerStore();
+const user_access_token = userStore.myAccessToken;
+
+const router = useRouter();
 
 const categories = [
   "데이터베이스",
@@ -17,18 +25,46 @@ const categories = [
 const loaded = ref(false);
 const categoryObj = ref();
 
-const favoriteApi = "https://i10a609.p.ssafy.io/api/mypage/flashcard/favorite";
-const incorrectApi = "https://i10a609.p.ssafy.io/api/mypage/incorrect";
+// 전역 Axios 사용
+const getInitLineChart = () => {
+  // axios함수를 통해 데이터를 불러온다.
+  getLineChart(
+    ({ data }) => {
+      categoryObj.value = data.data;
+
+      loaded.value = true;
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+};
+
+const removeStorage = function () {
+  sessionStorage.removeItem("myName");
+  sessionStorage.removeItem("accessToken");
+  sessionStorage.removeItem("refreshToken");
+  sessionStorage.removeItem("myGrantType");
+};
+
+const getInitDelete = () => {
+  router.push({ name: "home" });
+
+  removeStorage();
+  userStore.resetState();
+
+  axios.delete("https://i10a609.p.ssafy.io/api/auth/quit", {
+    headers: {
+      Authorization: `Bearer ${user_access_token}`,
+      "Content-Type": "application/json",
+    },
+  });
+};
 
 onMounted(async () => {
   loaded.value = false;
   try {
-    const response = await fetch("https://i10a609.p.ssafy.io/api/mypage/graph");
-
-    const categoryData = await response.json();
-    categoryObj.value = await categoryData.data;
-
-    loaded.value = true;
+    getInitLineChart();
   } catch (error) {
     console.error(error);
   }
@@ -39,7 +75,10 @@ onMounted(async () => {
   <div class="mypage-background text-font">
     <div class="container">
       <div class="mypage-component-background userinfo">
-        <UserInfoComponent />
+        <div style="text-align: center">
+          <UserInfoComponent />
+          <button class="del" @click="getInitDelete()">회원탈퇴</button>
+        </div>
         <GrassComponentVue />
       </div>
       <div class="mypage-component-background mychart">
@@ -53,10 +92,10 @@ onMounted(async () => {
       </div>
       <div class="mypage-component-background mycard">
         <div>
-          <CategoryComponent type="즐겨찾기" :apiUrl="favoriteApi" />
+          <CategoryComponent type="즐겨찾기" />
         </div>
         <div>
-          <CategoryComponent type="오답노트" :apiUrl="incorrectApi" />
+          <CategoryComponent type="오답노트" />
         </div>
       </div>
     </div>
@@ -92,6 +131,7 @@ onMounted(async () => {
   rotate: -90deg;
 }
 .mypage-component-background {
+  width: 80vw;
   height: auto;
   overflow: hidden;
   margin-inline: 10%;
@@ -104,19 +144,18 @@ onMounted(async () => {
 
 .mychart {
   display: grid;
+  place-items: center;
   grid-template-columns: repeat(3, 1fr);
 }
 
-.chart-box {
-  padding-left: 40px;
-}
 .transparent-card {
   background: transparent;
-  padding-left: 30px;
+  padding-inline: 20px;
   width: 350px;
 }
 .mycard {
   display: grid;
+  place-items: center;
   grid-template-columns: 1fr 1fr;
 }
 
@@ -141,6 +180,7 @@ onMounted(async () => {
 }
 @media screen and (max-width: 960px) {
   .mychart {
+    padding-top: 70px;
     grid-template-columns: repeat(1, 1fr);
     row-gap: 30px;
   }
@@ -151,6 +191,16 @@ onMounted(async () => {
     width: 600px; /* 또는 원하는 크기로 설정 */
     margin: 0 auto; /* 가운데 정렬을 위해 사용 */
     /* 추가로 필요한 스타일 설정 */
+  }
+}
+
+.del {
+  border: 1px solid black;
+  border-radius: 3cap;
+  padding-inline: 5px;
+  padding-top: 3px;
+  &:hover {
+    background-color: rgba(255, 0, 0, 0.5);
   }
 }
 </style>

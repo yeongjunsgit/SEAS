@@ -31,9 +31,19 @@ public class SolvedQuiz extends BaseEntity {
 		this.quiz = quiz;
 	}
 
-	public void updateCount(boolean isRight){
-		if(isRight) this.correctCount += 1;
-		else this.failedCount += 1;
+	public SolvedQuiz(Member member, Quiz quiz, Integer correctCount, Integer failedCount){
+		this.member = member;
+		this.quiz = quiz;
+		this.correctCount = correctCount;
+		this.failedCount = failedCount;
+	}
+
+	public void setCorrectCount(Integer correctCount){
+		this.correctCount = correctCount;
+	}
+
+	public void setWrongCount(Integer failedCount){
+		this.failedCount = failedCount;
 	}
 
 }

@@ -57,7 +57,7 @@ const currentQuestion = ref({
 
 // 정답 체크 ====================================================================
 // 정답 여부 변수s
-const isCorrect = ref(false);
+const isCorrect = ref(null);
 const answerShown = ref(false);
 
 // 다음 문제를 표시하는 메소드
@@ -86,49 +86,12 @@ const checkAnswer = () => {
             console.log(error);
         }
     );
-
-    // isCorrect.value = answerInput.value != null ? true : false; // 임시 정답 처리 되는지 확인 코드
-    // 얻어낸 bool값으로 해당 문제 맞았는지 틀렸는지 알려주기
-    answerShown.value = true;
 };
-// const checkAnswer = async () => {
-//     try {
-//         console.log(props.quizCategory);
-//         console.log(currentQuestion.value.quizId);
-//         console.log(answerInput.value);
-
-//         const { data } = await sendAnswerAsync(
-//             props.quizCategory,
-//             currentQuestion.value.quizId,
-//             answerInput.value
-//         );
-
-//         isCorrect.value = data.data.result; // 정답 여부를 저장
-//         console.log(data.data.result);
-//         console.log(isCorrect.value);
-
-//         // 얻어낸 bool값으로 해당 문제 맞았는지 틀렸는지 알려주기
-//         answerShown.value = true;
-//     } catch (error) {
-//         console.log(error);
-//     }
-// };
-
-// // Define a new asynchronous version of the sendAnswer function
-// const sendAnswerAsync = (category, quizId, answer) => {
-//     return new Promise((resolve, reject) => {
-//         sendAnswer(
-//             category,
-//             quizId,
-//             answer,
-//             (response) => resolve(response),
-//             (error) => reject(error)
-//         );
-//     });
-// };
 
 // 정답 여부 시간차 표시 및 넘기기 ==============================================
 const delayResult = () => {
+    // 얻어낸 bool값으로 해당 문제 맞았는지 틀렸는지 알려주기
+    answerShown.value = true;
     setTimeout(() => {
         // 제출 후 인풋 제거
         clearInput();
@@ -143,20 +106,21 @@ const delayResult = () => {
 
         // 현재 인덱스의 문제 업데이트
         hintShown.value = false;
+        hint.value = null;
         currentQuestion.value = content.value[currentIndex.value];
-        answerShown.value = null;
+        answerShown.value = false;
     }, 1000); // Convert seconds to milliseconds
 };
 
 // 힌트 표시 부분 ================================================================
 const hintShown = ref(false);
-const hint = ref("1");
+const hint = ref("");
 const showHint = () => {
-    hintShown.value = true;
     getHint(
         props.quizCategory,
         currentQuestion.value.quizId,
         ({ data }) => {
+            console.log(data.data);
             hint.value = data.data.hint; // 정답 여부를 저장
             console.log(hint.value);
         },
@@ -164,6 +128,14 @@ const showHint = () => {
             console.log(error);
         }
     );
+    delayHint();
+};
+
+const delayHint = () => {
+    // 얻어낸 bool값으로 해당 문제 맞았는지 틀렸는지 알려주기
+    setTimeout(() => {
+        hintShown.value = true;
+    }, 50); // Convert seconds to milliseconds
 };
 
 // 정답 인풋 =====================================================================
@@ -180,11 +152,12 @@ const clearInput = () => {
         <div class="question-container">
             <h2>Q. {{ currentQuestion.quiz }}</h2>
         </div>
-        <div class="hint-container">
+        <div class="hint-container" v-if="hintShown">
             <!-- 힌트 및 정답 여부 출력 -->
-            <h3 v-if="hintShown">
-                {{ hint ? `힌트: ${hint}` : "존재하는 힌트가 없습니다." }}
+            <h3 v-if="hint">
+                {{ `힌트: ${hint}` }}
             </h3>
+            <h3 v-else>존재하는 힌트가 없습니다.</h3>
         </div>
         <div class="input-conatiner">
             <input
@@ -197,12 +170,13 @@ const clearInput = () => {
             />
         </div>
         <div class="result-container">
-            <h3
-                v-if="answerShown"
-                class="input-result"
-                :class="{ correct: isCorrect, wrong: !isCorrect }"
-            >
-                {{ isCorrect ? "맞았습니다" : "틀렸습니다" }}
+            <h3 v-if="answerShown" class="input-result">
+                <p v-if="isCorrect == true" class="result correct">
+                    맞았습니다
+                </p>
+                <p v-else-if="isCorrect == false" class="result wrong">
+                    틀렸습니다
+                </p>
             </h3>
         </div>
     </div>
@@ -232,9 +206,6 @@ const clearInput = () => {
     height: 50%;
 }
 
-.hint-container {
-    height: 10%;
-}
 .result-container {
     height: 20%;
     display: flex;
@@ -243,15 +214,19 @@ const clearInput = () => {
     font-size: 140%;
 
     .input-result {
-        border: double;
-        border-width: 6px;
-        padding-top: 1%;
         width: 60%;
         display: flex;
         flex-direction: column;
         justify-content: center;
 
         transform: rotate(-10deg); /* 45도로 요소를 회전 */
+
+        .result {
+            padding: 2vh 0 1vh 0;
+            border: double;
+            border-width: 6px;
+            width: 100%;
+        }
     }
 
     .correct {

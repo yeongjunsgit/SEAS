@@ -1,7 +1,12 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import * as d3 from "d3";
+import { getCalendarChart } from "@/api/mypage.js";
 import axios from "axios";
+import { useauthControllerStore } from "@/stores/authController";
+
+const userStore = useauthControllerStore();
+const user_access_token = userStore.myAccessToken;
 
 // 차트 사이즈
 const width = 1100;
@@ -20,41 +25,7 @@ const timeWeek = d3.timeSunday;
 const countDay = (i) => i % 7;
 
 // data를 받아서 가공
-// const getData = [
-//   { date: "2022-1-17", value: 3 },
-//   { date: "2022-3-18", value: 5 },
-//   { date: "2022-5-19", value: 4 },
-//   { date: "2022-6-20", value: 2 },
-//   { date: "2022-7-21", value: 0 },
-//   { date: "2022-9-22", value: 5 },
-//   { date: "2022-12-31", value: 1 },
-//   { date: "2023-1-17", value: 3 },
-//   { date: "2023-3-18", value: 5 },
-//   { date: "2023-5-19", value: 4 },
-//   { date: "2023-6-20", value: 2 },
-//   { date: "2023-7-21", value: 0 },
-//   { date: "2023-9-22", value: 5 },
-//   { date: "2023-12-31", value: 1 },
-//   { date: "2024-1-1", value: 5 },
-//   { date: "2024-1-17", value: 3 },
-//   { date: "2024-1-31", value: 5 },
-//   { date: "2024-2-18", value: 5 },
-//   { date: "2024-2-19", value: 4 },
-//   { date: "2024-2-20", value: 2 },
-//   { date: "2024-3-21", value: 0 },
-//   { date: "2024-5-22", value: 5 },
-//   { date: "2024-5-29", value: 5 },
-//   { date: "2024-5-31", value: 5 },
-//   { date: "2024-6-23", value: 3 },
-//   { date: "2024-7-24", value: 5 },
-//   { date: "2024-8-25", value: 1 },
-//   { date: "2024-9-30", value: 3 },
-//   { date: "2024-10-31", value: 5 },
-//   { date: "2024-11-1", value: 4 },
-//   { date: "2024-11-2", value: 2 },
-//   { date: "2024-12-3", value: 5 },
-//   { date: "2024-12-30", value: 5 },
-// ];
+const today = new Date();
 
 const getData = ref([]);
 
@@ -379,17 +350,30 @@ function pathMonth(t) {
 var svgRef = ref(null); // ref로 svg 엘리먼트 선언
 
 // 초기 설정을 2024로 반응형 변수 생성
-const getYear = ref(2024);
+const getYear = ref(today.getFullYear());
+
 const getYears = ref();
 
 const userYears = ref();
 
 onMounted(async () => {
   try {
-    const response = await axios.get(
-      "https://i10a609.p.ssafy.io/api/mypage/history"
-    );
-    getData.value = response.data.data;
+    await axios
+      .get("https://i10a609.p.ssafy.io/api/mypage/history", {
+        headers: {
+          Authorization: `Bearer ${user_access_token}`,
+          "Content-Type": "application/json",
+        },
+      })
+      .then(function (response) {
+        if (response.data.data == 0) {
+          getData.value = [{ createdAt: today, grade: 0 }];
+        } else {
+          getData.value = response.data.data;
+        }
+      })
+      .catch((error) => console.log(error));
+
     // 각 data의 date를 Date 형식으로 변환
     getData.value.forEach((d) => {
       d.createdAt = new Date(d.createdAt);

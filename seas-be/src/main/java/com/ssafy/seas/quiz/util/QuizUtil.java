@@ -5,6 +5,7 @@ import com.ssafy.seas.quiz.constant.Interval;
 import com.ssafy.seas.quiz.constant.Quality;
 import com.ssafy.seas.quiz.dto.QuizAnswerDto;
 import com.ssafy.seas.quiz.dto.QuizDto;
+import com.ssafy.seas.quiz.dto.QuizListDto;
 import com.ssafy.seas.quiz.dto.QuizResultDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -92,7 +93,7 @@ public class QuizUtil {
     }
 
     // 퀴즈가 맞았는지를 판별
-    public void updateQuizState(Integer memberId, Integer quizId){
+    public void updateQuizAnswerState(Integer memberId, Integer quizId){
         Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
 
         String nestedKey = toKey(quizId);
@@ -104,6 +105,29 @@ public class QuizUtil {
         log.info("updateQuizState : " + quizId + " || " + value.get(nestedKey).getQuiz());
     }
 
+    // 퀴즈와 포인트를 저장하는 부분
+    public void updateQuizPointAndScore(Integer memberId, Integer quizId, Integer point, Integer score){
+        Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
+
+        String nestedKey = toKey(quizId);
+        log.info("MAP 출력 : " + value.toString());
+        value.get(nestedKey).setPoint(point);
+        value.get(nestedKey).setScore(score);
+
+        redisTemplate.opsForValue().set(memberId, value);
+    }
+
+    public void updateWeightFactor(Integer memberId, Integer quizId, Double ef, Double interval){
+        Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
+
+        String nestedKey = toKey(quizId);
+        log.info("MAP 출력 : " + value.toString());
+        value.get(nestedKey).setQuizInterval(interval);
+        value.get(nestedKey).setEf(ef);
+
+        redisTemplate.opsForValue().set(memberId, value);
+    }
+
     public QuizAnswerDto.UpdatedFactors getNewFactor(Integer memberId, Integer quizId, Integer categoryId) {
         Map<Integer, QuizDto.QuizFactorDto> value = redisTemplate.opsForValue().get(memberId);
         String nestedKey = toKey(quizId);
@@ -111,6 +135,7 @@ public class QuizUtil {
 
         boolean isCorrect = preFactors.getIsCorrect();
         boolean usedHint = preFactors.getIsUsedHint();
+
         Integer point = 0;
         Integer score = 0;
 
@@ -132,14 +157,11 @@ public class QuizUtil {
         }
 
 		Double newEf = calculateNewEf(ef, quality);
-
         Double newInterval = calculateNewInterval(interval , ef);
 
-        QuizAnswerDto.UpdatedFactors var = new QuizAnswerDto.UpdatedFactors(memberId, quizId, categoryId, newInterval, newEf, score, point);
-        log.info(var.toString());
-
-        return var;
+        return new QuizAnswerDto.UpdatedFactors(memberId, quizId, categoryId, newInterval, newEf, score, point);
     }
+
 	public static Double calculateNewEf(Double ef, int quality) {
 		Double newEf = ef - 0.06 + 0.08 * quality + 0.02 * quality * quality;
 
@@ -187,14 +209,25 @@ public class QuizUtil {
     }
 
     // 저장 확인 완료
-    public void storeQuizToRedis(Integer memberId, List<QuizDto.QuizFactorDto> quizInfoList){
+    public void storeQuizToRedis(Integer memberId,
+                    List<QuizDto.QuizFactorDto> quizInfoList,
+                    List<QuizListDto.QuizInfo> quizWeightList) {
 
         Map<Integer, QuizDto.QuizFactorDto> map = new HashMap<>();
 
-        for(QuizDto.QuizFactorDto quizInfo : quizInfoList) {
+
+        // 퀴즈 정보를 담고 있는 리스트
+        for (QuizDto.QuizFactorDto quizInfo : quizInfoList) {
             Integer quizId = quizInfo.getQuizId();
-            map.put(quizId, quizInfo);
-            log.info("저장되는 quizID : {}\n", quizId);
+
+            // 선택된 문제 리스트를 순회하면서 해당 아이디와 같으면 레디스에 저장한다.
+            for (QuizListDto.QuizInfo weightDto : quizWeightList) {
+                if (quizId == weightDto.getQuizId()) {
+                    map.put(quizId, quizInfo);
+                    log.info("저장되는 quizID : {}\n", quizId);
+                    break;
+                }
+            }
         }
 
         redisTemplate.opsForValue().set(memberId, map);

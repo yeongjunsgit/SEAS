@@ -1,6 +1,7 @@
 <script setup>
 import { Radar } from "vue-chartjs";
 import { ref, onMounted } from "vue";
+import { getRadarChart, getMyRadarChart } from "@/api/mypage.js";
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -11,6 +12,8 @@ import {
   Legend,
 } from "chart.js";
 
+const props = defineProps(["nickname"]);
+
 ChartJS.register(
   RadialLinearScale,
   PointElement,
@@ -20,7 +23,7 @@ ChartJS.register(
   Legend
 );
 
-const data = ref({
+const chartData = ref({
   labels: [
     "데이터베이스",
     "네트워크",
@@ -90,13 +93,38 @@ onMounted(async () => {
   loaded.value = false;
 
   try {
-    const response = await fetch(
-      "https://i10a609.p.ssafy.io/api/mypage/quiz-rate"
-    );
-    const userQuizRate = await response.json();
-    data.value.datasets[0].data = userQuizRate.data.map((e) => e.rate);
+    if (props.nickname) {
+      getRadarChart(
+        props.nickname,
+        ({ data }) => {
+          chartData.value.datasets[0].data = data.data.map((e) => e.rate);
 
-    loaded.value = true;
+          loaded.value = true;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    } else {
+      getMyRadarChart(
+        ({ data }) => {
+          chartData.value.datasets[0].data = data.data.map((e) => e.rate);
+
+          loaded.value = true;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    }
+
+    // const response = await fetch(
+    //   "https://i10a609.p.ssafy.io/api/mypage/quiz-rate"
+    // );
+    // const userQuizRate = await response.json();
+    // data.value.datasets[0].data = userQuizRate.data.map((e) => e.rate);
+
+    // loaded.value = true;
   } catch (error) {
     console.error(error);
   }
@@ -104,5 +132,5 @@ onMounted(async () => {
 </script>
 
 <template>
-  <Radar v-if="loaded" :data="data" :options="options" />
+  <Radar v-if="loaded" :data="chartData" :options="options" />
 </template>

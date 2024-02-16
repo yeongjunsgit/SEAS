@@ -11,12 +11,31 @@ function signupRequest(payload, success, fail) {
 }
 
 function checkIdRequest(payload, success, fail) {
-  console.log(payload);
   local.post(`/auth/check-id`, payload).then(success).catch(fail);
+}
+
+function checkNickRequest(payload, success, fail) {
+  local.post(`/auth/check-nickname`, payload).then(success).catch(fail);
 }
 
 function refreshRequest(payload, success, fail) {
   local.post(`/auth/refresh`, payload).then(success).catch(fail);
 }
 
-export { loginRequest, signupRequest, checkIdRequest, refreshRequest };
+function logOutRequest(success, fail) {
+  local.delete(`/auth/logout`).then(success).catch(fail);
+}
+
+function delRequest(success, fail) {
+  local.delete(`/auth/quit`).then(success).catch(fail);
+}
+
+export {
+  loginRequest,
+  signupRequest,
+  checkIdRequest,
+  checkNickRequest,
+  refreshRequest,
+  logOutRequest,
+  delRequest,
+};
