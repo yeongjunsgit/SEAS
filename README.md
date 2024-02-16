@@ -38,7 +38,7 @@ https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A609.git
 
 ## 🤝 Member
 
-| <a href="https://github.com/각자이름"><img src="https://github.com/각자이름.png" width="120"/></a> | <a href="https://github.com/sjhjack"><img src="https://github.com/sjhjack.png" width="120"/></a> | <a href="https://github.com/JinHyeonBae"><img src="https://github.com/JinHyeonBae.png" width="120"/></a> | <a href="https://github.com/MuRing"><img src="https://github.com/MuRing.png" width="120"/></a> | <a href="https://github.com/각자이름"><img src="https://github.com/각자이름.png" width="120"/></a> | <a href="https://github.com/각자이름"><img src="https://github.com/각자이름.png" width="120"/></a> |
+| <a href="https://github.com/LeeJE20"><img src="https://github.com/LeeJE20.png" width="120"/></a> | <a href="https://github.com/sjhjack"><img src="https://github.com/sjhjack.png" width="120"/></a> | <a href="https://github.com/JinHyeonBae"><img src="https://github.com/JinHyeonBae.png" width="120"/></a> | <a href="https://github.com/MuRing"><img src="https://github.com/MuRing.png" width="120"/></a> | <a href="https://github.com/각자이름"><img src="https://github.com/각자이름.png" width="120"/></a> | <a href="https://github.com/각자이름"><img src="https://github.com/각자이름.png" width="120"/></a> |
 | :------------------------------------------------------------------------------------------------: |:---------------------------------------------------------------------------------------------:| :------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------: |
 |                                             [이정은]()                                             |                                            [송정훈]()                                            |                                             [배진현](https://github.com/JinHyeonBae)                                             |                              [엄세현](https://github.com/MuRing)                               |                                             [권기용]()                                             |                                             [김영준]()                                             |
 
@@ -151,7 +151,15 @@ https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A609.git
 
 #### 이정은 (팀장)
 
-- 입력
+- 벡엔드 리더
+- 프로젝트 세팅
+- 로깅
+- Exception Handling
+- MyPage 구현
+- Swagger 세팅
+- Flashcard 구현
+- 카테고리 구현
+- 카테고리 캐싱
 
 #### 송정훈
 
