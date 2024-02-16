@@ -17,7 +17,9 @@ import com.ssafy.seas.ranking.dto.RankerDto;
 import com.ssafy.seas.ranking.service.RankingService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/ranking")
@@ -59,7 +61,12 @@ public class RankingController {
 	public ApiResponse<List<RankerDto.RankResponse>> getMemberRanking(@RequestParam("search") String searchNickname) {
 		// list로 넘겨달라는 요청이 있었음.
 		List<RankerDto.RankResponse> result = rankingService.getRankByNickname(searchNickname);
-		result.get(0).setBadgeList(rankingService.getBadgeList(searchNickname));
-		return ApiResponse.success(SuccessCode.GET_SUCCESS, result);
+		log.info("result size : {}, result : {}", result.size(), result.toString());
+		if(result.size() == 1) {
+			result.get(0).setBadgeList(rankingService.getBadgeList(searchNickname));
+			return ApiResponse.success(SuccessCode.GET_SUCCESS, result);
+		} else {
+			return ApiResponse.success(SuccessCode.ACCEPT_SUCCESS, result);
+		}
 	}
 }
