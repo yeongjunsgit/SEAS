@@ -31,7 +31,6 @@ const getInitLineChart = () => {
   getLineChart(
     ({ data }) => {
       categoryObj.value = data.data;
-
       loaded.value = true;
     },
     (error) => {
@@ -96,6 +95,9 @@ onMounted(async () => {
           <div class="transparent-card">
             <div class="chart-box">
               <LineChartVue v-if="loaded" :category="category" />
+            </div>
+            <div v-if="category.history == 0" class="no-content">
+              <h4>데이터가없습니다</h4>
             </div>
           </div>
         </div>
@@ -212,5 +214,13 @@ onMounted(async () => {
   &:hover {
     background-color: rgba(255, 0, 0, 0.5);
   }
+}
+
+.no-content {
+  position: relative;
+  text-align: center;
+  font-size: 30px;
+  transform: translate(5%, -250%);
+  background-color: rgba(255, 255, 255, 0); /* 배경을 투명하게 조절 */
 }
 </style>
