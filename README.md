@@ -311,7 +311,7 @@ https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A609.git
 - refresh Token
 - 퀴즈 풀이 시 중간 데이터 저장 (I, EF 등)
 
-### infra
+### Infra
 
 - jenkins & gitlab 사용해서 자동 빌드, 자동 배포 환경 구현
 - docker를 사용한 어플리케이션 환경 구성
