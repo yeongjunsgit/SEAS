@@ -165,7 +165,10 @@ https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A609.git
 
 #### 배진현
 
-- 입력
+- 백엔드 팀원
+- 인프라 자동 빌드, 배포 환경 구성
+- 이미지 저장을 위한 S3, CloudFront 환경 구성
+- 퀴즈 서비스 구현
 
 ### FRONTEND
 
@@ -262,7 +265,6 @@ https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A609.git
 
 <br>
 
-
 ## Technology
 
 ### SM2 알고리즘
@@ -308,3 +310,10 @@ https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A609.git
 - 카테고리 목록
 - refresh Token
 - 퀴즈 풀이 시 중간 데이터 저장 (I, EF 등)
+
+### infra
+
+- jenkins & gitlab 사용해서 자동 빌드, 자동 배포 환경 구현
+- docker를 사용한 어플리케이션 환경 구성
+- nginx를 사용한 경로 요청에 따른 요청 분산 처리
+- 이미지 캐싱을 위한 S3, CloudFront 환경 구축 
