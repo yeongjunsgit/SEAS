@@ -31,7 +31,7 @@ const getInitLineChart = () => {
   getLineChart(
     ({ data }) => {
       categoryObj.value = data.data;
-      console.log(data.data);
+
       loaded.value = true;
     },
     (error) => {
@@ -41,10 +41,10 @@ const getInitLineChart = () => {
 };
 
 const removeStorage = function () {
-  localStorage.removeItem("myName");
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("refreshToken");
-  localStorage.removeItem("myGrantType");
+  sessionStorage.removeItem("myName");
+  sessionStorage.removeItem("accessToken");
+  sessionStorage.removeItem("refreshToken");
+  sessionStorage.removeItem("myGrantType");
 };
 
 const getInitDelete = () => {
@@ -52,12 +52,6 @@ const getInitDelete = () => {
 
   removeStorage();
   userStore.resetState();
-  // axios.delete("https://i10a609.p.ssafy.io/api/auth/logout", {
-  //   headers: {
-  //     Authorization: `Bearer ${user_access_token}`,
-  //     "Content-Type": "application/json",
-  //   },
-  // });
 
   axios.delete("https://i10a609.p.ssafy.io/api/auth/quit", {
     headers: {
@@ -65,13 +59,16 @@ const getInitDelete = () => {
       "Content-Type": "application/json",
     },
   });
+};
 
-  // .then(function () {
-  //   removeStorage();
-  //   userStore.resetState();
-  //   router.push({ name: "home" });
-  // })
-  // .catch((error) => console.log(error));
+const confirmDelete = async () => {
+  const userConfirmed = window.confirm("정말 탈퇴하시려구요..?");
+
+  if (userConfirmed) {
+    await getInitDelete();
+  } else {
+    console.log("휴");
+  }
 };
 
 onMounted(async () => {
@@ -90,7 +87,7 @@ onMounted(async () => {
       <div class="mypage-component-background userinfo">
         <div style="text-align: center">
           <UserInfoComponent />
-          <button class="del" @click="getInitDelete()">회원탈퇴</button>
+          <button class="del" @click="confirmDelete()">회원탈퇴</button>
         </div>
         <GrassComponentVue />
       </div>
@@ -144,6 +141,7 @@ onMounted(async () => {
   rotate: -90deg;
 }
 .mypage-component-background {
+  width: 80vw;
   height: auto;
   overflow: hidden;
   margin-inline: 10%;
@@ -156,19 +154,18 @@ onMounted(async () => {
 
 .mychart {
   display: grid;
+  place-items: center;
   grid-template-columns: repeat(3, 1fr);
 }
 
-.chart-box {
-  padding-left: 40px;
-}
 .transparent-card {
   background: transparent;
-  padding-left: 30px;
+  padding-inline: 20px;
   width: 350px;
 }
 .mycard {
   display: grid;
+  place-items: center;
   grid-template-columns: 1fr 1fr;
 }
 
@@ -193,6 +190,7 @@ onMounted(async () => {
 }
 @media screen and (max-width: 960px) {
   .mychart {
+    padding-top: 70px;
     grid-template-columns: repeat(1, 1fr);
     row-gap: 30px;
   }

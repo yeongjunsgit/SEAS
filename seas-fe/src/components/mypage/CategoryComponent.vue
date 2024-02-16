@@ -29,13 +29,10 @@ onMounted(async () => {
                 .catch((error) => console.log(error));
 
             datas.value.forEach((data) => {
-                console.log("foreach data", data);
                 data.flashcardIds.forEach((cardNum) => {
-                    console.log("cardNum : ", cardNum);
                     getLikeCard(
                         cardNum,
                         ({ data }) => {
-                            console.log(data);
                             cardKwd.value = {
                                 ...cardKwd.value,
                                 [cardNum]: data.data.keyword,
@@ -115,11 +112,15 @@ function popupQuiz(categoryId, quizId) {
                 alt="도움"
             />
             <div class="tooltip-content" v-if="likes">
-                카드 페이지에서 즐겨찾기를 설정한 키워드에 대한 설명을
-                보여드립니다.
+                <p>
+                    카드 페이지에서 즐겨찾기를 설정한 키워드에 대한 설명을
+                    보여드립니다.
+                </p>
+                <p>스크롤을 통해 더 많은 키워드를 확인하실 수 있습니다.</p>
             </div>
             <div class="tooltip-content" v-if="wrongAnswer">
-                퀴즈 페이지에서 최근에 틀린 문제들을 다시 보여드립니다.
+                <p>퀴즈 페이지에서 최근에 틀린 문제들을 다시 보여드립니다.</p>
+                <p>스크롤을 통해 더 많은 문제를 확인하실 수 있습니다.</p>
             </div>
         </div>
 
@@ -182,7 +183,7 @@ h1 {
 .tooltip-content {
     position: absolute;
     margin-left: 115px;
-    margin-bottom: 65px;
+    margin-bottom: 95px;
     font-size: 15px;
     background: #fefefe;
     color: #555;
@@ -191,6 +192,9 @@ h1 {
     border-radius: 4px;
     pointer-events: none;
     transition: opacity 0.4s;
+    p {
+        margin-block: 0px;
+    }
 }
 .tooltip-content:after {
     border-top: 10px solid #fefefe;
@@ -199,7 +203,7 @@ h1 {
     border-bottom: 0px solid transparent;
     content: "";
     position: absolute;
-    top: 25px;
+    top: 53px;
     left: 4px;
 }
 
@@ -227,7 +231,7 @@ td div {
     flex-wrap: wrap;
 }
 .scrollable-td {
-    max-height: 45px; /* 스크롤 가능한 최대 높이 설정 */
+    max-height: 38px; /* 스크롤 가능한 최대 높이 설정 */
     overflow-y: scroll; /* 수직 스크롤 적용 */
     padding: 1% 0 1% 0;
     p {
