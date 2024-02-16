@@ -259,7 +259,8 @@ const closeModal = () => {
             display: flex;
             justify-content: space-around;
             width: 80%;
-            height: 30vh;
+            height: 40vh;
+            min-height: 250px;
             margin: 2% 0 15% 0;
 
             .ranker {
@@ -269,10 +270,12 @@ const closeModal = () => {
                 max-width: 630px;
                 height: 100%;
                 border: 2px double black;
+                font-size: 1.3vw;
 
                 .ranker-background {
                     width: 100%;
                     height: 100%;
+                    min-height: 100px;
                     position: relative;
                     background-image: url($url-path + "images/Logo.png");
                     background-size: contain;
