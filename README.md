@@ -38,9 +38,9 @@ https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A609.git
 
 ## 🤝 Member
 
-| <a href="https://github.com/각자이름"><img src="https://github.com/각자이름.png" width="120"/></a> | <a href="https://github.com/각자이름"><img src="https://github.com/각자이름.png" width="120"/></a> | <a href="https://github.com/각자이름"><img src="https://github.com/각자이름.png" width="120"/></a> | <a href="https://github.com/MuRing"><img src="https://github.com/MuRing.png" width="120"/></a> | <a href="https://github.com/각자이름"><img src="https://github.com/각자이름.png" width="120"/></a> | <a href="https://github.com/각자이름"><img src="https://github.com/각자이름.png" width="120"/></a> |
-| :------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------: |
-|                                             [이정은]()                                             |                                             [송정훈]()                                             |                                             [배진현]()                                             |                              [엄세현](https://github.com/MuRing)                               |                                             [권기용]()                                             |                                             [김영준]()                                             |
+| <a href="https://github.com/각자이름"><img src="https://github.com/각자이름.png" width="120"/></a> | <a href="https://github.com/sjhjack"><img src="https://github.com/sjhjack.png" width="120"/></a> | <a href="https://github.com/각자이름"><img src="https://github.com/각자이름.png" width="120"/></a> | <a href="https://github.com/MuRing"><img src="https://github.com/MuRing.png" width="120"/></a> | <a href="https://github.com/각자이름"><img src="https://github.com/각자이름.png" width="120"/></a> | <a href="https://github.com/각자이름"><img src="https://github.com/각자이름.png" width="120"/></a> |
+| :------------------------------------------------------------------------------------------------: |:---------------------------------------------------------------------------------------------:| :------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------: |
+|                                             [이정은]()                                             |                                            [송정훈]()                                            |                                             [배진현]()                                             |                              [엄세현](https://github.com/MuRing)                               |                                             [권기용]()                                             |                                             [김영준]()                                             |
 
 <br>
 
@@ -48,7 +48,7 @@ https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A609.git
 
 ## 📝 Specification
 
-- notion : 우리 노션 주소
+- [기능명세서](https://forested-danthus-512.notion.site/4aad797a315044c2ba3570730cdaa819?pvs=4)
 
 <br>
 
@@ -71,6 +71,9 @@ https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A609.git
         -   <img src="https://img.shields.io/badge/IDE-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/IntelliJIDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white"><img src="https://img.shields.io/badge/2021.2.4-515151?style=for-the-badge">
         -   <img src="https://img.shields.io/badge/Library-%23121011?style=for-the-badge"><img alt="Spring Security" src ="https://img.shields.io/badge/springsecurity-6DB33F.svg?&style=for-the-badge&logo=springsecurity&logoColor=white"/><img src="https://img.shields.io/badge/6.2.1-515151?style=for-the-badge">
             <img alt="FLYWAY" src ="https://img.shields.io/badge/flyway-CC0200.svg?&style=for-the-badge&logo=flyway&logoColor=white"/><img src="https://img.shields.io/badge/9.22.3-515151?style=for-the-badge">
+            <img alt="QUERYDSL" src ="https://img.shields.io/badge/querydsl-0078C0.svg?&style=for-the-badge"/><img src="https://img.shields.io/badge/5.0.0-515151?style=for-the-badge">
+            <img alt="MAPSTRUCT" src ="https://img.shields.io/badge/mapstruct-FF282D.svg?&style=for-the-badge"/><img src="https://img.shields.io/badge/1.5.3.Final-515151?style=for-the-badge">
+            <img alt="JJWT" src ="https://img.shields.io/badge/jjwt-F0047F.svg?&style=for-the-badge"/><img src="https://img.shields.io/badge/0.11.2-515151?style=for-the-badge">
     - Infra
         -   <img src="https://img.shields.io/badge/OS-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white"><img src="https://img.shields.io/badge/20.04.6 LTS-515151?style=for-the-badge">
         -   <img src="https://img.shields.io/badge/DB-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white"><img src="https://img.shields.io/badge/8.3.0-515151?style=for-the-badge">
@@ -152,7 +155,13 @@ https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A609.git
 
 #### 송정훈
 
-- 입력
+- 백엔드 팀원
+- ERD 설계
+- Spring Security 적용
+- JWT 적용
+- QueryDSL 설정
+- 회원 서비스 구현
+- 랭킹 서비스 구현
 
 #### 배진현
 
