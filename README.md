@@ -60,31 +60,30 @@ https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A609.git
 - Project Date: 2024.01 - 2024.02 (6주)
 - Language & Library
 
-
--   프로젝트 이름: SEAS
--   프로젝트 기간: 2024.01 - 2024.02 (6주)
--   개발 언어 및 라이브러리
-    -   Backend
-        -   <img src="https://img.shields.io/badge/Framework-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"><img src="https://img.shields.io/badge/3.2.2-515151?style=for-the-badge">
-        -   <img src="https://img.shields.io/badge/Build-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=Gradle&logoColor=white"><img src="https://img.shields.io/badge/8.5-515151?style=for-the-badge">
-        -   <img src="https://img.shields.io/badge/Language-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/java-%23ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"><img src="https://img.shields.io/badge/17.0.2-515151?style=for-the-badge">
-        -   <img src="https://img.shields.io/badge/IDE-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/IntelliJIDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white"><img src="https://img.shields.io/badge/2021.2.4-515151?style=for-the-badge">
-        -   <img src="https://img.shields.io/badge/Library-%23121011?style=for-the-badge"><img alt="Spring Security" src ="https://img.shields.io/badge/springsecurity-6DB33F.svg?&style=for-the-badge&logo=springsecurity&logoColor=white"/><img src="https://img.shields.io/badge/6.2.1-515151?style=for-the-badge">
-            <img alt="FLYWAY" src ="https://img.shields.io/badge/flyway-CC0200.svg?&style=for-the-badge&logo=flyway&logoColor=white"/><img src="https://img.shields.io/badge/9.22.3-515151?style=for-the-badge">
-    - Infra
-        -   <img src="https://img.shields.io/badge/OS-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white"><img src="https://img.shields.io/badge/20.04.6 LTS-515151?style=for-the-badge">
-        -   <img src="https://img.shields.io/badge/DB-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white"><img src="https://img.shields.io/badge/8.3.0-515151?style=for-the-badge">
-        -   <img src="https://img.shields.io/badge/CACHE-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white"><img src="https://img.shields.io/badge/7.2.4-515151?style=for-the-badge">
-        -   <img src="https://img.shields.io/badge/WEBSERVER-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white"><img src="https://img.shields.io/badge/1.18.0-515151?style=for-the-badge">
-        -   <img src="https://img.shields.io/badge/WAS-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/apache%20tomcat-%23F8DC75.svg?style=for-the-badge&logo=apache-tomcat&logoColor=black"><img src="https://img.shields.io/badge/10.1.18-515151?style=for-the-badge">
-        -   <img src="https://img.shields.io/badge/CICD-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/jenkins-%232C5263.svg?style=for-the-badge&logo=jenkins&logoColor=white"><img src="https://img.shields.io/badge/2.441-515151?style=for-the-badge">
-        -   <img src="https://img.shields.io/badge/CONTAINER-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white"><img src="https://img.shields.io/badge/24.0.5-515151?style=for-the-badge">
-    - Frontend
-      - <img src="https://img.shields.io/badge/Design-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white">
-      - <img src="https://img.shields.io/badge/Platform-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white"><img src="https://img.shields.io/badge/20.10.0-515151?style=for-the-badge">
-      - <img src="https://img.shields.io/badge/Framework-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D">
-      - <img src="https://img.shields.io/badge/Library-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=AEDDFF"><img src="https://img.shields.io/badge/axios-%23593d88?style=for-the-badge"><img src="https://img.shields.io/badge/pinia-2c4f7c?style=for-the-badge">
-      - <img src="https://img.shields.io/badge/Language-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E"><img src="https://img.shields.io/badge/SASS-hotpink.svg?style=for-the-badge&logo=SASS&logoColor=white">
+- 프로젝트 이름: SEAS
+- 프로젝트 기간: 2024.01 - 2024.02 (6주)
+- 개발 언어 및 라이브러리
+  - Backend
+    - <img src="https://img.shields.io/badge/Framework-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"><img src="https://img.shields.io/badge/3.2.2-515151?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/Build-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=Gradle&logoColor=white"><img src="https://img.shields.io/badge/8.5-515151?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/Language-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/java-%23ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"><img src="https://img.shields.io/badge/17.0.2-515151?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/IDE-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/IntelliJIDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white"><img src="https://img.shields.io/badge/2021.2.4-515151?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/Library-%23121011?style=for-the-badge"><img alt="Spring Security" src ="https://img.shields.io/badge/springsecurity-6DB33F.svg?&style=for-the-badge&logo=springsecurity&logoColor=white"/><img src="https://img.shields.io/badge/6.2.1-515151?style=for-the-badge">
+      <img alt="FLYWAY" src ="https://img.shields.io/badge/flyway-CC0200.svg?&style=for-the-badge&logo=flyway&logoColor=white"/><img src="https://img.shields.io/badge/9.22.3-515151?style=for-the-badge">
+  - Infra
+    - <img src="https://img.shields.io/badge/OS-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white"><img src="https://img.shields.io/badge/20.04.6 LTS-515151?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/DB-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white"><img src="https://img.shields.io/badge/8.3.0-515151?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/CACHE-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white"><img src="https://img.shields.io/badge/7.2.4-515151?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/WEBSERVER-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white"><img src="https://img.shields.io/badge/1.18.0-515151?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/WAS-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/apache%20tomcat-%23F8DC75.svg?style=for-the-badge&logo=apache-tomcat&logoColor=black"><img src="https://img.shields.io/badge/10.1.18-515151?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/CICD-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/jenkins-%232C5263.svg?style=for-the-badge&logo=jenkins&logoColor=white"><img src="https://img.shields.io/badge/2.441-515151?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/CONTAINER-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white"><img src="https://img.shields.io/badge/24.0.5-515151?style=for-the-badge">
+  - Frontend
+    - <img src="https://img.shields.io/badge/Design-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white">
+    - <img src="https://img.shields.io/badge/Platform-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white"><img src="https://img.shields.io/badge/20.10.0-515151?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/Framework-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D">
+    - <img src="https://img.shields.io/badge/Library-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=AEDDFF"><img src="https://img.shields.io/badge/axios-%23593d88?style=for-the-badge"><img src="https://img.shields.io/badge/pinia-2c4f7c?style=for-the-badge">
+    - <img src="https://img.shields.io/badge/Language-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E"><img src="https://img.shields.io/badge/SASS-hotpink.svg?style=for-the-badge&logo=SASS&logoColor=white">
 
 <br>
 
@@ -95,16 +94,16 @@ https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A609.git
 <a name="architect"></a>
 
 ## 🌐 System Architecture
-![image](/uploads/e7f82f6ae13ab1861d7da5d7f6d30220/image.png)
 
+![image](/uploads/e7f82f6ae13ab1861d7da5d7f6d30220/image.png)
 
 <br>
 
 <a name="erd"></a>
 
 ## 💾 ERD
-![image](/uploads/274e414254692c85b64461763568a983/image.png)
 
+![image](/uploads/274e414254692c85b64461763568a983/image.png)
 
 <br>
 
@@ -177,7 +176,11 @@ https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A609.git
 
 #### 권기용
 
-- 내용
+- 프론트엔드 멤버
+- 마이페이지 디자인 및 각종 차트 제작
+- 즐겨찾기 플래시카드 팝업 페이지 제작
+- 오답노트 팝업 페이지 제작
+- 유저 정보, 차트 및 즐겨찾기/오답노트 Axios 구축
 
 #### 김영준
 
@@ -203,7 +206,6 @@ https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A609.git
 - [x] 닉네임 중복 검사
 - [x] 아이디 중복 검사
 
-
 ### 카테고리
 
 💡 자료구조, 데이터베이스, 알고리즘, 하드웨어, 네트워크, 컴퓨터 구조로 총 6개의 카테고리로 구성
@@ -227,10 +229,12 @@ https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A609.git
 - [x] 티어 업데이트 확인
 
 ### 랭킹
+
 - [x] 랭킹 리스트 조회
 - [x] 사용자 랭킹 검색
 
 ### 마이페이지
+
 - [x] 유저 기본 정보 조회 (닉네임, 현상금, 티어, 풀이한 문제 수, 정답률)
 - [x] 유저 뱃지 조회
 - [x] 카테고리별 풀이 비율 조회
@@ -242,7 +246,6 @@ https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A609.git
 - [x] 플래시카드 내용 단일 조회
 
 <br>
-
 
 ## Technology
 
@@ -264,12 +267,12 @@ https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A609.git
 
 - 변수 설명
   - q: 사용자의 응답에 대한 품질 (Quality)
-    | quality | 의미                  |
+    | quality | 의미 |
     | ------- | --------------------- |
-    | 0       | 퀴즈를 틀림           |
-    | 1       | 플래시 카드를 공부함  |
-    | 2       | 퀴즈 맞힘 (힌트 사용) |
-    | 3       | 퀴즈 맞힘 (미사용)    |
+    | 0 | 퀴즈를 틀림 |
+    | 1 | 플래시 카드를 공부함 |
+    | 2 | 퀴즈 맞힘 (힌트 사용) |
+    | 3 | 퀴즈 맞힘 (미사용) |
   - I : 학습 간격 (Interval)
     - I(1) = 1
     - I(2) = 6
