@@ -73,7 +73,6 @@ const searchByName = () => {
                 console.log(rankData.value);
             },
             (error) => {
-                searchNotFound.value = true;
                 console.log(error);
             }
         );
@@ -152,7 +151,10 @@ const closeModal = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-if="searchNotFound == true" class="no-data">
+                            <tr
+                                v-if="!rankData || rankData == ''"
+                                class="no-data"
+                            >
                                 <td colspan="4">
                                     검색된 값이 없습니다. <br />검색할 이름을
                                     정확히 모두 입력해주십시오.
